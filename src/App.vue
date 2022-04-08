@@ -6,6 +6,7 @@
   <router-view />
 </template>
 
+
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -16,15 +17,22 @@
 }
 
 #nav {
-  padding: 30px;
+  padding: 40px;
+  background-color: grey;
+  position: fixed;
+  width: 100%;
+  z-index: 999;
 }
 
 #nav a {
   font-weight: bold;
   color: #2c3e50;
+  text-align: center;
+  z-index: 999;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #2c3e50;
+  z-index: 999;
 }
 </style>
