@@ -17,7 +17,7 @@
 }
 
 #nav {
-  padding: 40px; 
+  padding: 45px; 
   background-color: grey;
   position: fixed;
   width: 100vw;

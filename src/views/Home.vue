@@ -1,6 +1,6 @@
 <template>
   <div class="btn-div">
-    <MDBBtn color="dark" class="mb-4 floating-btn" @click="setRandom"
+    <MDBBtn color="dark" class="mb-4 floating-btn rounded-0" @click="setRandom"
       >Randomize</MDBBtn
     >
   </div>
@@ -13,7 +13,7 @@
       
         <MDBCol v-for="item in randomCocktails"
         :key="item.idDrink">
-          <MDBCard text="white" bg="dark">
+          <MDBCard class="rounded-0" text="white" bg="dark">
             <MDBCardBody>
               <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
 
@@ -21,7 +21,7 @@
                 <!-- {{ item.strInstructions }} -->
               </MDBCardText>
             </MDBCardBody>
-            <MDBCardImg bottom v-bind:src="item.strDrinkThumb" v-bind:alt="item.strDrink" />
+            <MDBCardImg class="rounded-0" bottom v-bind:src="item.strDrinkThumb" v-bind:alt="item.strDrink" />
           </MDBCard>
         </MDBCol>
 
@@ -183,7 +183,7 @@ export default {
 .home {
   background-color: lightgrey;
   min-height: 100vh;
-  padding-top: 110px;
+  padding-top: 115px;
   width: 100%;
   overflow-x: hidden;
   padding-left: 25px;
@@ -196,12 +196,13 @@ export default {
   text-align: center;
   display: block;
   z-index: 999;
+  margin-top: 30px;
 }
 .btn-div {
   width: 100vw;
   position: fixed;
-  height: 20px;
   z-index: 999;
-  padding-top: 70px;
+  height: 5px;
+  padding-top: 40px;
 }
 </style>
