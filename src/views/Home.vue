@@ -7,14 +7,13 @@
   <div class="home">
     <img alt="cocktail database logo" src="../assets/watercolor-title.png" />
 
-    <MDBRow :cols="['1', 'md-3']" class="g-4">
-      <MDBContainer
-        class="mb-4"
-        v-for="item in randomCocktails"
-        :key="item.idDrink"
-      >
-        <MDBCol>
-          <MDBCard class="h-100" text="white" bg="dark">
+    <!-- rows have one column, cards split equal width to fit 3, up to a breakpoint-->
+    <!-- g-4 = grid gap of 4 -->
+    <MDBRow :cols="['1', 'md-3']" class="g-4"> <!-- cols col to each row-->
+      
+        <MDBCol v-for="item in randomCocktails"
+        :key="item.idDrink">
+          <MDBCard text="white" bg="dark">
             <MDBCardBody>
               <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
 
@@ -25,8 +24,11 @@
             <MDBCardImg bottom v-bind:src="item.strDrinkThumb" v-bind:alt="item.strDrink" />
           </MDBCard>
         </MDBCol>
-      </MDBContainer>
+
     </MDBRow>
+
+
+
   </div>
 </template>
 <script>
@@ -38,7 +40,7 @@ import {
   MDBCardBody,
   MDBCardText,
   MDBCardTitle,
-  MDBContainer,
+  // MDBContainer,
   MDBCardImg,
   MDBCol,
   MDBRow,
@@ -51,7 +53,7 @@ export default {
     MDBCardTitle,
     MDBCardText,
     MDBBtn,
-    MDBContainer,
+    // MDBContainer,
     MDBCardImg,
     MDBCol,
     MDBRow,
@@ -178,22 +180,15 @@ export default {
   }
 }
 
-.cocktailCard {
-  border: 4px solid black;
-  margin: auto;
-  height: 800px;
-  width: 700px;
-  margin-bottom: 20px;
-}
-.cocktailImg {
-  height: 700px;
-  width: 700px;
-}
-
 .home {
   background-color: lightgrey;
   min-height: 100vh;
   padding-top: 110px;
+  width: 100%;
+  overflow-x: hidden;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-bottom: 25px;
 }
 
 .floating-btn {
@@ -203,9 +198,10 @@ export default {
   z-index: 999;
 }
 .btn-div {
-  width: 100%;
+  width: 100vw;
   position: fixed;
   height: 20px;
   z-index: 999;
+  padding-top: 70px;
 }
 </style>

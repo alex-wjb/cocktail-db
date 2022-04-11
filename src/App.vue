@@ -17,11 +17,12 @@
 }
 
 #nav {
-  padding: 40px;
+  padding: 40px; 
   background-color: grey;
   position: fixed;
-  width: 100%;
+  width: 100vw;
   z-index: 999;
+  overflow-x: hidden; 
 }
 
 #nav a {
