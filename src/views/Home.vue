@@ -21,7 +21,9 @@
                 <!-- {{ item.strInstructions }} -->
               </MDBCardText>
             </MDBCardBody>
-            <MDBCardImg class="rounded-0" bottom v-bind:src="item.strDrinkThumb" v-bind:alt="item.strDrink" />
+             <a class="drinkImgContainer"> 
+            <MDBCardImg class="rounded-0 drinkImg skeleton" bottom v-bind:src="item.strDrinkThumb" v-bind:alt="item.strDrink" />
+            </a>
           </MDBCard>
         </MDBCol>
 
@@ -205,4 +207,15 @@ export default {
   height: 5px;
   padding-top: 40px;
 }
+
+.drinkImg {
+  opacity: 1;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.drinkImgContainer:hover .drinkImg {
+  opacity: 0.6;
+}
+
 </style>
