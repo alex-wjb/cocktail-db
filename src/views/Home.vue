@@ -9,28 +9,66 @@
 
     <!-- rows have one column, cards split equal width to fit 3, up to a breakpoint-->
     <!-- g-4 = grid gap of 4 -->
-    <MDBRow :cols="['1', 'md-3']" class="g-4"> <!-- cols col to each row-->
-      
-        <MDBCol v-for="item in randomCocktails"
-        :key="item.idDrink">
-          <MDBCard class="rounded-0" text="white" bg="dark">
-            <MDBCardBody>
-              <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
+    <MDBRow :cols="['1', 'md-3']" class="g-4">
+      <!-- cols col to each row-->
 
-              <MDBCardText>
-                <!-- {{ item.strInstructions }} -->
-              </MDBCardText>
-            </MDBCardBody>
-             <a class="drinkImgContainer"> 
-            <MDBCardImg class="rounded-0 drinkImg skeleton" bottom v-bind:src="item.strDrinkThumb" v-bind:alt="item.strDrink" />
-            </a>
-          </MDBCard>
-        </MDBCol>
+      <MDBCol v-for="item in randomCocktails" :key="item.idDrink">
+        <MDBCard class="rounded-0" text="white" bg="dark">
+          <MDBCardBody>
+            <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
 
+            <MDBCardText>
+              <!-- {{ item.strInstructions }} -->
+            </MDBCardText>
+          </MDBCardBody>
+          <MDBBtn
+            color="primary"
+            aria-controls="exampleModal"
+            @click="(exampleModal = true), populateDrinkModal(item.idDrink)"
+          >
+            Launch modal
+          </MDBBtn>
+          <a class="drinkImgContainer">
+            <MDBCardImg
+              class="rounded-0 drinkImg skeleton"
+              bottom
+              v-bind:src="item.strDrinkThumb"
+              v-bind:alt="item.strDrink"
+            />
+          </a>
+        </MDBCard>
+      </MDBCol>
     </MDBRow>
 
-
-
+    <MDBModal
+      id="exampleModal"
+      tabindex="-1"
+      labelledby="exampleModalLabel"
+      v-model="exampleModal"
+      centered="true"
+      size="xl"
+      class="text-center"
+      
+    >
+    <!-- <div class="text-center"> -->
+      <MDBModalHeader style="text-align:center !important; justify-content: center!important; width:100% !important; border:1px solid white;" color="dark" class="text-light text-center justify-content-center" :close="false">
+        <!-- <div class="justify-content-center"> -->
+        <MDBModalTitle style="text-align:center !important; justify-content: center!important; width:100% !important;" bold="true" class="text-center" id="exampleModalLabel">
+         <p class="myModalTitle"> {{ cocktailName }} </p>
+        
+        </MDBModalTitle>
+        <!-- </div> -->
+      </MDBModalHeader>
+      <!-- </div> -->
+      <MDBModalBody class="bg-dark text-light"
+        >{{ cocktailInst }}
+        <img class="img-fluid" v-bind:src="cocktailImgSrc" alt="" />
+      </MDBModalBody>
+      <MDBModalFooter class="bg-dark">
+        <MDBBtn color="secondary" @click="exampleModal = false">Close</MDBBtn>
+        <MDBBtn color="primary">Save changes</MDBBtn>
+      </MDBModalFooter>
+    </MDBModal>
   </div>
 </template>
 <script>
@@ -46,6 +84,11 @@ import {
   MDBCardImg,
   MDBCol,
   MDBRow,
+  MDBModal,
+  MDBModalHeader,
+  MDBModalTitle,
+  MDBModalBody,
+  MDBModalFooter,
 } from "mdb-vue-ui-kit";
 export default {
   name: "Home",
@@ -59,6 +102,11 @@ export default {
     MDBCardImg,
     MDBCol,
     MDBRow,
+    MDBModal,
+    MDBModalHeader,
+    MDBModalTitle,
+    MDBModalBody,
+    MDBModalFooter,
   },
   setup() {
     //Connect to cocktaildb API
@@ -70,6 +118,7 @@ export default {
     const cocktailName = ref(null);
     const cocktailInst = ref(null);
     const cocktailImgSrc = ref(null);
+    const exampleModal = ref(false);
 
     //sends Fetch API request returning results as json
     const sendRequest = async (requestUrl) => {
@@ -87,6 +136,20 @@ export default {
         console.log(err.message);
         return Promise.reject(err.message);
       }
+    };
+
+    const getCocktailByID = (cocktailObjArray, drinkID) => {
+      const drink = cocktailObjArray.find(
+        (element) => element.idDrink === drinkID
+      );
+      return drink;
+    };
+
+    const populateDrinkModal = (drinkID) => {
+      const drinkObj = getCocktailByID(randomCocktails.value, drinkID);
+      cocktailName.value = drinkObj.strDrink;
+      cocktailInst.value = drinkObj.strInstructions;
+      cocktailImgSrc.value = drinkObj.strDrinkThumb;
     };
 
     //returns promise resolving to array of cocktails a-z
@@ -113,17 +176,17 @@ export default {
       });
     };
 
-    const getCocktailObject = () => {
-      console.log(allCocktails.value[1]);
-      return allCocktails.value[1];
-    };
+    // const getCocktailObject = () => {
+    //   console.log(allCocktails.value[1]);
+    //   return allCocktails.value[1];
+    // };
 
-    const populateCocktailData = (cocktailObj) => {
-      cocktailName.value = cocktailObj.strDrink;
-      console.log(cocktailName.value);
-      cocktailInst.value = cocktailObj.strInstructions;
-      cocktailImgSrc.value = cocktailObj.strDrinkThumb;
-    };
+    // const populateCocktailData = (cocktailObj) => {
+    //   cocktailName.value = cocktailObj.strDrink;
+    //   console.log(cocktailName.value);
+    //   cocktailInst.value = cocktailObj.strInstructions;
+    //   cocktailImgSrc.value = cocktailObj.strDrinkThumb;
+    // };
 
     const getRandomCocktails = (n) => {
       const cocktails = allCocktails.value;
@@ -145,9 +208,6 @@ export default {
         console.log(allCocktails.value);
       })
       .then(() => {
-        populateCocktailData(getCocktailObject());
-      })
-      .then(() => {
         setRandom();
       });
 
@@ -163,6 +223,8 @@ export default {
       cocktailImgSrc,
       randomCocktails,
       setRandom,
+      exampleModal,
+      populateDrinkModal,
     };
   },
 };
@@ -210,12 +272,27 @@ export default {
 
 .drinkImg {
   opacity: 1;
-  transition: .5s ease;
+  transition: 0.5s ease;
   backface-visibility: hidden;
 }
 
 .drinkImgContainer:hover .drinkImg {
   opacity: 0.6;
+}
+
+.justify-content-center {
+  text-align: center!important;
+  justify-content: center!important;
+}
+
+.modal-title{
+   text-align: center!important;
+   justify-content: center!important;
+}
+
+.myModalTitle{
+  text-align: center!important;
+  width:100%;
 }
 
 </style>
