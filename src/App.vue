@@ -3,9 +3,12 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </div>
-  <router-view />
+  <!-- <keep-alive include="Home"> -->
+ <router-view>
+  
+ </router-view>
+ <!-- </keep-alive> -->
 </template>
-
 
 <style>
 #app {
@@ -17,12 +20,12 @@
 }
 
 #nav {
-  padding: 45px; 
+  padding: 45px;
   background-color: grey;
   position: fixed;
   width: 100vw;
   z-index: 999;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
 
 #nav a {

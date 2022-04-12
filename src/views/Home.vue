@@ -28,6 +28,7 @@
           >
             Launch modal
           </MDBBtn>
+          <router-link :to="{name:'DrinkInfo', params: {id: item.idDrink}}">Get Drink Info</router-link>
           <a class="drinkImgContainer">
             <MDBCardImg
               class="rounded-0 drinkImg skeleton"
@@ -73,7 +74,7 @@
 </template>
 <script>
 // @ is an alias to /src
-import { ref } from "vue";
+import { ref, onMounted, onDeactivated, onBeforeUnmount } from "vue";
 import {
   MDBBtn,
   MDBCard,
@@ -119,6 +120,18 @@ export default {
     const cocktailInst = ref(null);
     const cocktailImgSrc = ref(null);
     const exampleModal = ref(false);
+
+    onMounted(()=>{
+      console.log("HOME MOUNTED");
+    });
+
+    onDeactivated(()=>{
+      console.log("HOME DEACTIVATED");
+    });
+
+    onBeforeUnmount(()=>{
+      console.log("HOME BEFORE UNMOUNT");
+    });
 
     //sends Fetch API request returning results as json
     const sendRequest = async (requestUrl) => {
