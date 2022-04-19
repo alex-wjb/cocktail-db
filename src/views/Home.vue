@@ -13,22 +13,22 @@
       <!-- cols col to each row-->
 
       <MDBCol v-for="item in randomCocktails" :key="item.idDrink">
-        <MDBCard class="rounded-0" text="white" bg="dark">
-          <MDBCardBody>
+        <MDBCard class="rounded-0 h-100" text="white" bg="dark">
+          <MDBCardHeader>
             <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
+          </MDBCardHeader>
+            
 
-            <MDBCardText>
-              <!-- {{ item.strInstructions }} -->
-            </MDBCardText>
-          </MDBCardBody>
-          <MDBBtn
+            <MDBBtn
             color="primary"
             aria-controls="exampleModal"
             @click="(exampleModal = true), populateDrinkModal(item.idDrink)"
           >
             Launch modal
           </MDBBtn>
-          <router-link :to="{name:'DrinkInfo', params: {id: item.idDrink}}">Get Drink Info</router-link>
+          <router-link :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
+            >Get Drink Info</router-link
+          >
           <a class="drinkImgContainer">
             <MDBCardImg
               class="rounded-0 drinkImg skeleton"
@@ -37,6 +37,18 @@
               v-bind:alt="item.strDrink"
             />
           </a>
+         
+
+          
+          <MDBCardFooter class="text-muted">
+            <li
+              class="ingredientItem list-inline list-inline-item"
+              v-for="item in getIngredients(item)"
+              :key="item"
+            >
+              {{ item }}
+            </li>
+          </MDBCardFooter>
         </MDBCard>
       </MDBCol>
     </MDBRow>
@@ -46,24 +58,46 @@
       tabindex="-1"
       labelledby="exampleModalLabel"
       v-model="exampleModal"
-      centered="true"
+      :centered="true"
       size="xl"
       class="text-center"
-      
     >
-    <!-- <div class="text-center"> -->
-      <MDBModalHeader style="text-align:center !important; justify-content: center!important; width:100% !important; border:1px solid white;" color="dark" class="text-light text-center justify-content-center" :close="false">
+      <!-- <div class="text-center"> -->
+      <MDBModalHeader
+        style="
+          text-align: center !important;
+          justify-content: center !important;
+          width: 100% !important;
+          border: 1px solid white;
+        "
+        color="dark"
+        class="text-light text-center justify-content-center"
+        :close="false"
+      >
         <!-- <div class="justify-content-center"> -->
-        <MDBModalTitle style="text-align:center !important; justify-content: center!important; width:100% !important;" bold="true" class="text-center" id="exampleModalLabel">
-         <p class="myModalTitle"> {{ cocktailName }} </p>
-        
+        <MDBModalTitle
+          style="
+            text-align: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+          "
+          bold="true"
+          class="text-center"
+          id="exampleModalLabel"
+        >
+          <p class="myModalTitle">{{ cocktailName }}</p>
         </MDBModalTitle>
         <!-- </div> -->
       </MDBModalHeader>
       <!-- </div> -->
       <MDBModalBody class="bg-dark text-light"
         >{{ cocktailInst }}
-        <img class="img-fluid" v-bind:src="cocktailImgSrc" alt="" />
+        <img
+          class="img-fluid"
+          v-bind:src="cocktailImgSrc"
+          v-bind:alt="cocktailName"
+        />
+        {{ ingredients }}
       </MDBModalBody>
       <MDBModalFooter class="bg-dark">
         <MDBBtn color="secondary" @click="exampleModal = false">Close</MDBBtn>
@@ -74,12 +108,13 @@
 </template>
 <script>
 // @ is an alias to /src
-import { ref, onMounted, onDeactivated, onBeforeUnmount } from "vue";
+import { ref } from "vue";
+import getAllCocktails from "../composables/fetchCocktails.js";
 import {
   MDBBtn,
   MDBCard,
-  MDBCardBody,
-  MDBCardText,
+  // MDBCardBody,
+  // MDBCardText,
   MDBCardTitle,
   // MDBContainer,
   MDBCardImg,
@@ -90,14 +125,16 @@ import {
   MDBModalTitle,
   MDBModalBody,
   MDBModalFooter,
+  MDBCardFooter,
+  MDBCardHeader
 } from "mdb-vue-ui-kit";
 export default {
   name: "Home",
   components: {
     MDBCard,
-    MDBCardBody,
+    // MDBCardBody,
     MDBCardTitle,
-    MDBCardText,
+    // MDBCardText,
     MDBBtn,
     // MDBContainer,
     MDBCardImg,
@@ -108,48 +145,17 @@ export default {
     MDBModalTitle,
     MDBModalBody,
     MDBModalFooter,
+    MDBCardFooter,
+    MDBCardHeader
   },
   setup() {
-    //Connect to cocktaildb API
-    const allCocktails = ref(null);
     const randomCocktails = ref(null);
-    const baseURL = "https://www.thecocktaildb.com/api/json/v2";
-    const apiKey = "9973533";
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
     const cocktailName = ref(null);
     const cocktailInst = ref(null);
     const cocktailImgSrc = ref(null);
     const exampleModal = ref(false);
-
-    onMounted(()=>{
-      console.log("HOME MOUNTED");
-    });
-
-    onDeactivated(()=>{
-      console.log("HOME DEACTIVATED");
-    });
-
-    onBeforeUnmount(()=>{
-      console.log("HOME BEFORE UNMOUNT");
-    });
-
-    //sends Fetch API request returning results as json
-    const sendRequest = async (requestUrl) => {
-      console.log(requestUrl);
-      //returns promise containing response object on resolve
-      try {
-        const response = await fetch(requestUrl);
-        if (response.status !== 200) {
-          throw new Error(response.status + " - Unable to fetch data.");
-        }
-        const responseJSON = await response.json();
-        console.log(responseJSON);
-        return responseJSON;
-      } catch (err) {
-        console.log(err.message);
-        return Promise.reject(err.message);
-      }
-    };
+    const ingredients = ref([]);
+    const { allCocktails, fetchData, error } = getAllCocktails();
 
     const getCocktailByID = (cocktailObjArray, drinkID) => {
       const drink = cocktailObjArray.find(
@@ -160,46 +166,22 @@ export default {
 
     const populateDrinkModal = (drinkID) => {
       const drinkObj = getCocktailByID(randomCocktails.value, drinkID);
+      ingredients.value = getIngredients(drinkObj);
       cocktailName.value = drinkObj.strDrink;
       cocktailInst.value = drinkObj.strInstructions;
       cocktailImgSrc.value = drinkObj.strDrinkThumb;
     };
 
-    //returns promise resolving to array of cocktails a-z
-    const getAllCocktails = async () => {
-      const charsAZ = Array.from(alphabet);
-      const cocktailsAZ = await Promise.all(
-        charsAZ.map(async (char) => {
-          const query = `search.php?f=${char}`;
-          const requestUrl = `${baseURL}/${apiKey}/${query}`;
-          return sendRequest(requestUrl);
-        })
-      );
-      let allCocktails = [];
-      cocktailsAZ.forEach((element) => {
-        if (element.drinks !== null) {
-          allCocktails = allCocktails.concat(element.drinks);
+    const getIngredients = (cocktailObj) => {
+      let ingredients = [];
+      for (let i = 1; i <= 15; i++) {
+        let n = "strIngredient" + i;
+        if (cocktailObj[n]) {
+          ingredients.push(cocktailObj[n]);
         }
-      });
-      console.log(allCocktails);
-      console.log(allCocktails.length);
-      return new Promise((resolve, reject) => {
-        resolve(allCocktails);
-        reject();
-      });
+      }
+      return ingredients;
     };
-
-    // const getCocktailObject = () => {
-    //   console.log(allCocktails.value[1]);
-    //   return allCocktails.value[1];
-    // };
-
-    // const populateCocktailData = (cocktailObj) => {
-    //   cocktailName.value = cocktailObj.strDrink;
-    //   console.log(cocktailName.value);
-    //   cocktailInst.value = cocktailObj.strInstructions;
-    //   cocktailImgSrc.value = cocktailObj.strDrinkThumb;
-    // };
 
     const getRandomCocktails = (n) => {
       const cocktails = allCocktails.value;
@@ -209,26 +191,37 @@ export default {
           cocktails.splice(Math.random() * cocktails.length, 1)
         );
       }
-      console.log(randomCocktails);
       return randomCocktails;
     };
-
-    getAllCocktails()
-      .then((data) => {
-        allCocktails.value = data;
-      })
-      .then(() => {
-        console.log(allCocktails.value);
-      })
-      .then(() => {
-        setRandom();
-      });
 
     const setRandom = () => {
       randomCocktails.value = getRandomCocktails(12);
       window.scrollTo(0, 0);
     };
 
+    const populateCocktailData = async () => {
+      await fetchData();
+      setRandom();
+    };
+
+    const logItem = (item) => {
+      console.log(item);
+      return item;
+    };
+
+    populateCocktailData();
+
+    // onMounted(()=>{
+    //   console.log("HOME MOUNTED");
+    // });
+
+    // onDeactivated(()=>{
+    //   console.log("HOME DEACTIVATED");
+    // });
+
+    // onBeforeUnmount(()=>{
+    //   console.log("HOME BEFORE UNMOUNT");
+    // });
     return {
       allCocktails,
       cocktailName,
@@ -238,12 +231,16 @@ export default {
       setRandom,
       exampleModal,
       populateDrinkModal,
+      getIngredients,
+      ingredients,
+      error,
+      logItem,
     };
   },
 };
 </script>
 
-<style>
+<style scoped>
 .skeleton {
   animation: skele-load 1s linear infinite alternate;
 }
@@ -293,19 +290,27 @@ export default {
   opacity: 0.6;
 }
 
-.justify-content-center {
-  text-align: center!important;
-  justify-content: center!important;
+/* CENTERES TITLE - DONT NEED IF TITLE IS KEPT IN HEADER */
+/* .justify-content-center {
+  text-align: center !important;
+  justify-content: center !important;
+
 }
 
-.modal-title{
-   text-align: center!important;
-   justify-content: center!important;
+.modal-title {
+  text-align: center !important;
+  justify-content: center !important;
 }
 
-.myModalTitle{
-  text-align: center!important;
-  width:100%;
-}
+.myModalTitle {
+  text-align: center !important;
+  width: 100%;
+} */
 
+.ingredientItem {
+  border: solid 1px;
+  padding-left: 3px;
+  padding-right: 3px;
+  margin-bottom: 5px;
+}
 </style>

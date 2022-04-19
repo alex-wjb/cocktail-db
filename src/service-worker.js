@@ -29,5 +29,21 @@ self.addEventListener("message", (event) => {
  * requests for URLs in the manifest.
  * See https://goo.gl/S9QRab
  */
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
+self.__precacheManifest = []
+  .concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
+workbox.routing.registerRoute(
+  new RegExp("https://www.thecocktaildb.com/api/json/v2/(.*)"),
+  workbox.strategies.cacheFirst({
+    cacheName: "drinks",
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxEntries: 30,
+      }),
+    ],
+    method: "GET",
+    cacheableResponse: { statuses: [0, 200] },
+  })
+);
+
