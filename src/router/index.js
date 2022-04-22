@@ -32,11 +32,16 @@ const routes = [
     name: "NotFound",
     component: NotFound,
   },
+  // {
+  //   path: '**/index.html',
+  //   beforeEnter: (to, from, next) => {
+  //     next('/')
+  //   }
+  // }
 ];
 
 const router = createRouter({
    history: createWebHistory(),
-  // createWebHashHistory(),
   routes,
 });
 

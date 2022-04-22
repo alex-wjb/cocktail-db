@@ -17,6 +17,9 @@ workbox.setConfig({
 });
 
 workbox.core.setCacheNameDetails({ prefix: "cocktail-db" });
+//USED TO ALLOW SERVICE WORKER TO PERFORM RUNTIME CACHING WHEN FIRST REGISTERED WITHOUT FIRST RELOADING PAGE
+ self.addEventListener("activate", () => self.clients.claim());
+ workbox.core.clientsClaim();
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -29,13 +32,13 @@ self.addEventListener("message", (event) => {
  * requests for URLs in the manifest.
  * See https://goo.gl/S9QRab
  */
-self.__precacheManifest = []
-  .concat(self.__precacheManifest || []);
+self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("index.html"));
 
 workbox.routing.registerRoute(
   new RegExp("https://www.thecocktaildb.com/api/json/v2/(.*)"),
-  workbox.strategies.cacheFirst({
+  workbox.strategies.networkFirst({
     cacheName: "drinks",
     plugins: [
       new workbox.expiration.Plugin({
@@ -47,3 +50,23 @@ workbox.routing.registerRoute(
   })
 );
 
+
+const baseURL = "https://www.thecocktaildb.com/api/json/v2";
+const apiKey = "9973533";
+const alphabet = "abcdefghijklmnopqrstuvwxyz";
+const charsAZ = Array.from(alphabet);
+const requestUrls = charsAZ.map(char=>{const query = `search.php?f=${char}`;
+const url = `${baseURL}/${apiKey}/${query}`;
+return url;
+})
+  
+const addResourcesToCache = async (resources) => {
+  const cache = await caches.open("drinks");
+  await cache.addAll(resources);
+};
+
+self.addEventListener("install", (evt) => {
+  evt.waitUntil(
+    addResourcesToCache(requestUrls).then(console.log("Drink api responses precached."))
+  );
+});

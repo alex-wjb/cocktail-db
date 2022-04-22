@@ -18,14 +18,6 @@
             <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
           </MDBCardHeader>
             
-
-            <MDBBtn
-            color="primary"
-            aria-controls="exampleModal"
-            @click="(exampleModal = true), populateDrinkModal(item.idDrink)"
-          >
-            Launch modal
-          </MDBBtn>
           <router-link :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
             >Get Drink Info</router-link
           >
@@ -240,7 +232,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .skeleton {
   animation: skele-load 1s linear infinite alternate;
 }
