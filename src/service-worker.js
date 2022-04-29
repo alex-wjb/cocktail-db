@@ -50,6 +50,21 @@ workbox.routing.registerRoute(
   })
 );
 
+workbox.routing.registerRoute(
+  new RegExp("https://use.fontawesome.com/releases/v5.15.1/css/all.css"),
+  workbox.strategies.cacheFirst({
+    cacheName: "icons",
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxEntries: 30,
+        maxAgeSeconds: 60 * 60 * 24 * 30 //30 days
+      }),
+    ],
+    method: "GET",
+    cacheableResponse: { statuses: [0, 200] },
+  })
+);
+
 
 const baseURL = "https://www.thecocktaildb.com/api/json/v2";
 const apiKey = "9973533";
@@ -60,13 +75,19 @@ const url = `${baseURL}/${apiKey}/${query}`;
 return url;
 })
   
-const addResourcesToCache = async (resources) => {
-  const cache = await caches.open("drinks");
+const addResourcesToCache = async (resources, cacheName) => {
+  const cache = await caches.open(cacheName);
   await cache.addAll(resources);
 };
 
 self.addEventListener("install", (evt) => {
   evt.waitUntil(
-    addResourcesToCache(requestUrls).then(console.log("Drink api responses precached."))
+    addResourcesToCache(requestUrls, "drinks").then(console.log("Drink api responses precached."))
+  );
+});
+
+self.addEventListener("install", (evt) => {
+  evt.waitUntil(
+    addResourcesToCache(["https://use.fontawesome.com/releases/v5.15.1/css/all.css"], "icons").then(console.log("Icons precached."))
   );
 });

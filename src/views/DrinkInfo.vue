@@ -74,7 +74,7 @@
 <script>
 import { useRoute } from "vue-router";
 import getAllCocktails from "../composables/fetchCocktails.js";
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import {
   MDBContainer,
   MDBCard,
@@ -102,11 +102,15 @@ export default {
     const cocktail = ref(null);
     const route = useRoute();
     const { allCocktails, fetchData, error } = getAllCocktails();
+    // const drinkId = ref(route.params.id);
 
-    const populateCocktailData = async () => {
+    
+
+    const populateCocktailData = async (drinkId) => {
+      cocktail.value = null;
       const baseURL = "https://www.thecocktaildb.com/api/json/v2";
       const apiKey = "9973533";
-      const query = `lookup.php?i=${route.params.id}`;
+      const query = `lookup.php?i=${drinkId}`;
       const requestUrl = `${baseURL}/${apiKey}/${query}`;
       try {
         const response = await fetch(requestUrl);
@@ -121,7 +125,7 @@ export default {
         if (error.value) {
           return;
         }
-        cocktail.value = getCocktailByID(allCocktails.value, route.params.id);
+        cocktail.value = getCocktailByID(allCocktails.value, drinkId);
       }
     };
 
@@ -154,7 +158,8 @@ export default {
       return ingredients;
     };
 
-    populateCocktailData();
+    watchEffect(()=>{populateCocktailData(route.params.id)});
+   
     return { error, cocktail, getIngredients };
   },
 };
@@ -170,6 +175,18 @@ export default {
   padding-left: 25px;
   padding-right: 25px;
   padding-bottom: 25px;
+}
+
+/* Feature Query */
+@supports(padding: max(0px)) {
+    .drinkInfo {
+      /* constant value provided by IOS to provide padding when iphone horizontal to
+      avoid sensor bar on some devices */
+      /* When vertical this constnant will be zero, so padding will default to
+      other specified value when using max() */
+        padding-left: max(25px, env(safe-area-inset-left));
+        padding-right: max(25px, env(safe-area-inset-right));
+    }
 }
 
 body {

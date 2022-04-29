@@ -100,7 +100,7 @@
 </template>
 <script>
 // @ is an alias to /src
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import {
   MDBBtn,
@@ -203,9 +203,9 @@ export default {
 
     populateCocktailData();
 
-    // onMounted(()=>{
-    //   console.log("HOME MOUNTED");
-    // });
+    onMounted(()=>{
+      console.log("HOME MOUNTED");
+    });
 
     // onDeactivated(()=>{
     //   console.log("HOME DEACTIVATED");
@@ -252,9 +252,21 @@ export default {
   padding-top: 115px;
   width: 100%;
   overflow-x: hidden;
+  padding-bottom: 25px;
   padding-left: 25px;
   padding-right: 25px;
-  padding-bottom: 25px;
+}
+
+/* Feature Query */
+@supports(padding: max(0px)) {
+    .home {
+      /* constant value provided by IOS to provide padding when iphone horizontal to
+      avoid sensor bar on some devices */
+      /* When vertical this constnant will be zero, so padding will default to
+      other specified value when using max() */
+        padding-left: max(25px, env(safe-area-inset-left));
+        padding-right: max(25px, env(safe-area-inset-right));
+    }
 }
 
 .floating-btn {
