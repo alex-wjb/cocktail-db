@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="searchContainer">
     <form class="d-flex input-group w-auto">
       <MDBInput inputGroup label="Search Drinks" v-model="searchQuery"
         ><MDBBtn
@@ -126,6 +126,12 @@ export default {
 </script>
 
 <style>
+.searchContainer{
+  /* prevents left border flicker of search input on nav expand */
+padding-left: 5px;
+}
+
+
 .searchLink {
   color: white !important;
   font-size: var(--mdb-body-font-size);
@@ -150,6 +156,7 @@ export default {
   border-top: 0.125rem solid lightgrey !important;
   border-right: 0.125rem solid lightgrey !important;
   border-bottom: 0.125rem solid lightgrey !important;
+  
 }
 
 .form-outline .form-control:focus ~ .form-notch .form-notch-middle {
@@ -170,4 +177,5 @@ export default {
 .form-outline .form-control ~ .form-notch .form-notch-trailing {
   border-radius: 0px !important;
 }
+
 </style>

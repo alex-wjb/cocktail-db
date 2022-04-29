@@ -72,9 +72,9 @@ a.router-link-active {
   .collapsedPadding {
     padding-bottom: 0px;
   }
-  #navbarSupportedContent.collapse.navbar-collapse.show {
+  /* #navbarSupportedContent.collapse.navbar-collapse.show {
     height: 0px !important ;
-  }
+  } */
 }
 
 /* prevents navbar bug of resizing twice on viewport expand */
