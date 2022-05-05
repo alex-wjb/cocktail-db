@@ -1,11 +1,10 @@
 <template>
   <div class="about">
     <body>
-      dfdfd
-      <h3 class="about-text">
+      <h4 class="about-text">
         This app uses data from
         <a href="https://www.thecocktaildb.com/"> TheCocktailDB.com</a>
-      </h3>
+      </h4>
     </body>
   </div>
 </template>

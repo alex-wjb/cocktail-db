@@ -1,6 +1,6 @@
 <template>
   <MDBNavbar expand="lg" dark bg="dark" position="top" container="md">
-    <MDBNavbarBrand href="#">Cocktail Database</MDBNavbarBrand>
+    <MDBNavbarBrand><router-link class="homeLink" :to="{name:'Home'}"> Cocktail Database</router-link></MDBNavbarBrand>
     <MDBNavbarToggler
       @click="collapse1 = !collapse1"
       target="#navbarSupportedContent"
@@ -9,13 +9,13 @@
       <MDBNavbarNav
         class="mb-2 mb-lg-0"
       >
-        <MDBNavbarItem to="/"> Home </MDBNavbarItem>
-        <MDBNavbarItem to="/about"> About </MDBNavbarItem>
+        <MDBNavbarItem   @click.prevent="collapse1 = !collapse1" to="/"> Home </MDBNavbarItem>
+        <MDBNavbarItem  @click.prevent="collapse1 = !collapse1" to="/about"> About </MDBNavbarItem>
       </MDBNavbarNav>
       <SearchBar />
     </MDBCollapse>
   </MDBNavbar>
-  <div :class="topPadding"></div>
+  <div :class="topPadding" class="paddingTransition"></div>
 </template>
 
 <script>
@@ -76,6 +76,9 @@ a.router-link-active {
     height: 0px !important ;
   } */
 }
+a.homeLink{
+  color: white !important;
+}
 
 /* prevents navbar bug of resizing twice on viewport expand */
 @media (min-width: 991.9px) {
@@ -89,4 +92,10 @@ a.router-link-active {
     height: 131px !important ;
   }
 }
+
+/* .paddingTransition{
+  transition: padding-bottom 1s;
+} */
+
+
 </style>

@@ -1,11 +1,11 @@
 <template>
   <div class="btn-div">
-    <MDBBtn color="dark" class="mb-4 floating-btn rounded-0" @click="setRandom"
-      >Randomize</MDBBtn
+    <MDBBtn  style="border: 3px solid rgba(0,0,0,.125);" color="dark" class="mb-4 floating-btn rounded-0" @click="setRandom"
+      >Randomise</MDBBtn
     >
   </div>
   <div class="home">
-    <img alt="cocktail database logo" src="../assets/watercolor-title.png" />
+    <img  class="cocktailLogo" alt="cocktail database logo" src="../assets/watercolor-title.png" />
 
     <!-- rows have one column, cards split equal width to fit 3, up to a breakpoint-->
     <!-- g-4 = grid gap of 4 -->
@@ -14,13 +14,15 @@
 
       <MDBCol v-for="item in randomCocktails" :key="item.idDrink">
         <MDBCard class="rounded-0 h-100" text="white" bg="dark">
-          <MDBCardHeader>
+          <MDBCardHeader style="border-width: 3px;">
             <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
           </MDBCardHeader>
             
-          <router-link :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
+          <router-link  style="padding: 2px;" :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
             >Get Drink Info</router-link
           >
+           <router-link :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
+            >
           <a class="drinkImgContainer">
             <MDBCardImg
               class="rounded-0 drinkImg skeleton"
@@ -29,6 +31,8 @@
               v-bind:alt="item.strDrink"
             />
           </a>
+          </router-link
+          >
          
 
           
@@ -188,7 +192,7 @@ export default {
 
     const setRandom = () => {
       randomCocktails.value = getRandomCocktails(12);
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 350);
     };
 
     const populateCocktailData = async () => {
@@ -294,6 +298,11 @@ export default {
   opacity: 0.6;
 }
 
+
+.cocktailLogo{
+  width: 280px;
+  max-height: 360px;
+}
 /* CENTERES TITLE - DONT NEED IF TITLE IS KEPT IN HEADER */
 /* .justify-content-center {
   text-align: center !important;

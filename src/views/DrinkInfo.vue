@@ -15,9 +15,7 @@
               style="max-width: 940px; margin: auto"
             >
               <MDBCardHeader>
-                <MDBCardTitle
-                  ><h2>{{ cocktail.strDrink }}</h2></MDBCardTitle
-                >
+                  <h2>{{ cocktail.strDrink }}</h2>
               </MDBCardHeader>
 
               <a class="drinkImgContainer">
@@ -72,7 +70,7 @@
 </template>
 
 <script>
-import { useRoute } from "vue-router";
+import { useRoute} from "vue-router";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import { ref, watchEffect } from "vue";
 import {
@@ -101,6 +99,7 @@ export default {
   setup() {
     const cocktail = ref(null);
     const route = useRoute();
+    // const router = useRouter();
     const { allCocktails, fetchData, error } = getAllCocktails();
     // const drinkId = ref(route.params.id);
 
@@ -126,11 +125,13 @@ export default {
           return;
         }
         cocktail.value = getCocktailByID(allCocktails.value, drinkId);
+        console.log(cocktail.value)
       }
     };
 
     const getCocktailByID = (cocktailObjArray, drinkID) => {
-      console.log(cocktailObjArray);
+      console.log(drinkID)
+      //console.log(cocktailObjArray);
       const drink = cocktailObjArray.find(
         (element) => element.idDrink === drinkID
       );
@@ -201,6 +202,8 @@ body {
 }
 
 .infoCards {
+  margin: 0 auto;
   margin-top: 25px;
+  max-width: 1200px;
 }
 </style>

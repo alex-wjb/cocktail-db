@@ -1,16 +1,36 @@
 <template>
   <div class="searchContainer">
     <form class="d-flex input-group w-auto">
-      <MDBInput inputGroup label="Search Drinks" v-model="searchQuery"
-        ><MDBBtn
+      <MDBInput
+        ref="searchBar"
+        inputGroup
+        type="search"
+        label="Search Drinks"
+        v-model="searchQuery"
+        @keydown.enter.prevent="search"
+      >
+        <!-- <router-link
+         :to="{ name: 'Search', params: { query: searchQuery } }"
+          @click="closeSearch"
+          ref="searchBtn"
+          id="button-addon2"
+          class="btn btn-dark btn-outline-light searchBtn ripple-surface"
+         
+        >
+        
+          Search
+        </router-link> -->
+        <MDBBtn
+          ref="searchBtn"
+          @click="search"
           id="button-addon2"
           class="searchBtn"
           color="dark"
           outline="light"
         >
-          Search
-        </MDBBtn></MDBInput
-      >
+          Search</MDBBtn
+        >
+      </MDBInput>
     </form>
     <!-- </form> -->
     <div style="width: auto; position: relative !important">
@@ -22,17 +42,24 @@
           v-if="searchQuery"
         >
           <router-link
+            @click = "closeSearch"
             v-for="item in limitedDrinkResults"
             :key="item"
             class="searchLink dropdown-item"
             :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
             >{{ item.strDrink }}</router-link
           >
-
+          
           <MDBDropdownItem
+          @click="search"
             v-if="searchedDrinks.length > numResults"
             tag="button"
             >{{ searchedDrinks.length }} More Results...</MDBDropdownItem
+          >
+         
+          <MDBDropdownItem tag="button" v-if="searchedDrinks.length == 0">
+            0 Results
+            </MDBDropdownItem
           >
         </MDBDropdownMenu>
       </div>
@@ -42,13 +69,15 @@
 
 <script>
 import {
-  MDBBtn,
+  // MDBBtn,
   MDBDropdownMenu,
   MDBDropdownItem,
   MDBInput,
+  MDBBtn,
 } from "mdb-vue-ui-kit";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 export default {
   components: {
     MDBBtn,
@@ -61,6 +90,10 @@ export default {
     const { allCocktails, fetchData, error } = getAllCocktails();
     const searchQuery = ref("");
     const numResults = 5;
+    const searchBtn = ref(null);
+    //const focus = true;
+    const searchBar = ref(null);
+    const router = useRouter();
 
     const populateDrinks = async () => {
       await fetchData();
@@ -70,6 +103,25 @@ export default {
       drinks.value = allCocktails.value;
     };
 
+    const search = () => {
+      let query = searchQuery.value;
+      unfocusSearch();
+      closeSearch();
+      //naviate to results page
+      router.push({ name: "Search", params: { query: query } });
+    };
+
+    const closeSearch = ()=>{
+      //set value of input element
+      searchBar.value.$el.nextElementSibling.firstElementChild.value = "";
+      //clear v-model ref
+      searchQuery.value="";
+    }
+   
+    const unfocusSearch = () => {
+      console.log(searchBtn.value.$el);
+      searchBtn.value.$el.blur();
+    };
     const searchedDrinks = computed(() => {
       let searchResults = drinks.value.filter(
         (drink) =>
@@ -106,6 +158,7 @@ export default {
       });
       //LIMIT SEARCH RESULTS
       //searchResults = searchResults.slice(0,numResults);
+      console.log(searchResults);
       return searchResults;
     });
 
@@ -120,17 +173,22 @@ export default {
       searchedDrinks,
       numResults,
       limitedDrinkResults,
+      searchBtn,
+      //focus,
+      unfocusSearch,
+      searchBar,
+      search,
+      closeSearch
     };
   },
 };
 </script>
 
 <style>
-.searchContainer{
+.searchContainer {
   /* prevents left border flicker of search input on nav expand */
-padding-left: 5px;
+  padding-left: 5px;
 }
-
 
 .searchLink {
   color: white !important;
@@ -156,7 +214,6 @@ padding-left: 5px;
   border-top: 0.125rem solid lightgrey !important;
   border-right: 0.125rem solid lightgrey !important;
   border-bottom: 0.125rem solid lightgrey !important;
-  
 }
 
 .form-outline .form-control:focus ~ .form-notch .form-notch-middle {
@@ -168,8 +225,24 @@ padding-left: 5px;
   color: lightgrey !important;
 }
 
+.btn-outline-light:active {
+  color: lightgrey !important;
+  border-color: lightgrey;
+}
+.btn-outline-light:hover {
+  border-color: lightgrey;
+}
+/* search btn focus color after click */
+.searchBtn.btn-check:focus + .searchBtn.btn-dark,
+.searchBtn.btn-dark:focus {
+  border-color: grey;
+  background-color: lightgrey;
+  color: black !important;
+}
+
 .form-control {
   border-radius: 0px !important;
+  color: white !important;
 }
 .form-outline .form-control ~ .form-notch .form-notch-leading {
   border-radius: 0 0 0 0;
@@ -177,5 +250,4 @@ padding-left: 5px;
 .form-outline .form-control ~ .form-notch .form-notch-trailing {
   border-radius: 0px !important;
 }
-
 </style>

@@ -14,5 +14,6 @@ export default {
 <style scoped>
 body{
   padding-top: 115px;
+  background-color: lightgrey;
 }
 </style>

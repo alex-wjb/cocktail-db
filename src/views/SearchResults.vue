@@ -1,0 +1,256 @@
+<template>
+  <div class="pageResults">
+    <h2>Results for: "{{ searchQuery }}"</h2>
+    <!-- <p v-for="item in results" :key="item">
+      {{ item.strDrink }}
+    </p> -->
+    
+    <div v-if="results">
+    {{results.length}} Results
+    </div>
+
+    <nav aria-label="Drinks Results Page Navigation">
+      <MDBPagination v-if=" getPageResults">
+        <MDBPageNav @click="pageBack" prev></MDBPageNav>
+        <div v-for="item in numbersShown" :key="item">
+          <div v-if="item==pgNum">
+        <MDBPageItem active @click="setPageNumber(item)">{{item}}</MDBPageItem>
+        </div>
+        <div v-else>
+        <MDBPageItem @click="setPageNumber(item)">{{item}}</MDBPageItem>
+        </div>
+        </div>
+        <MDBPageNav @click="pageForward" next></MDBPageNav>
+      </MDBPagination>
+    </nav>
+
+ <MDBListGroup  flush v-if="getPageResults">
+      <MDBListGroupItem class="resultItem" style="background-color:lightgrey;" v-for="item in getPageResults" :key="item">
+        <router-link :to = "{ name: 'DrinkInfo', params: { id: item.idDrink } }">
+           <img class="resultImg" :src="item.strDrinkThumb" :alt="item.strDrink">
+          </router-link>
+       
+      <router-link :to = "{ name: 'DrinkInfo', params: { id: item.idDrink } }" class="drinkTitle">{{
+        item.strDrink
+      }}</router-link></MDBListGroupItem>
+    </MDBListGroup>
+
+    <!-- <MDBListGroup flush>
+      <MDBListGroupItem v-for="item in results" :key="item">{{
+        item.strDrink
+      }}</MDBListGroupItem>
+    </MDBListGroup> -->
+    <nav  class = "bottomPageNav" aria-label="Drinks Results Page Navigation">
+      <MDBPagination v-if=" getPageResults">
+        <MDBPageNav @click="pageBack" prev></MDBPageNav>
+        <div v-for="item in numbersShown" :key="item">
+          <div v-if="item==pgNum">
+        <MDBPageItem active @click="setPageNumber(item)">{{item}}</MDBPageItem>
+        </div>
+        <div v-else>
+        <MDBPageItem @click="setPageNumber(item)">{{item}}</MDBPageItem>
+        </div>
+        </div>
+        <MDBPageNav @click="pageForward" next></MDBPageNav>
+      </MDBPagination>
+    </nav>
+  </div>
+</template>
+
+<script>
+import { useRoute } from "vue-router";
+import { ref, watchEffect, computed } from "vue";
+import getAllCocktails from "../composables/fetchCocktails.js";
+import {
+  MDBListGroup,
+  MDBListGroupItem,
+  MDBPagination,
+  MDBPageNav,
+  MDBPageItem,
+} from "mdb-vue-ui-kit";
+export default {
+  components: {
+    MDBListGroup,
+    MDBListGroupItem,
+    MDBPagination,
+    MDBPageNav,
+    MDBPageItem,
+  },
+  setup() {
+    const route = useRoute();
+    const searchQuery = ref("");
+    const results = ref([null]);
+    const { allCocktails, fetchData, error } = getAllCocktails();
+    console.log(route.params.query);
+    const pgNum = ref(1);
+    const resultChunks = ref([]);
+
+    const setPageNumber = (n) => {
+      pgNum.value = n;
+      console.log(pgNum.value);
+    };
+
+    const numbersShown = computed(()=>{
+        let numShown = 5;   //sets limit of page numbers shown
+        //sets number of pages if less than 5
+        numShown = Math.min(numShown, resultChunks.value.length);
+        let first = pgNum.value - Math.floor(numShown / 2);
+        first = Math.max(first, 1);
+        first = Math.min(first, resultChunks.value.length - numShown + 1);
+        let pagesShown = [first];
+        for(let i = 1; i<numShown; i++){
+          pagesShown.push(first+i);
+        }
+
+        return pagesShown;
+
+    })
+
+    const splitResults = (results) => {
+      const resultChunks = [];
+      const resultsPerPage = 10;
+      for (let i = 0; i < results.length; i += resultsPerPage) {
+        const resultsChunk = results.slice(i, i + resultsPerPage);
+        resultChunks.push(resultsChunk);
+      }
+      return resultChunks;
+    };
+
+   const getPageResults =  computed(()=>{
+     return resultChunks.value[pgNum.value-1];
+   })
+
+   const pageBack = () => {
+     if(pgNum.value > 1){
+      pgNum.value--;
+     }
+     console.log(pgNum.value);
+   }
+
+    const pageForward = () => {
+     if(pgNum.value < (resultChunks.value.length)){
+      pgNum.value++;
+     }
+     console.log(pgNum.value);
+   }
+
+    const populateResults = async (searchString) => {
+      results.value = null;
+      const baseURL = "https://www.thecocktaildb.com/api/json/v2";
+      const apiKey = "9973533";
+      const query = `search.php?s=${searchString}`;
+      const requestUrl = `${baseURL}/${apiKey}/${query}`;
+      try {
+        const response = await fetch(requestUrl);
+        if (response.status !== 200) {
+          throw new Error(response.status + " - Unable to fetch data.");
+        }
+        const responseJSON = await response.json();
+        // console.log(responseJSON);
+        sortResults(responseJSON.drinks, searchString);
+        results.value = responseJSON.drinks;
+        console.log(results.value);
+        resultChunks.value = splitResults(results.value);
+      } catch (e) {
+        await fetchData();
+        if (error.value) {
+          return;
+        }
+        results.value = searchDrinks(allCocktails.value, searchString);
+        resultChunks.value = splitResults(results.value);
+      }
+    };
+    watchEffect(() => {
+      searchQuery.value = route.params.query;
+      populateResults(searchQuery.value);
+    });
+
+    const searchDrinks = (drinks, searchString) => {
+      let searchResults = drinks.filter(
+        (drink) =>
+          //if there is an occurence of the search string in the
+          //drink name, then return true and
+          //add to the new filtered array
+          drink.strDrink.toLowerCase().indexOf(searchString.toLowerCase()) !==
+          -1
+      );
+
+      sortResults(searchResults, searchString);
+      //LIMIT SEARCH RESULTS
+      //searchResults = searchResults.slice(0,numResults);
+      return searchResults;
+    };
+
+    const sortResults = (searchResults, searchString) => {
+      searchResults.sort((a, b) => {
+        a = a.strDrink.toLowerCase();
+        b = b.strDrink.toLowerCase();
+        searchString = searchString.toLowerCase();
+        if (a.startsWith(searchString) && !b.startsWith(searchString)) {
+          return -1;
+        }
+        if (!a.startsWith(searchString) && b.startsWith(searchString)) {
+          return 1;
+        }
+        if (a.startsWith(searchString) && b.startsWith(searchString)) {
+          return a.localeCompare(b);
+        }
+      });
+    };
+
+    return { searchQuery, results, setPageNumber, resultChunks, pgNum, getPageResults, pageBack, pageForward, numbersShown};
+  },
+};
+</script>
+
+
+<style>
+
+/* only works when style not scoped */
+.page-item.active .page-link {
+  background-color: #262626 !important;
+}
+
+.pageResults {
+  background-color: lightgrey;
+  min-height: 100vh;
+  padding-top: 115px;
+  width: 100%;
+  overflow-x: hidden;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-bottom: 25px;
+}
+
+.resultImg{
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+}
+.drinkTitle{
+  display: inline-block;
+  padding: 20px;
+}
+.resultItem{
+  text-align: left;
+  word-wrap:normal;
+  /* border-bottom-width: 3px !important; */
+}
+
+/* veritically centers text */
+a.drinkTitle {
+  color: black !important;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+a.drinkTitle:hover{
+  color: grey !important;
+}
+
+.bottomPageNav{
+  padding-top:15px;
+}
+</style>
