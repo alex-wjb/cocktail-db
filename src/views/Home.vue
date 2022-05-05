@@ -192,7 +192,8 @@ export default {
 
     const setRandom = () => {
       randomCocktails.value = getRandomCocktails(12);
-      window.scrollTo(0, 350);
+      window.scrollTo(0, 0);
+      // window.scrollTo(0, 350);
     };
 
     const populateCocktailData = async () => {
