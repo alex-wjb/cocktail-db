@@ -9,17 +9,6 @@
         v-model="searchQuery"
         @keydown.enter.prevent="search"
       >
-        <!-- <router-link
-         :to="{ name: 'Search', params: { query: searchQuery } }"
-          @click="closeSearch"
-          ref="searchBtn"
-          id="button-addon2"
-          class="btn btn-dark btn-outline-light searchBtn ripple-surface"
-         
-        >
-        
-          Search
-        </router-link> -->
         <MDBBtn
           ref="searchBtn"
           @click="search"
@@ -32,7 +21,6 @@
         >
       </MDBInput>
     </form>
-    <!-- </form> -->
     <div style="width: auto; position: relative !important">
       <div style="position: absolute !important; width: 100%">
         <MDBDropdownMenu
@@ -42,25 +30,24 @@
           v-if="searchQuery"
         >
           <router-link
-            @click = "closeSearch"
+            @click="closeSearch"
             v-for="item in limitedDrinkResults"
             :key="item"
             class="searchLink dropdown-item"
             :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
             >{{ item.strDrink }}</router-link
           >
-          
+
           <MDBDropdownItem
-          @click="search"
+            @click="search"
             v-if="searchedDrinks.length > numResults"
             tag="button"
             >{{ searchedDrinks.length }} More Results...</MDBDropdownItem
           >
-         
+
           <MDBDropdownItem tag="button" v-if="searchedDrinks.length == 0">
             0 Results
-            </MDBDropdownItem
-          >
+          </MDBDropdownItem>
         </MDBDropdownMenu>
       </div>
     </div>
@@ -69,7 +56,6 @@
 
 <script>
 import {
-  // MDBBtn,
   MDBDropdownMenu,
   MDBDropdownItem,
   MDBInput,
@@ -91,7 +77,6 @@ export default {
     const searchQuery = ref("");
     const numResults = 5;
     const searchBtn = ref(null);
-    //const focus = true;
     const searchBar = ref(null);
     const router = useRouter();
 
@@ -111,15 +96,14 @@ export default {
       router.push({ name: "Search", params: { query: query } });
     };
 
-    const closeSearch = ()=>{
+    const closeSearch = () => {
       //set value of input element
       searchBar.value.$el.nextElementSibling.firstElementChild.value = "";
       //clear v-model ref
-      searchQuery.value="";
-    }
-   
+      searchQuery.value = "";
+    };
+
     const unfocusSearch = () => {
-      console.log(searchBtn.value.$el);
       searchBtn.value.$el.blur();
     };
     const searchedDrinks = computed(() => {
@@ -156,9 +140,6 @@ export default {
           return a.localeCompare(b);
         }
       });
-      //LIMIT SEARCH RESULTS
-      //searchResults = searchResults.slice(0,numResults);
-      console.log(searchResults);
       return searchResults;
     });
 
@@ -174,11 +155,10 @@ export default {
       numResults,
       limitedDrinkResults,
       searchBtn,
-      //focus,
       unfocusSearch,
       searchBar,
       search,
-      closeSearch
+      closeSearch,
     };
   },
 };

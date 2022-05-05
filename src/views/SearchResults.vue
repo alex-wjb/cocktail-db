@@ -1,55 +1,61 @@
 <template>
   <div class="pageResults">
-    <h2>Results for: "{{ searchQuery }}"</h2>
-    <!-- <p v-for="item in results" :key="item">
-      {{ item.strDrink }}
-    </p> -->
-    
-    <div v-if="results">
-    {{results.length}} Results
-    </div>
+    <h2 v-if="searchQuery">Results for: "{{ searchQuery }}"</h2>
+
+    <div v-if="results">{{ results.length }} Results</div>
 
     <nav aria-label="Drinks Results Page Navigation">
-      <MDBPagination v-if=" getPageResults">
-        <MDBPageNav @click="pageBack" prev></MDBPageNav>
+      <MDBPagination v-if="getPageResults">
+        <MDBPageItem @click="pageBack">Previous</MDBPageItem>
         <div v-for="item in numbersShown" :key="item">
-          <div v-if="item==pgNum">
-        <MDBPageItem active @click="setPageNumber(item)">{{item}}</MDBPageItem>
+          <div v-if="item == pgNum">
+            <MDBPageItem active @click="setPageNumber(item)">{{
+              item
+            }}</MDBPageItem>
+          </div>
+          <div v-else>
+            <MDBPageItem @click="setPageNumber(item)">{{ item }}</MDBPageItem>
+          </div>
         </div>
-        <div v-else>
-        <MDBPageItem @click="setPageNumber(item)">{{item}}</MDBPageItem>
-        </div>
-        </div>
-        <MDBPageNav @click="pageForward" next></MDBPageNav>
+        <MDBPageItem @click="pageForward">Next</MDBPageItem>
       </MDBPagination>
     </nav>
 
- <MDBListGroup  flush v-if="getPageResults">
-      <MDBListGroupItem class="resultItem" style="background-color:lightgrey;" v-for="item in getPageResults" :key="item">
-        <router-link :to = "{ name: 'DrinkInfo', params: { id: item.idDrink } }">
-           <img class="resultImg" :src="item.strDrinkThumb" :alt="item.strDrink">
-          </router-link>
-       
-      <router-link :to = "{ name: 'DrinkInfo', params: { id: item.idDrink } }" class="drinkTitle">{{
-        item.strDrink
-      }}</router-link></MDBListGroupItem>
+    <MDBListGroup flush v-if="getPageResults">
+      <MDBListGroupItem
+        class="resultItem"
+        style="background-color: lightgrey"
+        v-for="item in getPageResults"
+        :key="item"
+      >
+        <router-link :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }">
+          <img
+            class="resultImg"
+            :src="item.strDrinkThumb"
+            :alt="item.strDrink"
+          />
+        </router-link>
+
+        <router-link
+          :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
+          class="drinkTitle"
+          >{{ item.strDrink }}</router-link
+        ></MDBListGroupItem
+      >
     </MDBListGroup>
 
-    <!-- <MDBListGroup flush>
-      <MDBListGroupItem v-for="item in results" :key="item">{{
-        item.strDrink
-      }}</MDBListGroupItem>
-    </MDBListGroup> -->
-    <nav  class = "bottomPageNav" aria-label="Drinks Results Page Navigation">
-      <MDBPagination v-if=" getPageResults">
+    <nav class="bottomPageNav" aria-label="Drinks Results Page Navigation">
+      <MDBPagination v-if="getPageResults">
         <MDBPageNav @click="pageBack" prev></MDBPageNav>
         <div v-for="item in numbersShown" :key="item">
-          <div v-if="item==pgNum">
-        <MDBPageItem active @click="setPageNumber(item)">{{item}}</MDBPageItem>
-        </div>
-        <div v-else>
-        <MDBPageItem @click="setPageNumber(item)">{{item}}</MDBPageItem>
-        </div>
+          <div v-if="item == pgNum">
+            <MDBPageItem active @click="setPageNumber(item)">{{
+              item
+            }}</MDBPageItem>
+          </div>
+          <div v-else>
+            <MDBPageItem @click="setPageNumber(item)">{{ item }}</MDBPageItem>
+          </div>
         </div>
         <MDBPageNav @click="pageForward" next></MDBPageNav>
       </MDBPagination>
@@ -81,30 +87,27 @@ export default {
     const searchQuery = ref("");
     const results = ref([null]);
     const { allCocktails, fetchData, error } = getAllCocktails();
-    console.log(route.params.query);
     const pgNum = ref(1);
     const resultChunks = ref([]);
 
     const setPageNumber = (n) => {
       pgNum.value = n;
-      console.log(pgNum.value);
     };
 
-    const numbersShown = computed(()=>{
-        let numShown = 5;   //sets limit of page numbers shown
-        //sets number of pages if less than 5
-        numShown = Math.min(numShown, resultChunks.value.length);
-        let first = pgNum.value - Math.floor(numShown / 2);
-        first = Math.max(first, 1);
-        first = Math.min(first, resultChunks.value.length - numShown + 1);
-        let pagesShown = [first];
-        for(let i = 1; i<numShown; i++){
-          pagesShown.push(first+i);
-        }
+    const numbersShown = computed(() => {
+      let numShown = 5; //sets limit of page numbers shown
+      //sets number of pages if less than 5
+      numShown = Math.min(numShown, resultChunks.value.length);
+      let first = pgNum.value - Math.floor(numShown / 2);
+      first = Math.max(first, 1);
+      first = Math.min(first, resultChunks.value.length - numShown + 1);
+      let pagesShown = [first];
+      for (let i = 1; i < numShown; i++) {
+        pagesShown.push(first + i);
+      }
 
-        return pagesShown;
-
-    })
+      return pagesShown;
+    });
 
     const splitResults = (results) => {
       const resultChunks = [];
@@ -116,25 +119,24 @@ export default {
       return resultChunks;
     };
 
-   const getPageResults =  computed(()=>{
-     return resultChunks.value[pgNum.value-1];
-   })
+    const getPageResults = computed(() => {
+      return resultChunks.value[pgNum.value - 1];
+    });
 
-   const pageBack = () => {
-     if(pgNum.value > 1){
-      pgNum.value--;
-     }
-     console.log(pgNum.value);
-   }
+    const pageBack = () => {
+      if (pgNum.value > 1) {
+        pgNum.value--;
+      }
+    };
 
     const pageForward = () => {
-     if(pgNum.value < (resultChunks.value.length)){
-      pgNum.value++;
-     }
-     console.log(pgNum.value);
-   }
+      if (pgNum.value < resultChunks.value.length) {
+        pgNum.value++;
+      }
+    };
 
     const populateResults = async (searchString) => {
+      pgNum.value = 1;
       results.value = null;
       const baseURL = "https://www.thecocktaildb.com/api/json/v2";
       const apiKey = "9973533";
@@ -146,10 +148,8 @@ export default {
           throw new Error(response.status + " - Unable to fetch data.");
         }
         const responseJSON = await response.json();
-        // console.log(responseJSON);
         sortResults(responseJSON.drinks, searchString);
         results.value = responseJSON.drinks;
-        console.log(results.value);
         resultChunks.value = splitResults(results.value);
       } catch (e) {
         await fetchData();
@@ -198,14 +198,22 @@ export default {
       });
     };
 
-    return { searchQuery, results, setPageNumber, resultChunks, pgNum, getPageResults, pageBack, pageForward, numbersShown};
+    return {
+      searchQuery,
+      results,
+      setPageNumber,
+      resultChunks,
+      pgNum,
+      getPageResults,
+      pageBack,
+      pageForward,
+      numbersShown,
+    };
   },
 };
 </script>
 
-
 <style>
-
 /* only works when style not scoped */
 .page-item.active .page-link {
   background-color: #262626 !important;
@@ -222,19 +230,18 @@ export default {
   padding-bottom: 25px;
 }
 
-.resultImg{
+.resultImg {
   width: 100px;
   height: 100px;
   display: inline-block;
 }
-.drinkTitle{
+.drinkTitle {
   display: inline-block;
   padding: 20px;
 }
-.resultItem{
+.resultItem {
   text-align: left;
-  word-wrap:normal;
-  /* border-bottom-width: 3px !important; */
+  word-wrap: normal;
 }
 
 /* veritically centers text */
@@ -246,11 +253,11 @@ a.drinkTitle {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-a.drinkTitle:hover{
+a.drinkTitle:hover {
   color: grey !important;
 }
 
-.bottomPageNav{
-  padding-top:15px;
+.bottomPageNav {
+  padding-top: 15px;
 }
 </style>

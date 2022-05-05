@@ -1,11 +1,19 @@
 <template>
   <div class="btn-div">
-    <MDBBtn  style="border: 3px solid rgba(0,0,0,.125);" color="dark" class="mb-4 floating-btn rounded-0" @click="setRandom"
+    <MDBBtn
+      style="border: 3px solid rgba(0, 0, 0, 0.125)"
+      color="dark"
+      class="mb-4 floating-btn rounded-0"
+      @click="setRandom"
       >Randomise</MDBBtn
     >
   </div>
   <div class="home">
-    <img  class="cocktailLogo" alt="cocktail database logo" src="../assets/watercolor-title.png" />
+    <img
+      class="cocktailLogo"
+      alt="cocktail database logo"
+      src="../assets/watercolor-title.png"
+    />
 
     <!-- rows have one column, cards split equal width to fit 3, up to a breakpoint-->
     <!-- g-4 = grid gap of 4 -->
@@ -14,28 +22,28 @@
 
       <MDBCol v-for="item in randomCocktails" :key="item.idDrink">
         <MDBCard class="rounded-0 h-100" text="white" bg="dark">
-          <MDBCardHeader style="border-width: 3px;">
+          <MDBCardHeader style="border-width: 3px">
             <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
           </MDBCardHeader>
-            
-          <router-link  style="padding: 2px;" :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
+
+          <router-link
+            style="padding: 2px"
+            :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
             >Get Drink Info</router-link
           >
-           <router-link :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
-            >
-          <a class="drinkImgContainer">
-            <MDBCardImg
-              class="rounded-0 drinkImg skeleton"
-              bottom
-              v-bind:src="item.strDrinkThumb"
-              v-bind:alt="item.strDrink"
-            />
-          </a>
-          </router-link
+          <router-link
+            :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
           >
-         
+            <a class="drinkImgContainer">
+              <MDBCardImg
+                class="rounded-0 drinkImg skeleton"
+                bottom
+                v-bind:src="item.strDrinkThumb"
+                v-bind:alt="item.strDrink"
+              />
+            </a>
+          </router-link>
 
-          
           <MDBCardFooter class="text-muted">
             <li
               class="ingredientItem list-inline list-inline-item"
@@ -48,101 +56,32 @@
         </MDBCard>
       </MDBCol>
     </MDBRow>
-
-    <MDBModal
-      id="exampleModal"
-      tabindex="-1"
-      labelledby="exampleModalLabel"
-      v-model="exampleModal"
-      :centered="true"
-      size="xl"
-      class="text-center"
-    >
-      <!-- <div class="text-center"> -->
-      <MDBModalHeader
-        style="
-          text-align: center !important;
-          justify-content: center !important;
-          width: 100% !important;
-          border: 1px solid white;
-        "
-        color="dark"
-        class="text-light text-center justify-content-center"
-        :close="false"
-      >
-        <!-- <div class="justify-content-center"> -->
-        <MDBModalTitle
-          style="
-            text-align: center !important;
-            justify-content: center !important;
-            width: 100% !important;
-          "
-          bold="true"
-          class="text-center"
-          id="exampleModalLabel"
-        >
-          <p class="myModalTitle">{{ cocktailName }}</p>
-        </MDBModalTitle>
-        <!-- </div> -->
-      </MDBModalHeader>
-      <!-- </div> -->
-      <MDBModalBody class="bg-dark text-light"
-        >{{ cocktailInst }}
-        <img
-          class="img-fluid"
-          v-bind:src="cocktailImgSrc"
-          v-bind:alt="cocktailName"
-        />
-        {{ ingredients }}
-      </MDBModalBody>
-      <MDBModalFooter class="bg-dark">
-        <MDBBtn color="secondary" @click="exampleModal = false">Close</MDBBtn>
-        <MDBBtn color="primary">Save changes</MDBBtn>
-      </MDBModalFooter>
-    </MDBModal>
   </div>
 </template>
 <script>
-// @ is an alias to /src
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import {
   MDBBtn,
   MDBCard,
-  // MDBCardBody,
-  // MDBCardText,
   MDBCardTitle,
-  // MDBContainer,
   MDBCardImg,
   MDBCol,
   MDBRow,
-  MDBModal,
-  MDBModalHeader,
-  MDBModalTitle,
-  MDBModalBody,
-  MDBModalFooter,
   MDBCardFooter,
-  MDBCardHeader
+  MDBCardHeader,
 } from "mdb-vue-ui-kit";
 export default {
   name: "Home",
   components: {
     MDBCard,
-    // MDBCardBody,
     MDBCardTitle,
-    // MDBCardText,
     MDBBtn,
-    // MDBContainer,
     MDBCardImg,
     MDBCol,
     MDBRow,
-    MDBModal,
-    MDBModalHeader,
-    MDBModalTitle,
-    MDBModalBody,
-    MDBModalFooter,
     MDBCardFooter,
-    MDBCardHeader
+    MDBCardHeader,
   },
   setup() {
     const randomCocktails = ref(null);
@@ -193,7 +132,6 @@ export default {
     const setRandom = () => {
       randomCocktails.value = getRandomCocktails(12);
       window.scrollTo(0, 0);
-      // window.scrollTo(0, 350);
     };
 
     const populateCocktailData = async () => {
@@ -208,17 +146,6 @@ export default {
 
     populateCocktailData();
 
-    onMounted(()=>{
-      console.log("HOME MOUNTED");
-    });
-
-    // onDeactivated(()=>{
-    //   console.log("HOME DEACTIVATED");
-    // });
-
-    // onBeforeUnmount(()=>{
-    //   console.log("HOME BEFORE UNMOUNT");
-    // });
     return {
       allCocktails,
       cocktailName,
@@ -263,15 +190,15 @@ export default {
 }
 
 /* Feature Query */
-@supports(padding: max(0px)) {
-    .home {
-      /* constant value provided by IOS to provide padding when iphone horizontal to
+@supports (padding: max(0px)) {
+  .home {
+    /* constant value provided by IOS to provide padding when iphone horizontal to
       avoid sensor bar on some devices */
-      /* When vertical this constnant will be zero, so padding will default to
+    /* When vertical this constnant will be zero, so padding will default to
       other specified value when using max() */
-        padding-left: max(25px, env(safe-area-inset-left));
-        padding-right: max(25px, env(safe-area-inset-right));
-    }
+    padding-left: max(25px, env(safe-area-inset-left));
+    padding-right: max(25px, env(safe-area-inset-right));
+  }
 }
 
 .floating-btn {
@@ -299,27 +226,10 @@ export default {
   opacity: 0.6;
 }
 
-
-.cocktailLogo{
+.cocktailLogo {
   width: 280px;
   max-height: 360px;
 }
-/* CENTERES TITLE - DONT NEED IF TITLE IS KEPT IN HEADER */
-/* .justify-content-center {
-  text-align: center !important;
-  justify-content: center !important;
-
-}
-
-.modal-title {
-  text-align: center !important;
-  justify-content: center !important;
-}
-
-.myModalTitle {
-  text-align: center !important;
-  width: 100%;
-} */
 
 .ingredientItem {
   border: solid 1px;

@@ -4,14 +4,12 @@ import NotFound from "../views/NotFound.vue";
 
 //redirects to home if search route is accessed with no search params
 let requireParams =(to, from, next) => {
-  console.log(to.params.query)
   
   if(to.params.query!==""){
     
     next()
   }
   else{
-    console.log("NOPARAMS");
     next({name: 'Home'})
   }
 }

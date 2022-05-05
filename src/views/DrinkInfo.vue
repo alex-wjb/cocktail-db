@@ -99,9 +99,8 @@ export default {
   setup() {
     const cocktail = ref(null);
     const route = useRoute();
-    // const router = useRouter();
     const { allCocktails, fetchData, error } = getAllCocktails();
-    // const drinkId = ref(route.params.id);
+
 
     
 
@@ -131,7 +130,6 @@ export default {
 
     const getCocktailByID = (cocktailObjArray, drinkID) => {
       console.log(drinkID)
-      //console.log(cocktailObjArray);
       const drink = cocktailObjArray.find(
         (element) => element.idDrink === drinkID
       );
