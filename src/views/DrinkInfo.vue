@@ -15,7 +15,7 @@
               style="max-width: 940px; margin: auto"
             >
               <MDBCardHeader>
-                  <h2>{{ cocktail.strDrink }}</h2>
+                <h2>{{ cocktail.strDrink }}</h2>
               </MDBCardHeader>
 
               <a class="drinkImgContainer">
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { useRoute} from "vue-router";
+import { useRoute } from "vue-router";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import { ref, watchEffect } from "vue";
 import {
@@ -101,9 +101,6 @@ export default {
     const route = useRoute();
     const { allCocktails, fetchData, error } = getAllCocktails();
 
-
-    
-
     const populateCocktailData = async (drinkId) => {
       cocktail.value = null;
       const baseURL = "https://www.thecocktaildb.com/api/json/v2";
@@ -124,12 +121,12 @@ export default {
           return;
         }
         cocktail.value = getCocktailByID(allCocktails.value, drinkId);
-        console.log(cocktail.value)
+        console.log(cocktail.value);
       }
     };
 
     const getCocktailByID = (cocktailObjArray, drinkID) => {
-      console.log(drinkID)
+      console.log(drinkID);
       const drink = cocktailObjArray.find(
         (element) => element.idDrink === drinkID
       );
@@ -157,8 +154,10 @@ export default {
       return ingredients;
     };
 
-    watchEffect(()=>{populateCocktailData(route.params.id)});
-   
+    watchEffect(() => {
+      populateCocktailData(route.params.id);
+    });
+
     return { error, cocktail, getIngredients };
   },
 };
@@ -168,7 +167,7 @@ export default {
 .drinkInfo {
   background-color: lightgrey;
   min-height: 100vh;
-  padding-top: 115px;
+  padding-top: 80px;
   width: 100%;
   overflow-x: hidden;
   padding-left: 25px;
@@ -177,15 +176,15 @@ export default {
 }
 
 /* Feature Query */
-@supports(padding: max(0px)) {
-    .drinkInfo {
-      /* constant value provided by IOS to provide padding when iphone horizontal to
+@supports (padding: max(0px)) {
+  .drinkInfo {
+    /* constant value provided by IOS to provide padding when iphone horizontal to
       avoid sensor bar on some devices */
-      /* When vertical this constnant will be zero, so padding will default to
+    /* When vertical this constnant will be zero, so padding will default to
       other specified value when using max() */
-        padding-left: max(25px, env(safe-area-inset-left));
-        padding-right: max(25px, env(safe-area-inset-right));
-    }
+    padding-left: max(25px, env(safe-area-inset-left));
+    padding-right: max(25px, env(safe-area-inset-right));
+  }
 }
 
 body {

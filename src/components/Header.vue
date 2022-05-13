@@ -1,18 +1,51 @@
 <template>
   <MDBNavbar expand="lg" dark bg="dark" position="top" container="md">
-    <MDBNavbarBrand><router-link class="homeLink" :to="{name:'Home'}"> Cocktail Database</router-link></MDBNavbarBrand>
+    <MDBNavbarBrand
+      ><router-link class="homeLink" :to="{ name: 'Home' }">
+        Cocktail Database</router-link
+      ></MDBNavbarBrand
+    >
     <MDBNavbarToggler
       @click="collapse1 = !collapse1"
       target="#navbarSupportedContent"
     ></MDBNavbarToggler>
-    <MDBCollapse v-model="collapse1" id="navbarSupportedContent">
-      <MDBNavbarNav
-        class="mb-2 mb-lg-0"
-      >
-        <MDBNavbarItem   @click.prevent="collapse1 = !collapse1" to="/"> Home </MDBNavbarItem>
-        <MDBNavbarItem  @click.prevent="collapse1 = !collapse1" to="/about"> About </MDBNavbarItem>
+    <MDBCollapse
+      v-model="collapse1"
+      id="navbarSupportedContent"
+      :class="navHeight"
+    >
+      <MDBNavbarNav class="mb-2 mb-lg-0">
+        <MDBNavbarItem @click.prevent="collapse1 = !collapse1" to="/">
+          Home
+        </MDBNavbarItem>
+        <MDBNavbarItem @click.prevent="collapse1 = !collapse1" to="/about">
+          About
+        </MDBNavbarItem>
+        <MDBNavbarItem
+          v-if="showLoginRegister()"
+          @click.prevent="collapse1 = !collapse1"
+          to="/login"
+        >
+          Login/Register
+        </MDBNavbarItem>
+        <MDBNavbarItem
+          v-if="loggedIn()"
+          @click.prevent="collapse1 = !collapse1"
+          to="/profile"
+        >
+          Profile
+        </MDBNavbarItem>
+        <MDBNavbarItem
+          v-if="loggedIn()"
+          @click.prevent="collapse1 = !collapse1"
+          @click="logout"
+          to="/"
+        >
+          Logout
+        </MDBNavbarItem>
       </MDBNavbarNav>
-      <SearchBar />
+
+      <SearchBar @searchEvent="collapse1 = !collapse1" />
     </MDBCollapse>
   </MDBNavbar>
   <div :class="topPadding" class="paddingTransition"></div>
@@ -27,8 +60,11 @@ import {
   MDBNavbarItem,
   MDBCollapse,
 } from "mdb-vue-ui-kit";
+import getUser from "../composables/getUser";
 import SearchBar from "../components/SearchBar.vue";
 import { ref, watchEffect } from "vue";
+import { getAuth, signOut } from "firebase/auth";
+import { useRouter, useRoute } from "vue-router";
 export default {
   components: {
     MDBNavbar,
@@ -43,9 +79,54 @@ export default {
     const collapse1 = ref(false);
     const dropdown1 = ref(false);
     const topPadding = ref("");
+    const router = useRouter();
+    const navHeight = ref("");
+    const route = useRoute();
+    const currentRoute = ref("");
+
+    const auth = getAuth();
+    const { currentUser } = getUser();
+    //checks if user is logged in and also email verified
+    const loggedIn = () => {
+      // console.log(currentUser.value)
+      return currentUser.value ? true : false;
+    };
+    const showLoginRegister = () => {
+      return !currentUser.value ? true : false;
+    };
+    //nav bar logout
+    const logout = async () => {
+      try {
+        await signOut(auth);
+        // router.push('/login');
+        router.go("/");
+      } catch (err) {
+        alert(err.message);
+      }
+    };
+
+    watchEffect(() => {
+      if (loggedIn()) {
+        navHeight.value = "loggedInHeight";
+      } else {
+        navHeight.value = "loggedOutHeight";
+      }
+    });
+
+    watchEffect(() => {
+      console.log(route.name);
+      currentRoute.value = route.name;
+    });
+
     watchEffect(() => {
       if (collapse1.value) {
-        topPadding.value = "expandedPadding";
+        if (loggedIn()) {
+          topPadding.value = "expandedPaddingLogIn";
+          navHeight.value = "loggedInHeight";
+        } else {
+          navHeight.value = "loggedOutHeight";
+          topPadding.value = "expandedPadding";
+        }
       } else {
         topPadding.value = "collapsedPadding";
       }
@@ -54,6 +135,11 @@ export default {
       collapse1,
       dropdown1,
       topPadding,
+      loggedIn,
+      showLoginRegister,
+      logout,
+      navHeight,
+      currentRoute,
     };
   },
 };
@@ -67,16 +153,19 @@ a.router-link-active {
 /* prevents navbar obstructing main content */
 @media (max-width: 991.98px) {
   .expandedPadding {
-    padding-bottom: 125px;
+    padding-bottom: 170px;
   }
   .collapsedPadding {
     padding-bottom: 0px;
+  }
+  .expandedPaddingLogIn {
+    padding-bottom: 210px;
   }
   /* #navbarSupportedContent.collapse.navbar-collapse.show {
     height: 0px !important ;
   } */
 }
-a.homeLink{
+a.homeLink {
   color: white !important;
 }
 
@@ -88,14 +177,17 @@ a.homeLink{
   /* overrides height on smaller view to ensure expanded navbar still has height */
 }
 @media (max-width: 991.98px) {
-  #navbarSupportedContent.collapse.navbar-collapse.show {
-    height: 131px !important ;
+  #navbarSupportedContent.collapse.navbar-collapse.show.loggedOutHeight {
+    /* height: 170px !important ; */
+    height: auto !important ;
+  }
+  #navbarSupportedContent.collapse.navbar-collapse.show.loggedInHeight {
+    /* height: 210px !important ; */
+    height: auto !important ;
   }
 }
 
 /* .paddingTransition{
   transition: padding-bottom 1s;
 } */
-
-
 </style>

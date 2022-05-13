@@ -3,6 +3,7 @@
     <form class="d-flex input-group w-auto">
       <MDBInput
         ref="searchBar"
+        class="searchInput"
         inputGroup
         type="search"
         label="Search Drinks"
@@ -16,6 +17,8 @@
           class="searchBtn"
           color="dark"
           outline="light"
+          :disabled="!searchValid"
+          
         >
           Search</MDBBtn
         >
@@ -62,7 +65,7 @@ import {
   MDBBtn,
 } from "mdb-vue-ui-kit";
 import getAllCocktails from "../composables/fetchCocktails.js";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 export default {
   components: {
@@ -71,7 +74,8 @@ export default {
     MDBDropdownItem,
     MDBInput,
   },
-  setup() {
+   emits: ['searchEvent'],
+  setup(props, ctx) {
     const drinks = ref(null);
     const { allCocktails, fetchData, error } = getAllCocktails();
     const searchQuery = ref("");
@@ -79,6 +83,7 @@ export default {
     const searchBtn = ref(null);
     const searchBar = ref(null);
     const router = useRouter();
+    const searchValid = ref(false);
 
     const populateDrinks = async () => {
       await fetchData();
@@ -92,7 +97,7 @@ export default {
       let query = searchQuery.value;
       unfocusSearch();
       closeSearch();
-      //naviate to results page
+      //navigate to results page
       router.push({ name: "Search", params: { query: query } });
     };
 
@@ -101,6 +106,8 @@ export default {
       searchBar.value.$el.nextElementSibling.firstElementChild.value = "";
       //clear v-model ref
       searchQuery.value = "";
+
+      ctx.emit('searchEvent');
     };
 
     const unfocusSearch = () => {
@@ -147,6 +154,11 @@ export default {
       return searchedDrinks.value.slice(0, numResults);
     });
 
+    //prevents searching of empty string
+    watch((searchQuery)=>{
+      searchValid.value = searchQuery!="";
+    })
+
     populateDrinks();
     return {
       drinks,
@@ -159,6 +171,7 @@ export default {
       searchBar,
       search,
       closeSearch,
+      searchValid
     };
   },
 };
@@ -220,7 +233,7 @@ export default {
   color: black !important;
 }
 
-.form-control {
+.searchInput.form-control {
   border-radius: 0px !important;
   color: white !important;
 }

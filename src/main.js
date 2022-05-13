@@ -4,6 +4,17 @@ import App from "./App.vue";
 import "./registerServiceWorker";
 import router from "./router";
 
-createApp(App).use(router).mount("#app");
+import { auth } from './firebase/config';
+import { onAuthStateChanged } from 'firebase/auth'
+
+let app = null;
+
+onAuthStateChanged(auth, () =>{
+  if(!app){
+    app = createApp(App).use(router).mount("#app");
+  }
+} );
+
+
 
 

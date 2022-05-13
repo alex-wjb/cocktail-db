@@ -32,7 +32,7 @@
           <img
             class="resultImg"
             :src="item.strDrinkThumb"
-            :alt="item.strDrink"
+            v-bind:alt="item.strDrink"
           />
         </router-link>
 
@@ -46,7 +46,7 @@
 
     <nav class="bottomPageNav" aria-label="Drinks Results Page Navigation">
       <MDBPagination v-if="getPageResults">
-        <MDBPageNav @click="pageBack" prev></MDBPageNav>
+        <MDBPageItem @click="pageBack">Previous</MDBPageItem>
         <div v-for="item in numbersShown" :key="item">
           <div v-if="item == pgNum">
             <MDBPageItem active @click="setPageNumber(item)">{{
@@ -57,7 +57,7 @@
             <MDBPageItem @click="setPageNumber(item)">{{ item }}</MDBPageItem>
           </div>
         </div>
-        <MDBPageNav @click="pageForward" next></MDBPageNav>
+        <MDBPageItem @click="pageForward">Next</MDBPageItem>
       </MDBPagination>
     </nav>
   </div>
@@ -71,7 +71,6 @@ import {
   MDBListGroup,
   MDBListGroupItem,
   MDBPagination,
-  MDBPageNav,
   MDBPageItem,
 } from "mdb-vue-ui-kit";
 export default {
@@ -79,7 +78,6 @@ export default {
     MDBListGroup,
     MDBListGroupItem,
     MDBPagination,
-    MDBPageNav,
     MDBPageItem,
   },
   setup() {

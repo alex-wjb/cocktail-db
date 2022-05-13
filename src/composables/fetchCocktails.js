@@ -41,6 +41,8 @@ const getAllCocktails = () => {
 
 
   const fetchData = async () => {
+    //clear cocktails array
+    allCocktails.value = [];
     let data = [];
     try {
       //resolve all promises to an array of cocktail arrays a-z
