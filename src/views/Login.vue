@@ -1,9 +1,9 @@
 <template>
 <div class="loginPage">
     <div class=" w-100 p-4 d-flex align-items-center justify-content-center" style="height: 70%">
-      <MDBCard text="center">
-        <MDBCardHeader>
-          Login
+      <MDBCard class="rounded-0" bg="dark" text="center">
+        <MDBCardHeader style="color: white;">
+          <h4>Login</h4>
         </MDBCardHeader>
         <MDBCardBody>
           <MDBCardTitle v-if="errorMessage" class='mb-4 errorMsg'>
@@ -11,8 +11,8 @@
           </MDBCardTitle>
           <MDBCardText>
             <form @submit.prevent="login">
-              <!-- Email input -->
               <MDBInput
+              class="loginInput"
                 id="form2Email"
                 v-model="email"
                 type="email"
@@ -21,8 +21,9 @@
                 :maxlength="320"
               />
 
-              <!-- Password input -->
+           
               <MDBInput
+              class="loginInput"
                 id="form2Password"
                 v-model="password"
                 type="password"
@@ -30,10 +31,8 @@
                 wrapper-class="mb-4"
                 :maxlength="64"
               />
-              <!-- 2 column grid layout for inline styling -->
               <MDBRow class="mb-4">
                 <MDBCol class="d-flex justify-content-center">
-                  <!-- Simple link -->
                   <router-link
                     to="/reset"
                   >
@@ -41,18 +40,22 @@
                   </router-link>
                 </MDBCol>
               </MDBRow>
-              <MDBBtn type="submit" color="primary">
+              <MDBBtn
+              ref="loginBtn"
+              class="rounded-0" type="submit" 
+               color="dark"
+          outline="light"
+          style="border-color:grey;">
                 Login
               </MDBBtn>
             </form>
           </MDBCardText>
         </MDBCardBody>
         <MDBCardFooter>
-          <!-- Register buttons -->
           <div>
-            <p>
-              Not a member?
-              <router-link
+            <p style="color:white;">
+              Not Registered?
+              <router-link 
                 to="/register"
 
               >
@@ -98,20 +101,25 @@
       MDBRow,
     },
     setup() {
-      // const auth = getAuth();
       const email = ref('');
       const errorMessage = ref();
       const password = ref('');
       const router = useRouter();
+      const loginBtn = ref(null);
+
+         const unfocusLogin = () => {
+      loginBtn.value.$el.blur();
+    };
       const login = async () => {
       try {
+        unfocusLogin();    
           await signInWithEmailAndPassword(auth, email.value, password.value);
-        
+              
          
             router.push('/');
           }
         catch (error) {
-          //custom error messages
+
           switch (error.code) {
           case 'auth/invalid-email':
             errorMessage.value = 'Invalid email.';
@@ -125,11 +133,11 @@
           }
         }
       };
-      return { login, email, errorMessage, password };
+      return { login, email, errorMessage, password,loginBtn };
     }
   };
 </script>
-<style scoped>
+<style>
 .loginPage {
   background-color: lightgrey;
   min-height: 100vh;
@@ -142,15 +150,23 @@
 }
 
 .errorMsg{
-  border: 1px solid;
+  border: 1px solid red;
   font-size: 15px;
-  margin: 1%;
-  padding: 2% 1% 2% 3%;
-  background-repeat: no-repeat;
-  background-position: 10px center;
-  max-width: 40vw;
-  color: #d8000c;
-  background-color: #ffbaba;
+  padding: 2%;
+  max-width: 45vw;
+  color: red;
+  background-color: pink;
 }
+
+/* only works when not scoped */
+.loginInput.form-control {
+  border-radius: 0px !important;
+  color: white !important;
+}
+
+.loginBtn {
+  border-color: grey!important;
+}
+
 </style>
 

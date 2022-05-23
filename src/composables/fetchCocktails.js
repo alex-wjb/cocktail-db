@@ -39,7 +39,6 @@ const getAllCocktails = () => {
   const allCocktails = ref([]);
   const error = ref(null);
 
-
   const fetchData = async () => {
     //clear cocktails array
     allCocktails.value = [];

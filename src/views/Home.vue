@@ -14,7 +14,7 @@
       alt="cocktail database logo"
       src="../assets/watercolor-title.png"
     />
-
+    <div style="max-width:1500px; margin: auto" class="homeDrinkCards">
     <!-- rows have one column, cards split equal width to fit 3, up to a breakpoint-->
     <!-- g-4 = grid gap of 4 -->
     <MDBRow :cols="['1', 'md-3']" class="g-4">
@@ -52,15 +52,19 @@
             >
               {{ item }}
             </li>
+            <FavBtn v-if="currentUser" :drinkId="item.idDrink"/>
           </MDBCardFooter>
         </MDBCard>
       </MDBCol>
     </MDBRow>
+    </div>
   </div>
 </template>
 <script>
 import { ref } from "vue";
 import getAllCocktails from "../composables/fetchCocktails.js";
+import FavBtn from "../components/FavBtn";
+import getUser from "../composables/getUser";
 import {
   MDBBtn,
   MDBCard,
@@ -82,6 +86,7 @@ export default {
     MDBRow,
     MDBCardFooter,
     MDBCardHeader,
+    FavBtn
   },
   setup() {
     const randomCocktails = ref(null);
@@ -91,6 +96,7 @@ export default {
     const exampleModal = ref(false);
     const ingredients = ref([]);
     const { allCocktails, fetchData, error } = getAllCocktails();
+    const { currentUser } = getUser();
 
     const getCocktailByID = (cocktailObjArray, drinkID) => {
       const drink = cocktailObjArray.find(
@@ -159,6 +165,7 @@ export default {
       ingredients,
       error,
       logItem,
+      currentUser
     };
   },
 };

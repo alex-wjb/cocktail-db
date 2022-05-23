@@ -58,4 +58,21 @@ import Header from './components/Header.vue';
   z-index: 999;
 }
 
+/* autocomplete input styles for chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 0;
+  -webkit-text-fill-color: white;
+  background-color: #262626;
+  -webkit-box-shadow: 0 0 0px 1000px #262626 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 </style>

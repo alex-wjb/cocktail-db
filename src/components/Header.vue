@@ -22,7 +22,7 @@
           About
         </MDBNavbarItem>
         <MDBNavbarItem
-          v-if="showLoginRegister()"
+          v-if="showLogin()"
           @click.prevent="collapse1 = !collapse1"
           to="/login"
         >
@@ -86,19 +86,24 @@ export default {
 
     const auth = getAuth();
     const { currentUser } = getUser();
-    //checks if user is logged in and also email verified
+
     const loggedIn = () => {
-      // console.log(currentUser.value)
-      return currentUser.value ? true : false;
+      if (currentUser.value) {
+        return true;
+      } else {
+        return false;
+      }
     };
-    const showLoginRegister = () => {
-      return !currentUser.value ? true : false;
+    const showLogin = () => {
+      if (!currentUser.value) {
+        return true;
+      } else {
+        return false;
+      }
     };
-    //nav bar logout
     const logout = async () => {
       try {
         await signOut(auth);
-        // router.push('/login');
         router.go("/");
       } catch (err) {
         alert(err.message);
@@ -114,7 +119,6 @@ export default {
     });
 
     watchEffect(() => {
-      console.log(route.name);
       currentRoute.value = route.name;
     });
 
@@ -136,7 +140,7 @@ export default {
       dropdown1,
       topPadding,
       loggedIn,
-      showLoginRegister,
+      showLogin,
       logout,
       navHeight,
       currentRoute,
@@ -178,16 +182,10 @@ a.homeLink {
 }
 @media (max-width: 991.98px) {
   #navbarSupportedContent.collapse.navbar-collapse.show.loggedOutHeight {
-    /* height: 170px !important ; */
     height: auto !important ;
   }
   #navbarSupportedContent.collapse.navbar-collapse.show.loggedInHeight {
-    /* height: 210px !important ; */
     height: auto !important ;
   }
 }
-
-/* .paddingTransition{
-  transition: padding-bottom 1s;
-} */
 </style>

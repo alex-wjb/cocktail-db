@@ -2,20 +2,17 @@ import { auth } from '../firebase/config';
 import { ref } from 'vue';
 import { sendPasswordResetEmail, } from 'firebase/auth';
 
-const actionCodeSettings = {
-  //change to domain address of production site
-  url: 'http://localhost:8080/'
-};
+
 const error = ref(null);
-const isPending = ref(false);
+const pending = ref(false);
 
 const passReset = async(email) => {
   error.value = null;
-  isPending.value = true;
+  pending.value = true;
 
   try {
-    await sendPasswordResetEmail(auth, email, actionCodeSettings);
-    isPending.value = false;
+    await sendPasswordResetEmail(auth, email);
+    pending.value = false;
   } catch (err) {
     console.error(err.message);
     switch (err.code) {
@@ -29,13 +26,13 @@ const passReset = async(email) => {
         error.value = 'Incorrect password.';
         break;
       }
-    isPending.value = false;
+      pending.value = false;
   }
 };
 
 //composable function
 const usePassReset = () => {
-  return { error, passReset, isPending };
+  return { error, passReset, pending };
 };
 
 export default usePassReset;

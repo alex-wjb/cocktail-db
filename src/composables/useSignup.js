@@ -5,14 +5,13 @@ import { ref } from "vue";
 const pending = ref(false);
 const signupError = ref(null);
 
-//creates firebase user email/pass auth entry
 const signup = async (email, password) => {
   signupError.value = null;
   pending.value = true;
 
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
-    if (!res) throw new Error("Sign Up Unsuccessful");
+    if (!res) throw new Error("Sign Up Failed");
 
     signupError.value = null;
     pending.value = false;
@@ -32,7 +31,6 @@ const signup = async (email, password) => {
   }
 };
 
-//composable function
 const useSignup = () => {
   return { signup, signupError, pending };
 };

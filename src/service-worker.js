@@ -18,8 +18,8 @@ workbox.setConfig({
 
 workbox.core.setCacheNameDetails({ prefix: "cocktail-db" });
 //USED TO ALLOW SERVICE WORKER TO PERFORM RUNTIME CACHING WHEN FIRST REGISTERED WITHOUT FIRST RELOADING PAGE
- self.addEventListener("activate", () => self.clients.claim());
- workbox.core.clientsClaim();
+self.addEventListener("activate", () => self.clients.claim());
+workbox.core.clientsClaim();
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -34,11 +34,14 @@ self.addEventListener("message", (event) => {
  */
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("index.html"));
+workbox.routing.registerNavigationRoute(
+  workbox.precaching.getCacheKeyForURL("index.html")
+);
 
 workbox.routing.registerRoute(
   new RegExp("https://www.thecocktaildb.com/api/json/v2/(.*)"),
-  workbox.strategies.networkFirst({
+  // workbox.strategies.networkFirst({
+  workbox.strategies.staleWhileRevalidate({
     cacheName: "drinks",
     plugins: [
       new workbox.expiration.Plugin({
@@ -57,7 +60,7 @@ workbox.routing.registerRoute(
     plugins: [
       new workbox.expiration.Plugin({
         maxEntries: 30,
-        maxAgeSeconds: 60 * 60 * 24 * 30 //30 days
+        maxAgeSeconds: 60 * 60 * 24 * 30, //30 days
       }),
     ],
     method: "GET",
@@ -65,16 +68,16 @@ workbox.routing.registerRoute(
   })
 );
 
-
 const baseURL = "https://www.thecocktaildb.com/api/json/v2";
 const apiKey = "9973533";
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 const charsAZ = Array.from(alphabet);
-const requestUrls = charsAZ.map(char=>{const query = `search.php?f=${char}`;
-const url = `${baseURL}/${apiKey}/${query}`;
-return url;
-})
-  
+const requestUrls = charsAZ.map((char) => {
+  const query = `search.php?f=${char}`;
+  const url = `${baseURL}/${apiKey}/${query}`;
+  return url;
+});
+
 const addResourcesToCache = async (resources, cacheName) => {
   const cache = await caches.open(cacheName);
   await cache.addAll(resources);
@@ -82,12 +85,17 @@ const addResourcesToCache = async (resources, cacheName) => {
 
 self.addEventListener("install", (evt) => {
   evt.waitUntil(
-    addResourcesToCache(requestUrls, "drinks").then(console.log("Drink api responses precached."))
+    addResourcesToCache(requestUrls, "drinks").then(
+      console.log("Drink api responses precached.")
+    )
   );
 });
 
 self.addEventListener("install", (evt) => {
   evt.waitUntil(
-    addResourcesToCache(["https://use.fontawesome.com/releases/v5.15.1/css/all.css"], "icons").then(console.log("Icons precached."))
+    addResourcesToCache(
+      ["https://use.fontawesome.com/relea" + "ses/v5.15.1/css/all.css"],
+      "icons"
+    ).then(console.log("Icons precached."))
   );
 });

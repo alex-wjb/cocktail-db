@@ -1,17 +1,23 @@
 {
   "hosting": {
     "public": "dist",
+    "headers": [
+      {
+        "source": "**/*.@(html)",
+        "headers": [
+          {
+            "key": "X-Frame-Options",
+            "value": "SAMEORIGIN"
+          }
+        ]
+      }
+    ],
     "rewrites": [
       {
-      "source": "**",
-      "destination": "/index.html"
+        "source": "**",
+        "destination": "/index.html"
       }
-
     ],
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
 }

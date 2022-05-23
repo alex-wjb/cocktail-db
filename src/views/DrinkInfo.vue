@@ -17,6 +17,7 @@
               <MDBCardHeader>
                 <h2>{{ cocktail.strDrink }}</h2>
               </MDBCardHeader>
+              
 
               <a class="drinkImgContainer">
                 <MDBCardImg
@@ -34,6 +35,7 @@
                 <li class="tagItem list-inline list-inline-item">
                   {{ cocktail.strCategory }}
                 </li>
+                 <FavBtn v-if="currentUser" :drinkId="cocktail.idDrink"/>
               </MDBCardFooter>
             </MDBCard>
           </MDBCol>
@@ -73,6 +75,9 @@
 import { useRoute } from "vue-router";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import { ref, watchEffect } from "vue";
+import FavBtn from "../components/FavBtn"
+import getUser from "../composables/getUser";
+ 
 import {
   MDBContainer,
   MDBCard,
@@ -95,11 +100,13 @@ export default {
     MDBCol,
     MDBRow,
     MDBCardBody,
+    FavBtn
   },
   setup() {
     const cocktail = ref(null);
     const route = useRoute();
     const { allCocktails, fetchData, error } = getAllCocktails();
+    const { currentUser } = getUser();
 
     const populateCocktailData = async (drinkId) => {
       cocktail.value = null;
@@ -158,7 +165,7 @@ export default {
       populateCocktailData(route.params.id);
     });
 
-    return { error, cocktail, getIngredients };
+    return { error, cocktail, getIngredients, currentUser};
   },
 };
 </script>

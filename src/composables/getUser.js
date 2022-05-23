@@ -1,19 +1,17 @@
+import { auth } from "../firebase/config.js";
+import { onAuthStateChanged } from "firebase/auth";
+import { ref } from "vue";
 
-import { auth } from '../firebase/config.js';
-import { onAuthStateChanged } from 'firebase/auth';
-import { ref } from 'vue';
-
-//null if not logged in
 const currentUser = ref(auth.currentUser);
 
-//fires on log in / sign out
+//event triggers on log in/out
 onAuthStateChanged(auth, (user) => {
-  
-  console.log('Current user is:', user)
-  currentUser.value = user});
+  console.log("Current user is:", user);
+  currentUser.value = user;
+});
 
 const getUser = () => {
-  return  {currentUser} ;
+  return { currentUser };
 };
 
 export default getUser;
