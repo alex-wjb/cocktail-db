@@ -8,7 +8,8 @@
       >Randomise</MDBBtn
     >
   </div>
-  <div class="home">
+  <!-- <div class="home"> -->
+    <PageWrapper>
     <img
       class="cocktailLogo"
       alt="cocktail database logo"
@@ -58,12 +59,14 @@
       </MDBCol>
     </MDBRow>
     </div>
-  </div>
+    </PageWrapper>
+  <!-- </div> -->
 </template>
 <script>
 import { ref } from "vue";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import FavBtn from "../components/FavBtn";
+import PageWrapper from "../components/PageWrapper";
 import getUser from "../composables/getUser";
 import {
   MDBBtn,
@@ -86,7 +89,8 @@ export default {
     MDBRow,
     MDBCardFooter,
     MDBCardHeader,
-    FavBtn
+    FavBtn,
+    PageWrapper
   },
   setup() {
     const randomCocktails = ref(null);
@@ -185,7 +189,7 @@ export default {
   }
 }
 
-.home {
+/* .home {
   background-color: lightgrey;
   min-height: 100vh;
   padding-top: 115px;
@@ -194,19 +198,7 @@ export default {
   padding-bottom: 25px;
   padding-left: 25px;
   padding-right: 25px;
-}
-
-/* Feature Query */
-@supports (padding: max(0px)) {
-  .home {
-    /* constant value provided by IOS to provide padding when iphone horizontal to
-      avoid sensor bar on some devices */
-    /* When vertical this constnant will be zero, so padding will default to
-      other specified value when using max() */
-    padding-left: max(25px, env(safe-area-inset-left));
-    padding-right: max(25px, env(safe-area-inset-right));
-  }
-}
+} */
 
 .floating-btn {
   margin: 0 auto;

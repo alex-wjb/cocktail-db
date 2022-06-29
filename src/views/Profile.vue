@@ -1,6 +1,5 @@
-/
 <template>
-  <div class="profilePage">
+  <PageWrapper>
     <div class="profileCard">
       <MDBCard class="rounded-0 h-100" text="white" bg="dark">
         <MDBCardHeader style="border-width: 0px !important">
@@ -97,7 +96,7 @@
     </div>
     <!-- <EasyCamera v-model="picture"/> -->
     <Camera @photoUploaded="getProfilePic()" v-if="showCamera" />
-  </div>
+  </PageWrapper>
 </template>
 
 <script>
@@ -108,6 +107,8 @@ import {
   ref as storageRef,
   getDownloadURL,
 } from "firebase/storage";
+import PageWrapper from "../components/PageWrapper";
+
 import getUser from "../composables/getUser";
 import Camera from "../components/Camera.vue";
 import { doc, getDoc } from "firebase/firestore";
@@ -141,7 +142,8 @@ export default {
     MDBRow,
     MDBCardFooter,
     Camera,
-    FavBtn
+    FavBtn,
+    PageWrapper
     // EasyCamera
   },
   setup() {

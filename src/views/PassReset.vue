@@ -1,5 +1,6 @@
 <template>
-  <div class="resetPage">
+<PageWrapper>
+ 
     <div
       class="login w-100 p-4 d-flex align-items-center justify-content-center"
       style="height: 70%"
@@ -37,10 +38,12 @@
         </MDBCardBody>
       </MDBCard>
     </div>
-  </div>
+</PageWrapper>
 </template>
 
 <script>
+import PageWrapper from "../components/PageWrapper";
+
 import usePassReset from "../composables/passReset";
 import { ref } from "vue";
 import {
@@ -62,6 +65,7 @@ export default {
     MDBCardBody,
     MDBCardTitle,
     MDBCardText,
+    PageWrapper
   },
   setup() {
     const email = ref("");
@@ -85,16 +89,7 @@ export default {
   color: red;
   background-color: pink;
 }
-.resetPage {
-  background-color: lightgrey;
-  min-height: 100vh;
-  padding-top: 115px;
-  width: 100%;
-  overflow-x: hidden;
-  padding-bottom: 25px;
-  padding-left: 25px;
-  padding-right: 25px;
-}
+
 .resetInput {
   border-radius: 0px !important;
   color: white !important;

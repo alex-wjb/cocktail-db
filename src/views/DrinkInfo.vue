@@ -1,6 +1,7 @@
 <template>
-  <div class="drinkInfo">
-    <body>
+  <!-- <div class="drinkInfo"> -->
+    <PageWrapper>
+   
       <MDBContainer>
         {{ error }}
       </MDBContainer>
@@ -67,8 +68,9 @@
           </MDBCol>
         </MDBRow>
       </div>
-    </body>
-  </div>
+   
+    </PageWrapper>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -77,6 +79,7 @@ import getAllCocktails from "../composables/fetchCocktails.js";
 import { ref, watchEffect } from "vue";
 import FavBtn from "../components/FavBtn"
 import getUser from "../composables/getUser";
+import PageWrapper from "../components/PageWrapper";
  
 import {
   MDBContainer,
@@ -100,7 +103,8 @@ export default {
     MDBCol,
     MDBRow,
     MDBCardBody,
-    FavBtn
+    FavBtn,
+    PageWrapper
   },
   setup() {
     const cocktail = ref(null);
@@ -171,7 +175,7 @@ export default {
 </script>
 
 <style>
-.drinkInfo {
+/* .drinkInfo {
   background-color: lightgrey;
   min-height: 100vh;
   padding-top: 80px;
@@ -180,23 +184,9 @@ export default {
   padding-left: 25px;
   padding-right: 25px;
   padding-bottom: 25px;
-}
+} */
 
-/* Feature Query */
-@supports (padding: max(0px)) {
-  .drinkInfo {
-    /* constant value provided by IOS to provide padding when iphone horizontal to
-      avoid sensor bar on some devices */
-    /* When vertical this constnant will be zero, so padding will default to
-      other specified value when using max() */
-    padding-left: max(25px, env(safe-area-inset-left));
-    padding-right: max(25px, env(safe-area-inset-right));
-  }
-}
 
-body {
-  background-color: lightgrey;
-}
 
 .tagItem {
   border: solid 1px;

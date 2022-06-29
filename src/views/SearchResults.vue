@@ -1,5 +1,5 @@
 <template>
-  <div class="pageResults">
+  <PageWrapper>
     <h2 v-if="searchQuery">Results for: "{{ searchQuery }}"</h2>
 
     <div v-if="results">{{ results.length }} Results</div>
@@ -60,13 +60,15 @@
         <MDBPageItem @click="pageForward">Next</MDBPageItem>
       </MDBPagination>
     </nav>
-  </div>
+  </PageWrapper>
 </template>
 
 <script>
 import { useRoute } from "vue-router";
 import { ref, watchEffect, computed } from "vue";
 import getAllCocktails from "../composables/fetchCocktails.js";
+import PageWrapper from "../components/PageWrapper";
+
 import {
   MDBListGroup,
   MDBListGroupItem,
@@ -79,6 +81,7 @@ export default {
     MDBListGroupItem,
     MDBPagination,
     MDBPageItem,
+    PageWrapper
   },
   setup() {
     const route = useRoute();
@@ -217,7 +220,7 @@ export default {
   background-color: #262626 !important;
 }
 
-.pageResults {
+/* .pageResults {
   background-color: lightgrey;
   min-height: 100vh;
   padding-top: 115px;
@@ -226,7 +229,7 @@ export default {
   padding-left: 25px;
   padding-right: 25px;
   padding-bottom: 25px;
-}
+} */
 
 .resultImg {
   width: 100px;
