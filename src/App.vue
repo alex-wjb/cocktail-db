@@ -1,14 +1,12 @@
 <template>
-  <!-- <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div> -->
+
  <Header></Header>
-  <!-- <keep-alive include="Home"> -->
- 
+
+ <div class="pageWrapper">
  <router-view>
   
  </router-view>
+ </div>
  <!-- </keep-alive> -->
  
 </template>
@@ -35,6 +33,17 @@ import Header from './components/Header.vue';
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+ .pageWrapper {
+  background-color: lightgrey;
+  min-height: 100vh;
+  padding-top: 115px;
+  width: 100%;
+  overflow-x: hidden;
+  padding-bottom: 25px;
+  padding-left: 25px;
+  padding-right: 25px;
 }
 
 #nav {

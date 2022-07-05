@@ -1,6 +1,5 @@
 <template>
-  <!-- <div class="drinkInfo"> -->
-    <PageWrapper>
+
    
       <MDBContainer>
         {{ error }}
@@ -69,8 +68,7 @@
         </MDBRow>
       </div>
    
-    </PageWrapper>
-  <!-- </div> -->
+  
 </template>
 
 <script>
@@ -78,9 +76,7 @@ import { useRoute } from "vue-router";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import { ref, watchEffect } from "vue";
 import FavBtn from "../components/FavBtn"
-import getUser from "../composables/getUser";
-import PageWrapper from "../components/PageWrapper";
- 
+import getUser from "../composables/getUser"; 
 import {
   MDBContainer,
   MDBCard,
@@ -104,7 +100,6 @@ export default {
     MDBRow,
     MDBCardBody,
     FavBtn,
-    PageWrapper
   },
   setup() {
     const cocktail = ref(null);

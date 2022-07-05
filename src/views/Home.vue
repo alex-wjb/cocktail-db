@@ -8,8 +8,6 @@
       >Randomise</MDBBtn
     >
   </div>
-  <!-- <div class="home"> -->
-    <PageWrapper>
     <img
       class="cocktailLogo"
       alt="cocktail database logo"
@@ -59,14 +57,12 @@
       </MDBCol>
     </MDBRow>
     </div>
-    </PageWrapper>
-  <!-- </div> -->
 </template>
 <script>
 import { ref } from "vue";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import FavBtn from "../components/FavBtn";
-import PageWrapper from "../components/PageWrapper";
+// import PageWrapper from "../components/PageWrapper";
 import getUser from "../composables/getUser";
 import {
   MDBBtn,
@@ -90,7 +86,7 @@ export default {
     MDBCardFooter,
     MDBCardHeader,
     FavBtn,
-    PageWrapper
+    // PageWrapper
   },
   setup() {
     const randomCocktails = ref(null);
@@ -189,30 +185,21 @@ export default {
   }
 }
 
-/* .home {
-  background-color: lightgrey;
-  min-height: 100vh;
-  padding-top: 115px;
-  width: 100%;
-  overflow-x: hidden;
-  padding-bottom: 25px;
-  padding-left: 25px;
-  padding-right: 25px;
-} */
+
 
 .floating-btn {
   margin: 0 auto;
   text-align: center;
-  display: block;
   z-index: 999;
-  margin-top: 30px;
+  border: 3px solid green;
 }
 .btn-div {
   width: 100vw;
   position: fixed;
+  top: 70px;  /* relative to container (viewport) */
+  left: 0px;  /* relative to container (viewport) */
   z-index: 999;
-  height: 5px;
-  padding-top: 40px;
+  height: 30px;
 }
 
 .drinkImg {

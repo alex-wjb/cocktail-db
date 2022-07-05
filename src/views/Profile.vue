@@ -1,5 +1,4 @@
 <template>
-  <PageWrapper>
     <div class="profileCard">
       <MDBCard class="rounded-0 h-100" text="white" bg="dark">
         <MDBCardHeader style="border-width: 0px !important">
@@ -95,7 +94,6 @@
       </MDBRow>
     </div>
     <Camera @photoUploaded="getProfilePic()" v-if="showCamera" />
-  </PageWrapper>
 </template>
 
 <script>
@@ -104,7 +102,6 @@ import {
   ref as storageRef,
   getDownloadURL,
 } from "firebase/storage";
-import PageWrapper from "../components/PageWrapper";
 
 import getUser from "../composables/getUser";
 import Camera from "../components/Camera.vue";
@@ -140,7 +137,7 @@ export default {
     MDBCardFooter,
     Camera,
     FavBtn,
-    PageWrapper
+    
   },
   setup() {
     const { currentUser } = getUser();

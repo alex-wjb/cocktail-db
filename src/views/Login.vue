@@ -1,6 +1,4 @@
 <template>
-<!-- <div class="loginPage"> -->
-<PageWrapper>
 
     <div class=" w-100 p-4 d-flex align-items-center justify-content-center" style="height: 70%">
       <MDBCard class="rounded-0" bg="dark" text="center">
@@ -68,13 +66,10 @@
         </MDBCardFooter>
       </MDBCard>
     </div>
-    
-    </PageWrapper>
 </template>
 
 <script>
   import {signInWithEmailAndPassword,  } from 'firebase/auth';
-  import PageWrapper from "../components/PageWrapper";
 
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
@@ -104,7 +99,6 @@
       MDBCol,
       MDBInput,
       MDBRow,
-    PageWrapper
     },
     setup() {
       const email = ref('');

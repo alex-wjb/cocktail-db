@@ -1,5 +1,4 @@
 <template>
-<PageWrapper>
  
     <div
       class="login w-100 p-4 d-flex align-items-center justify-content-center"
@@ -38,11 +37,10 @@
         </MDBCardBody>
       </MDBCard>
     </div>
-</PageWrapper>
+
 </template>
 
 <script>
-import PageWrapper from "../components/PageWrapper";
 
 import usePassReset from "../composables/passReset";
 import { ref } from "vue";
@@ -65,7 +63,7 @@ export default {
     MDBCardBody,
     MDBCardTitle,
     MDBCardText,
-    PageWrapper
+    
   },
   setup() {
     const email = ref("");

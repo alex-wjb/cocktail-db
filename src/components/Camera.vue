@@ -56,7 +56,7 @@
           class="closeBtn rounded-0"
           color="dark"
           outline="light"
-          @click="toggleCamera(), (this.$parent.$parent.showCamera = false)"
+          @click="toggleCamera(), (this.$parent.showCamera = false)"
         >
           Close</MDBBtn
         >

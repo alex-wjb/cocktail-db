@@ -1,5 +1,4 @@
 <template>
-  <PageWrapper>
     <div
       class="w-100 p-4 d-flex align-items-center justify-content-center"
       style="height: 70%"
@@ -96,11 +95,9 @@
         </MDBCardFooter>
       </MDBCard>
     </div>
-  </PageWrapper>
 </template>
 
 <script>
-import PageWrapper from "../components/PageWrapper";
 
 import useSignup from "../composables/useSignup";
 import { auth, db } from "../firebase/config";
@@ -134,7 +131,7 @@ export default {
     MDBCol,
     MDBInput,
     MDBRow,
-    PageWrapper
+    
   },
   setup() {
     let canRegister = ref(false);
