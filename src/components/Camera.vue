@@ -1,6 +1,6 @@
 <template>
   <div class="camera">
-    <div class="wrapper">
+    <div class="cameraWrapper">
       <!-- Button to open/close video stream -->
       <div class="video-container">
         <!-- Video Stream -->
@@ -47,7 +47,7 @@
           color="dark"
           outline="light"
           @click="
-            uploadPhoto(), toggleCamera(), (this.$parent.showCamera = false)
+            uploadPhoto(), toggleCamera(), (this.$parent.$parent.showCamera = false)
           "
         >
           Upload</MDBBtn
@@ -56,7 +56,7 @@
           class="closeBtn rounded-0"
           color="dark"
           outline="light"
-          @click="toggleCamera(), (this.$parent.showCamera = false)"
+          @click="toggleCamera(), (this.$parent.$parent.showCamera = false)"
         >
           Close</MDBBtn
         >
@@ -89,6 +89,7 @@ export default {
           height: 540,
         },
       });
+      console.log("HELLO1")
 
       navigator.mediaDevices
         .getUserMedia(constraints)
@@ -96,6 +97,7 @@ export default {
           camera.value.srcObject = stream;
         })
         .catch((error) => {
+          console.log("HELLO")
           console.log(error);
         });
     };
@@ -110,6 +112,7 @@ export default {
         isCameraOpen.value = false;
         isPhotoTaken.value = false;
         endCameraStream();
+        console.log("camera closed")
       } else {
         isCameraOpen.value = true;
         createCameraEle();
@@ -205,7 +208,7 @@ export default {
   background: rgba(0, 0, 0, 0.45);
 }
 
-.wrapper {
+.cameraWrapper {
   position: relative;
   width: 540px;
   height: 600px;
@@ -261,7 +264,7 @@ export default {
 }
 
 @media (max-width: 600px) {
-  .wrapper {
+  .cameraWrapper {
     position: relative;
     width: 360px;
     height: 420px;
@@ -283,7 +286,7 @@ export default {
 }
 
 @media (max-height: 420px) {
-  .wrapper {
+  .cameraWrapper {
     position: relative;
     width: 270px;
     height: 310px;

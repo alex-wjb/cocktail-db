@@ -94,14 +94,11 @@
         </MDBCol>
       </MDBRow>
     </div>
-    <!-- <EasyCamera v-model="picture"/> -->
     <Camera @photoUploaded="getProfilePic()" v-if="showCamera" />
   </PageWrapper>
 </template>
 
 <script>
-// import Camera from "simple-vue-camera";
-// import EasyCamera from 'easy-vue-camera';
 import {
   getStorage,
   ref as storageRef,
@@ -144,7 +141,6 @@ export default {
     Camera,
     FavBtn,
     PageWrapper
-    // EasyCamera
   },
   setup() {
     const { currentUser } = getUser();
