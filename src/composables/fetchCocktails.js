@@ -13,6 +13,7 @@ const sendRequest = async (requestUrl) => {
     const responseJSON = await response.json();
     return responseJSON;
   } catch (err) {
+    //ADD SWITCH CASE FOR CUSTOM ERRORS
     return Promise.reject(err.message);
   }
 };
@@ -54,7 +55,8 @@ const getAllCocktails = () => {
         }
       });
     } catch (err) {
-      error.value = err;
+      console.log(err);
+      error.value = err;   
     }
   };
   return { allCocktails, fetchData, error };

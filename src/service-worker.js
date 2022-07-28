@@ -40,12 +40,12 @@ workbox.routing.registerNavigationRoute(
 
 workbox.routing.registerRoute(
   new RegExp("https://www.thecocktaildb.com/api/json/v2/(.*)"),
-  // workbox.strategies.networkFirst({
   workbox.strategies.staleWhileRevalidate({
     cacheName: "drinks",
     plugins: [
       new workbox.expiration.Plugin({
         maxEntries: 30,
+        maxAgeSeconds: 60 * 60 * 24 //1 day
       }),
     ],
     method: "GET",

@@ -65,7 +65,7 @@ import {
   MDBBtn,
 } from "mdb-vue-ui-kit";
 import getAllCocktails from "../composables/fetchCocktails.js";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 export default {
   components: {
@@ -155,7 +155,7 @@ export default {
     });
 
     //prevents searching of empty string
-    watch((searchQuery)=>{
+    watchEffect((searchQuery)=>{
       searchValid.value = searchQuery!="";
     })
 

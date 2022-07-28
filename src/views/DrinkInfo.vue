@@ -1,84 +1,81 @@
 <template>
+  <div v-if="error" class="fetchError">
+    <div style="height: fit-content">
+      <h4 class="errorTxt">Unable to retrieve cocktail data.</h4>
+      <h4 class="errorTxt">Please try again later.</h4>
+    </div>
+  </div>
+  <div class="infoCards">
+    <MDBRow :cols="['1', 'md-2']" class="g-4">
+      <MDBCol>
+        <MDBCard
+          v-if="cocktail != null"
+          class="rounded-0 h-100"
+          text="white"
+          bg="dark"
+          style="max-width: 940px; margin: auto"
+        >
+          <MDBCardHeader>
+            <h2>{{ cocktail.strDrink }}</h2>
+          </MDBCardHeader>
 
-   
-      <MDBContainer>
-        {{ error }}
-      </MDBContainer>
-      <div class="infoCards">
-        <MDBRow :cols="['1', 'md-2']" class="g-4">
-          <MDBCol>
-            <MDBCard
-              v-if="cocktail != null"
-              class="rounded-0 h-100"
-              text="white"
-              bg="dark"
-              style="max-width: 940px; margin: auto"
-            >
-              <MDBCardHeader>
-                <h2>{{ cocktail.strDrink }}</h2>
-              </MDBCardHeader>
-              
+          <a class="drinkImgContainer">
+            <MDBCardImg
+              class="rounded-0 skeleton"
+              bottom
+              v-bind:src="cocktail.strDrinkThumb"
+              v-bind:alt="cocktail.strDrink"
+            />
+          </a>
 
-              <a class="drinkImgContainer">
-                <MDBCardImg
-                  class="rounded-0 skeleton"
-                  bottom
-                  v-bind:src="cocktail.strDrinkThumb"
-                  v-bind:alt="cocktail.strDrink"
-                />
-              </a>
+          <MDBCardFooter class="text-muted">
+            <li class="tagItem list-inline list-inline-item">
+              {{ cocktail.strAlcoholic }}
+            </li>
+            <li class="tagItem list-inline list-inline-item">
+              {{ cocktail.strCategory }}
+            </li>
+            <FavBtn v-if="currentUser" :drinkId="cocktail.idDrink" />
+          </MDBCardFooter>
+        </MDBCard>
+      </MDBCol>
+      <MDBCol>
+        <MDBCard
+          v-if="cocktail != null"
+          class="rounded-0 h-100"
+          text="white"
+          bg="dark"
+          style="max-width: 940px; margin: auto"
+        >
+          <MDBCardBody>
+            <h3>Directions</h3>
+            <p>{{ cocktail.strInstructions }}</p>
+            <br />
+            <h3>Ingredients</h3>
 
-              <MDBCardFooter class="text-muted">
-                <li class="tagItem list-inline list-inline-item">
-                  {{ cocktail.strAlcoholic }}
-                </li>
-                <li class="tagItem list-inline list-inline-item">
-                  {{ cocktail.strCategory }}
-                </li>
-                 <FavBtn v-if="currentUser" :drinkId="cocktail.idDrink"/>
-              </MDBCardFooter>
-            </MDBCard>
-          </MDBCol>
-          <MDBCol>
-            <MDBCard
-              v-if="cocktail != null"
-              class="rounded-0 h-100"
-              text="white"
-              bg="dark"
-              style="max-width: 940px; margin: auto"
-            >
-              <MDBCardBody>
-                <h3>Directions</h3>
-                <p>{{ cocktail.strInstructions }}</p>
-                <br />
-                <h3>Ingredients</h3>
-
-                <MDBTable style="width: 50%; margin: auto" sm dark>
-                  <tbody>
-                    <tr v-for="item in getIngredients(cocktail)" :key="item">
-                      <td>{{ item.ingredient }}</td>
-                      <td>{{ item.measure }}</td>
-                    </tr>
-                  </tbody>
-                </MDBTable>
-              </MDBCardBody>
-              <MDBCardFooter class="text-muted"> </MDBCardFooter>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
-      </div>
-   
-  
+            <MDBTable style="width: 50%; margin: auto" sm dark>
+              <tbody>
+                <tr v-for="item in getIngredients(cocktail)" :key="item">
+                  <td>{{ item.ingredient }}</td>
+                  <td>{{ item.measure }}</td>
+                </tr>
+              </tbody>
+            </MDBTable>
+          </MDBCardBody>
+          <MDBCardFooter class="text-muted"> </MDBCardFooter>
+        </MDBCard>
+      </MDBCol>
+    </MDBRow>
+  </div>
 </template>
 
 <script>
 import { useRoute } from "vue-router";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import { ref, watchEffect } from "vue";
-import FavBtn from "../components/FavBtn"
-import getUser from "../composables/getUser"; 
+import FavBtn from "../components/FavBtn";
+import getUser from "../composables/getUser";
 import {
-  MDBContainer,
   MDBCard,
   MDBCardHeader,
   MDBCardImg,
@@ -90,7 +87,6 @@ import {
 } from "mdb-vue-ui-kit";
 export default {
   components: {
-    MDBContainer,
     MDBCard,
     MDBCardHeader,
     MDBCardImg,
@@ -107,27 +103,34 @@ export default {
     const { allCocktails, fetchData, error } = getAllCocktails();
     const { currentUser } = getUser();
 
-    const populateCocktailData = async (drinkId) => {
-      cocktail.value = null;
+    //uses thecocktaildb api lookup query to retrieve up to date drink info
+    const fetchCocktailByID = async (drinkId)=>{
       const baseURL = "https://www.thecocktaildb.com/api/json/v2";
       const apiKey = "9973533";
       const query = `lookup.php?i=${drinkId}`;
       const requestUrl = `${baseURL}/${apiKey}/${query}`;
-      try {
-        const response = await fetch(requestUrl);
+   
+      const response = await fetch(requestUrl);
         if (response.status !== 200) {
           throw new Error(response.status + " - Unable to fetch data.");
         }
         const responseJSON = await response.json();
-        console.log(responseJSON);
-        cocktail.value = responseJSON.drinks[0];
+        return responseJSON.drinks[0];
+      }
+   
+    const populateCocktailData = async (drinkId) => {
+      cocktail.value = null;
+      try {
+        cocktail.value = await fetchCocktailByID(drinkId);
+    
       } catch (e) {
+        //defaults to drink data stored in cache by service worker 
         await fetchData();
         if (error.value) {
           return;
         }
         cocktail.value = getCocktailByID(allCocktails.value, drinkId);
-        console.log(cocktail.value);
+     
       }
     };
 
@@ -136,7 +139,6 @@ export default {
       const drink = cocktailObjArray.find(
         (element) => element.idDrink === drinkID
       );
-      console.log(drink);
       return drink;
     };
 
@@ -170,18 +172,19 @@ export default {
 </script>
 
 <style>
-/* .drinkInfo {
-  background-color: lightgrey;
-  min-height: 100vh;
-  padding-top: 80px;
-  width: 100%;
-  overflow-x: hidden;
-  padding-left: 25px;
-  padding-right: 25px;
-  padding-bottom: 25px;
-} */
+.fetchError {
+  padding: 20px;
+  margin: 40px auto;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  height: 100px;
+}
 
-
+.errorTxt {
+  width: fit-content;
+  margin: auto;
+}
 
 .tagItem {
   border: solid 1px;

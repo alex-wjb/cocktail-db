@@ -1,19 +1,30 @@
 <template>
+  <!-- Randomise button -->
   <div class="btn-div">
     <MDBBtn
       style="border: 3px solid rgba(0, 0, 0, 0.125)"
       color="dark"
       class="mb-4 floating-btn rounded-0"
-      @click="setRandom"
+      @click="setRandom()"
       >Randomise</MDBBtn
     >
   </div>
-    <img
-      class="cocktailLogo"
-      alt="cocktail database logo"
-      src="../assets/watercolor-title.png"
-    />
-    <div style="max-width:1500px; margin: auto" class="homeDrinkCards">
+  <!-- Site logo -->
+  <img
+    class="cocktailLogo"
+    alt="cocktail database logo"
+    src="../assets/watercolor-title.png"
+  />
+
+  <div v-if="error" class="fetchError">
+    <div style="height: fit-content">
+      <h4 class="errorTxt">Unable to retrieve cocktail data.</h4>
+      <h4 class="errorTxt">Please try again later.</h4>
+    </div>
+  </div>
+
+  <!-- Displayed Drinks -->
+  <div class="drinkCardsContainer">
     <!-- rows have one column, cards split equal width to fit 3, up to a breakpoint-->
     <!-- g-4 = grid gap of 4 -->
     <MDBRow :cols="['1', 'md-3']" class="g-4">
@@ -51,19 +62,19 @@
             >
               {{ item }}
             </li>
-            <FavBtn v-if="currentUser" :drinkId="item.idDrink"/>
+            <FavBtn v-if="currentUser" :drinkId="item.idDrink" />
           </MDBCardFooter>
         </MDBCard>
       </MDBCol>
     </MDBRow>
-    </div>
+  </div>
 </template>
 <script>
 import { ref } from "vue";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import FavBtn from "../components/FavBtn";
-// import PageWrapper from "../components/PageWrapper";
 import getUser from "../composables/getUser";
+import { onBeforeMount } from "vue";
 import {
   MDBBtn,
   MDBCard,
@@ -86,33 +97,13 @@ export default {
     MDBCardFooter,
     MDBCardHeader,
     FavBtn,
-    // PageWrapper
   },
   setup() {
     const randomCocktails = ref(null);
-    const cocktailName = ref(null);
-    const cocktailInst = ref(null);
-    const cocktailImgSrc = ref(null);
-    const exampleModal = ref(false);
-    const ingredients = ref([]);
     const { allCocktails, fetchData, error } = getAllCocktails();
     const { currentUser } = getUser();
-
-    const getCocktailByID = (cocktailObjArray, drinkID) => {
-      const drink = cocktailObjArray.find(
-        (element) => element.idDrink === drinkID
-      );
-      return drink;
-    };
-
-    const populateDrinkModal = (drinkID) => {
-      const drinkObj = getCocktailByID(randomCocktails.value, drinkID);
-      ingredients.value = getIngredients(drinkObj);
-      cocktailName.value = drinkObj.strDrink;
-      cocktailInst.value = drinkObj.strInstructions;
-      cocktailImgSrc.value = drinkObj.strDrinkThumb;
-    };
-
+    
+    //returns list of all ingredients of a cocktail obj
     const getIngredients = (cocktailObj) => {
       let ingredients = [];
       for (let i = 1; i <= 15; i++) {
@@ -124,6 +115,7 @@ export default {
       return ingredients;
     };
 
+    //returns array of n random cocktails
     const getRandomCocktails = (n) => {
       const cocktails = allCocktails.value;
       let randomCocktails = [];
@@ -145,33 +137,20 @@ export default {
       setRandom();
     };
 
-    const logItem = (item) => {
-      console.log(item);
-      return item;
-    };
-
-    populateCocktailData();
+    onBeforeMount(populateCocktailData);
 
     return {
-      allCocktails,
-      cocktailName,
-      cocktailInst,
-      cocktailImgSrc,
       randomCocktails,
       setRandom,
-      exampleModal,
-      populateDrinkModal,
       getIngredients,
-      ingredients,
       error,
-      logItem,
-      currentUser
+      currentUser,
     };
   },
 };
 </script>
 
-<style>
+<style scoped>
 .skeleton {
   animation: skele-load 1s linear infinite alternate;
 }
@@ -185,19 +164,36 @@ export default {
   }
 }
 
+.drinkCardsContainer {
+  max-width: 1500px;
+  margin: auto;
+}
 
+.fetchError {
+  padding: 20px;
+  background-color: grey;
+  margin: 40px auto;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  height: 100px;
+}
+
+.errorTxt {
+  width: fit-content;
+  margin: auto;
+}
 
 .floating-btn {
   margin: 0 auto;
   text-align: center;
   z-index: 999;
-  border: 3px solid green;
 }
 .btn-div {
   width: 100vw;
   position: fixed;
-  top: 70px;  /* relative to container (viewport) */
-  left: 0px;  /* relative to container (viewport) */
+  top: 70px; /* relative to container (viewport) */
+  left: 0px; /* relative to container (viewport) */
   z-index: 999;
   height: 30px;
 }

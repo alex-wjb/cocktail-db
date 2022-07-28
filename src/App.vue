@@ -1,41 +1,30 @@
 <template>
+  <Header></Header>
 
- <Header></Header>
-
- <div class="pageWrapper">
- <router-view>
-  
- </router-view>
- </div>
- <!-- </keep-alive> -->
- 
+  <div class="pageWrapper">
+    <router-view> </router-view>
+  </div>
 </template>
 
 <script>
-import Header from './components/Header.vue';
-  import { ref } from 'vue';
-  export default {
-    components: {
-   Header
-    },
-    setup(){
-      const collapse1 = ref(false);
-      const dropdown1 = ref(false);
-      return{collapse1, dropdown1}
-    }
-}
+import Header from "./components/Header.vue";
+export default {
+  components: {
+    Header,
+  },
+};
 </script>
 
 <style>
 #app {
+  /* Global vue app font */
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 
- .pageWrapper {
+.pageWrapper {
   background-color: lightgrey;
   min-height: 100vh;
   padding-top: 115px;
@@ -46,30 +35,9 @@ import Header from './components/Header.vue';
   padding-right: 25px;
 }
 
-#nav {
-  padding: 45px;
-  background-color: grey;
-  position: fixed;
-  width: 100vw;
-  z-index: 999;
-  overflow-x: hidden;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-  text-align: center;
-  z-index: 999;
-}
-
-#nav a.router-link-exact-active {
-  color: #2c3e50;
-  z-index: 999;
-}
-
-/* autocomplete input styles for chrome*/
+/* CHROME input element autocomplete styles*/
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
+input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 textarea:-webkit-autofill:hover,
@@ -83,5 +51,4 @@ select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #262626 inset;
   transition: background-color 5000s ease-in-out 0s;
 }
-
 </style>

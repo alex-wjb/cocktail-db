@@ -6,7 +6,7 @@ const currentUser = ref(auth.currentUser);
 
 //event triggers on log in/out
 onAuthStateChanged(auth, (user) => {
-  console.log("Current user is:", user);
+  // console.log("Current user is:", user);
   currentUser.value = user;
 });
 
