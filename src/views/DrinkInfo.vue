@@ -135,7 +135,6 @@ export default {
     };
 
     const getCocktailByID = (cocktailObjArray, drinkID) => {
-      console.log(drinkID);
       const drink = cocktailObjArray.find(
         (element) => element.idDrink === drinkID
       );
@@ -162,6 +161,7 @@ export default {
       return ingredients;
     };
 
+    //repopulate drink info if the url id parameter changes 
     watchEffect(() => {
       populateCocktailData(route.params.id);
     });

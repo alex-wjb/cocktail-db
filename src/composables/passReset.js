@@ -2,7 +2,7 @@ import { auth } from '../firebase/config';
 import { ref } from 'vue';
 import { sendPasswordResetEmail, } from 'firebase/auth';
 
-
+//reactive values with global state
 const error = ref(null);
 const pending = ref(false);
 

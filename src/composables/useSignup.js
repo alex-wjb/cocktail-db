@@ -2,6 +2,7 @@ import { auth } from "../firebase/config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { ref } from "vue";
 
+//reactive values with global state
 const pending = ref(false);
 const signupError = ref(null);
 
@@ -31,6 +32,7 @@ const signup = async (email, password) => {
   }
 };
 
+//composition function
 const useSignup = () => {
   return { signup, signupError, pending };
 };

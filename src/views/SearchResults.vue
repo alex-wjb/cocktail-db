@@ -107,10 +107,11 @@ export default {
       return pagesShown;
     });
 
+    //returns array of result arrays of length n, where n = results per page
     const splitResults = (results) => {
       const resultChunks = [];
       const resultsPerPage = 10;
-      for (let i = 0; i < results.length; i += resultsPerPage) {
+      for (let i = 0; i < results.length; i = i + resultsPerPage) {
         const resultsChunk = results.slice(i, i + resultsPerPage);
         resultChunks.push(resultsChunk);
       }
@@ -179,6 +180,7 @@ export default {
       return searchResults;
     };
 
+    //sorts results by alphabet and relevancy
     const sortResults = (searchResults, searchString) => {
       searchResults.sort((a, b) => {
         a = a.strDrink.toLowerCase();
@@ -217,17 +219,6 @@ export default {
   background-color: #262626 !important;
 }
 
-/* .pageResults {
-  background-color: lightgrey;
-  min-height: 100vh;
-  padding-top: 115px;
-  width: 100%;
-  overflow-x: hidden;
-  padding-left: 25px;
-  padding-right: 25px;
-  padding-bottom: 25px;
-} */
-
 .resultImg {
   width: 100px;
   height: 100px;
@@ -242,7 +233,7 @@ export default {
   word-wrap: normal;
 }
 
-/* veritically centers text */
+/* vertically centers text */
 a.drinkTitle {
   color: black !important;
   margin: 0;
