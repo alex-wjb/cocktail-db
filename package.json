@@ -25,6 +25,7 @@
     "register-service-worker": "^1.7.1",
     "simple-vue-camera": "^1.1.0",
     "vue": "^3.0.0",
+    "vue-meta": "^3.0.0-alpha.10",
     "vue-router": "^4.0.0-0"
   },
   "devDependencies": {

@@ -1,4 +1,7 @@
 module.exports = {
+  transpileDependencies: [
+    'vue-meta',
+],
   pwa: {
     name: "Cocktail Database",
     manifestOptions: {

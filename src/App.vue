@@ -1,17 +1,27 @@
 <template>
+ <metainfo></metainfo>
   <Header></Header>
 
   <div class="pageWrapper">
     <router-view> </router-view>
   </div>
+ 
 </template>
 
 <script>
 import Header from "./components/Header.vue";
+import { useMeta } from 'vue-meta'
 export default {
   components: {
     Header,
   },
+  setup(){
+     useMeta({
+      title: 'Cocktail Database',
+      description: 'Search recipes, instructions, ingredients and photos for over 600 cocktails.',
+      htmlAttrs: { lang: 'en', amp: true }
+    })
+  }
 };
 </script>
 

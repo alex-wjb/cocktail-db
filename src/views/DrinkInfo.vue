@@ -16,7 +16,7 @@
           style="max-width: 940px; margin: auto"
         >
           <MDBCardHeader>
-            <h2>{{ cocktail.strDrink }}</h2>
+            <h2>{{ applyTitleCase(cocktail.strDrink) }}</h2>
           </MDBCardHeader>
 
           <a class="drinkImgContainer">
@@ -24,7 +24,7 @@
               class="rounded-0 skeleton"
               bottom
               v-bind:src="cocktail.strDrinkThumb"
-              v-bind:alt="cocktail.strDrink"
+              v-bind:alt="imgAltText"
             />
           </a>
 
@@ -72,9 +72,11 @@
 <script>
 import { useRoute } from "vue-router";
 import getAllCocktails from "../composables/fetchCocktails.js";
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, computed} from "vue";
 import FavBtn from "../components/FavBtn";
 import getUser from "../composables/getUser";
+import { useMeta } from 'vue-meta';
+
 import {
   MDBCard,
   MDBCardHeader,
@@ -99,6 +101,14 @@ export default {
   },
   setup() {
     const cocktail = ref(null);
+    const drinkName = ref(null);
+    const imgAltText = ref(null);
+   const computedMeta = computed(() => ({
+      // title: `${drinkName.value || ''} cocktail recipe`,
+      title: drinkName.value ? drinkName.value + ' - Cocktail Recipe' : "Cocktail Recipe",
+      description : ''
+    }))
+    useMeta(computedMeta);
     const route = useRoute();
     const { allCocktails, fetchData, error } = getAllCocktails();
     const { currentUser } = getUser();
@@ -122,7 +132,10 @@ export default {
       cocktail.value = null;
       try {
         cocktail.value = await fetchCocktailByID(drinkId);
-    
+        console.log(drinkName.value);
+        drinkName.value = applyTitleCase(cocktail.value.strDrink);
+        imgAltText.value = drinkName.value + " Cocktail Photo"
+        console.log(drinkName.value);
       } catch (e) {
         //defaults to drink data stored in cache by service worker 
         await fetchData();
@@ -130,6 +143,8 @@ export default {
           return;
         }
         cocktail.value = getCocktailByID(allCocktails.value, drinkId);
+        drinkName.value = applyTitleCase(cocktail.value.strDrink);
+        imgAltText.value = drinkName.value + " Cocktail Photo"
      
       }
     };
@@ -140,6 +155,15 @@ export default {
       );
       return drink;
     };
+
+    const applyTitleCase = (string) => {
+      //separate strings by spaces
+      let  wordArray = string.split(" ");
+      wordArray = wordArray.map(word=>{
+        return word.substr(0,1).toUpperCase() + word.substr(1,word.length);
+      })
+      return wordArray.join(' ');
+    }
 
     const getIngredients = (cocktailObj) => {
       let ingredients = [];
@@ -166,7 +190,7 @@ export default {
       populateCocktailData(route.params.id);
     });
 
-    return { error, cocktail, getIngredients, currentUser};
+    return { error, cocktail, getIngredients, currentUser, applyTitleCase, imgAltText};
   },
 };
 </script>
