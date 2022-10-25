@@ -1,4 +1,5 @@
 <template>
+<h1 v-if="drinkName">How to Make: {{drinkName}}</h1>
   <div v-if="error" class="fetchError">
     <div style="height: fit-content">
       <h4 class="errorTxt">Unable to retrieve cocktail data.</h4>
@@ -105,7 +106,7 @@ export default {
     const imgAltText = ref(null);
    const computedMeta = computed(() => ({
       // title: `${drinkName.value || ''} cocktail recipe`,
-      title: drinkName.value ? drinkName.value + ' - Cocktail Recipe' : "Cocktail Recipe",
+      title: drinkName.value ? 'How to Make - ' + drinkName.value + ' - Cocktail Recipe' : "Cocktail Recipe",
       description : ''
     }))
     useMeta(computedMeta);
@@ -187,10 +188,12 @@ export default {
 
     //repopulate drink info if the url id parameter changes 
     watchEffect(() => {
-      populateCocktailData(route.params.id);
+      if(route.name=="DrinkInfo"){
+        populateCocktailData(route.params.id);
+      }
     });
 
-    return { error, cocktail, getIngredients, currentUser, applyTitleCase, imgAltText};
+    return { error, cocktail, getIngredients, currentUser, applyTitleCase, imgAltText, drinkName};
   },
 };
 </script>

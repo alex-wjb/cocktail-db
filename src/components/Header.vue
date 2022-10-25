@@ -1,10 +1,11 @@
 <template>
   <MDBNavbar expand="lg" dark bg="dark" position="top" container="md">
     <MDBNavbarBrand
-      ><router-link class="homeLink" :to="{ name: 'Home' }">
+      ><h1 class="navHeading"><router-link class="homeLink" :to="{ name: 'Home' }">
         Cocktail Database</router-link
-      ></MDBNavbarBrand
+      ></h1></MDBNavbarBrand
     >
+    
     <MDBNavbarToggler
       @click="collapse1 = !collapse1"
       target="#navbarSupportedContent"
@@ -152,6 +153,11 @@ export default {
 <style scoped>
 a.router-link-active {
   color: white !important;
+}
+.navHeading{
+   margin-top: 0;
+    margin-bottom: 0;
+    font-size: 20px;
 }
 
 /* prevents navbar obstructing main content */
