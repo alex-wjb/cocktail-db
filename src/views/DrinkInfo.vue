@@ -1,5 +1,11 @@
 <template>
-<h1 v-if="drinkName">How to Make: {{drinkName}}</h1>
+  <component
+    :is="'script'"
+    v-if="cocktail"
+    v-html="generateJsonld"
+    type="application/ld+json"
+  ></component>
+  <h1 v-if="drinkName">How to Make: {{ drinkName }}</h1>
   <div v-if="error" class="fetchError">
     <div style="height: fit-content">
       <h4 class="errorTxt">Unable to retrieve cocktail data.</h4>
@@ -73,10 +79,10 @@
 <script>
 import { useRoute } from "vue-router";
 import getAllCocktails from "../composables/fetchCocktails.js";
-import { ref, watchEffect, computed} from "vue";
+import { ref, watchEffect, computed } from "vue";
 import FavBtn from "../components/FavBtn";
 import getUser from "../composables/getUser";
-import { useMeta } from 'vue-meta';
+import { useMeta } from "vue-meta";
 
 import {
   MDBCard,
@@ -104,49 +110,97 @@ export default {
     const cocktail = ref(null);
     const drinkName = ref(null);
     const imgAltText = ref(null);
-   const computedMeta = computed(() => ({
+    const computedMeta = computed(() => ({
       // title: `${drinkName.value || ''} cocktail recipe`,
-      title: drinkName.value ? 'How to Make - ' + drinkName.value + ' - Cocktail Recipe' : "Cocktail Recipe",
-      description : ''
-    }))
+      title: drinkName.value
+        ? "How to Make - " + drinkName.value + " - Cocktail Recipe"
+        : "Cocktail Recipe",
+      description: "",
+    }));
     useMeta(computedMeta);
     const route = useRoute();
     const { allCocktails, fetchData, error } = getAllCocktails();
     const { currentUser } = getUser();
 
+    const generateIngredientList = (cocktailObj) => {
+      const ingredientObjs = getIngredients(cocktailObj);
+      const ingredientList = ingredientObjs.map((obj) => {
+        return obj.ingredient;
+      });
+      return ingredientList.toString().replace(/,/g, ', ');
+    };
+    const generateIngMeasureList = (cocktailObj) => {
+      const ingredientObjs = getIngredients(cocktailObj);
+      const ingredientList = ingredientObjs.map((obj) => {
+        return obj.measure + obj.ingredient;
+      });
+      return ingredientList.toString().replace(/,/g, ', ');
+    };
+
+    const generateJsonld = computed(() => {
+      let jsonld = null;
+      if (cocktail.value) {
+        console.log(cocktail.value);
+        jsonld = JSON.stringify({
+          "@context": "https://schema.org/",
+          "@type": "Recipe",
+          "name": applyTitleCase(cocktail.value.strDrink),
+          "image": cocktail.value.strDrinkThumb,
+          "datePublished": cocktail.value.dateModified,
+          "description": applyTitleCase(cocktail.value.strDrink) + "- Recipe and Ingredients",
+          "keywords":
+            "Cocktail Recipe, How to Make, Mixology, Alcoholic Drink," +
+            cocktail.value.strTags +
+            ", " +
+            generateIngredientList(cocktail.value),
+          "recipeYield": "1",
+          "recipeCategory": "Cocktail",
+          "recipeIngredient": [generateIngMeasureList(cocktail.value)],
+          "recipeInstructions": {
+            "@type": "HowToStep",
+            "name": "Make",
+            "text": cocktail.value.strInstructions,
+            "url": window.location.origin + route.path,
+            "image": cocktail.value.strDrinkThumb,
+          },
+        });
+      }
+      console.log(jsonld);
+      return jsonld;
+    });
+
     //uses thecocktaildb api lookup query to retrieve up to date drink info
-    const fetchCocktailByID = async (drinkId)=>{
+    const fetchCocktailByID = async (drinkId) => {
       const baseURL = "https://www.thecocktaildb.com/api/json/v2";
       const apiKey = "9973533";
       const query = `lookup.php?i=${drinkId}`;
       const requestUrl = `${baseURL}/${apiKey}/${query}`;
-   
+
       const response = await fetch(requestUrl);
-        if (response.status !== 200) {
-          throw new Error(response.status + " - Unable to fetch data.");
-        }
-        const responseJSON = await response.json();
-        return responseJSON.drinks[0];
+      if (response.status !== 200) {
+        throw new Error(response.status + " - Unable to fetch data.");
       }
-   
+      const responseJSON = await response.json();
+      return responseJSON.drinks[0];
+    };
+
     const populateCocktailData = async (drinkId) => {
       cocktail.value = null;
       try {
         cocktail.value = await fetchCocktailByID(drinkId);
         console.log(drinkName.value);
         drinkName.value = applyTitleCase(cocktail.value.strDrink);
-        imgAltText.value = drinkName.value + " Cocktail Photo"
+        imgAltText.value = drinkName.value + " Cocktail Photo";
         console.log(drinkName.value);
       } catch (e) {
-        //defaults to drink data stored in cache by service worker 
+        //defaults to drink data stored in cache by service worker
         await fetchData();
         if (error.value) {
           return;
         }
         cocktail.value = getCocktailByID(allCocktails.value, drinkId);
         drinkName.value = applyTitleCase(cocktail.value.strDrink);
-        imgAltText.value = drinkName.value + " Cocktail Photo"
-     
+        imgAltText.value = drinkName.value + " Cocktail Photo";
       }
     };
 
@@ -159,12 +213,12 @@ export default {
 
     const applyTitleCase = (string) => {
       //separate strings by spaces
-      let  wordArray = string.split(" ");
-      wordArray = wordArray.map(word=>{
-        return word.substr(0,1).toUpperCase() + word.substr(1,word.length);
-      })
-      return wordArray.join(' ');
-    }
+      let wordArray = string.split(" ");
+      wordArray = wordArray.map((word) => {
+        return word.substr(0, 1).toUpperCase() + word.substr(1, word.length);
+      });
+      return wordArray.join(" ");
+    };
 
     const getIngredients = (cocktailObj) => {
       let ingredients = [];
@@ -186,14 +240,23 @@ export default {
       return ingredients;
     };
 
-    //repopulate drink info if the url id parameter changes 
+    //repopulate drink info if the url id parameter changes
     watchEffect(() => {
-      if(route.name=="DrinkInfo"){
+      if (route.name == "DrinkInfo") {
         populateCocktailData(route.params.id);
       }
     });
 
-    return { error, cocktail, getIngredients, currentUser, applyTitleCase, imgAltText, drinkName};
+    return {
+      error,
+      cocktail,
+      getIngredients,
+      currentUser,
+      applyTitleCase,
+      imgAltText,
+      drinkName,
+      generateJsonld,
+    };
   },
 };
 </script>
