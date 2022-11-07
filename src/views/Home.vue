@@ -118,6 +118,7 @@ export default {
     //returns array of n random cocktails
     const getRandomCocktails = (n) => {
       const cocktails = allCocktails.value;
+      cocktails.forEach((ele)=>{console.log(ele.strDrink)})
       let randomCocktails = [];
       for (let i = 0; i < n; i++) {
         randomCocktails = randomCocktails.concat(
@@ -126,6 +127,7 @@ export default {
       }
       return randomCocktails;
     };
+
 
     const setRandom = () => {
       randomCocktails.value = getRandomCocktails(12);

@@ -17,8 +17,8 @@ export default {
   },
   setup(){
      useMeta({
-      title: 'Cocktail Database - Classic and New Cocktail Recipes',
-      description: 'Search recipes, instructions, ingredients and photos for over 600 cocktails.',
+      title: 'The Cocktail Database - Classic Cocktail Recipes',
+      description: 'Browse recipes, ingredients and photos for over 600 cocktails.',
       htmlAttrs: { lang: 'en', amp: true }
     })
   }
