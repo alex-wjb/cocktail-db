@@ -1,25 +1,23 @@
-/* eslint-disable no-undef */
-/**
- * Welcome to your Workbox-powered service worker!
- *
- * You'll need to register this file in your web app and you should
- * disable HTTP caching for this file too.
- * See https://goo.gl/nhQhGp
- *
- * The rest of the code is auto-generated. Please don't update this file
- * directly; instead, make changes to your Workbox build configuration
- * and re-run your build process.
- * See https://goo.gl/2aRDsh
- */
+import {
+  precacheAndRoute,
+  cleanupOutdatedCaches,
+  createHandlerBoundToURL,
+} from "workbox-precaching";
+import { NavigationRoute, registerRoute } from "workbox-routing";
+import { CacheFirst, StaleWhileRevalidate } from "workbox-strategies";
+import { ExpirationPlugin } from "workbox-expiration";
+import { clientsClaim, setCacheNameDetails } from "workbox-core";
 
-workbox.setConfig({
-  debug: true,
-});
+precacheAndRoute(self.__WB_MANIFEST);
 
-workbox.core.setCacheNameDetails({ prefix: "cocktail-db" });
+// workbox.setConfig({
+//   debug: true,
+// });
+cleanupOutdatedCaches();
+setCacheNameDetails({ prefix: "cocktail-db" });
 //USED TO ALLOW SERVICE WORKER TO PERFORM RUNTIME CACHING WHEN FIRST REGISTERED WITHOUT FIRST RELOADING PAGE
 self.addEventListener("activate", () => self.clients.claim());
-workbox.core.clientsClaim();
+clientsClaim();
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -27,25 +25,19 @@ self.addEventListener("message", (event) => {
   }
 });
 
-/**
- * The workboxSW.precacheAndRoute() method efficiently caches and responds to
- * requests for URLs in the manifest.
- * See https://goo.gl/S9QRab
- */
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-workbox.routing.registerNavigationRoute(
-  workbox.precaching.getCacheKeyForURL("index.html")
-);
+// This assumes /index.html has been precached.
+const handler = createHandlerBoundToURL("/index.html");
+const navigationRoute = new NavigationRoute(handler);
+registerRoute(navigationRoute);
 
-workbox.routing.registerRoute(
+registerRoute(
   new RegExp("https://www.thecocktaildb.com/api/json/v2/(.*)"),
-  workbox.strategies.staleWhileRevalidate({
+  new StaleWhileRevalidate({
     cacheName: "drinks",
     plugins: [
-      new workbox.expiration.Plugin({
+      new ExpirationPlugin({
         maxEntries: 30,
-        maxAgeSeconds: 60 * 60 * 24 //1 day
+        maxAgeSeconds: 60 * 60 * 24, //1 day
       }),
     ],
     method: "GET",
@@ -53,12 +45,12 @@ workbox.routing.registerRoute(
   })
 );
 
-workbox.routing.registerRoute(
+registerRoute(
   new RegExp("https://use.fontawesome.com/releases/v5.15.1/css/all.css"),
-  workbox.strategies.cacheFirst({
+  new CacheFirst({
     cacheName: "icons",
     plugins: [
-      new workbox.expiration.Plugin({
+      new ExpirationPlugin({
         maxEntries: 30,
         maxAgeSeconds: 60 * 60 * 24 * 30, //30 days
       }),

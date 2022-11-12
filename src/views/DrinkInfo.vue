@@ -80,7 +80,7 @@
 import { useRoute } from "vue-router";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import { ref, watchEffect, computed } from "vue";
-import FavBtn from "../components/FavBtn";
+import FavBtn from "../components/FavBtn.vue";
 import getUser from "../composables/getUser";
 import { useMeta } from "vue-meta";
 
@@ -127,14 +127,14 @@ export default {
       const ingredientList = ingredientObjs.map((obj) => {
         return obj.ingredient;
       });
-      return ingredientList.toString().replace(/,/g, ', ');
+      return ingredientList.toString().replace(/,/g, ", ");
     };
     const generateIngMeasureList = (cocktailObj) => {
       const ingredientObjs = getIngredients(cocktailObj);
       const ingredientList = ingredientObjs.map((obj) => {
         return obj.measure + obj.ingredient;
       });
-      return ingredientList.toString().replace(/,/g, ', ');
+      return ingredientList.toString().replace(/,/g, ", ");
     };
 
     const generateJsonld = computed(() => {
@@ -147,7 +147,9 @@ export default {
           "name": applyTitleCase(cocktail.value.strDrink),
           "image": cocktail.value.strDrinkThumb,
           "datePublished": cocktail.value.dateModified,
-          "description": applyTitleCase(cocktail.value.strDrink) + "- Recipe and Ingredients",
+          "description":
+            applyTitleCase(cocktail.value.strDrink) +
+            "- Recipe and Ingredients",
           "keywords":
             "Cocktail Recipe, How to Make, Mixology, Alcoholic Drink," +
             cocktail.value.strTags +

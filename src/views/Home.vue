@@ -72,7 +72,7 @@
 <script>
 import { ref } from "vue";
 import getAllCocktails from "../composables/fetchCocktails.js";
-import FavBtn from "../components/FavBtn";
+import FavBtn from "../components/FavBtn.vue";
 import getUser from "../composables/getUser";
 import { onBeforeMount } from "vue";
 import {

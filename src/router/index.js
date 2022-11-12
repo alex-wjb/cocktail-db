@@ -43,55 +43,41 @@ const routes = [
   {
     path: "/about",
     name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    component: () => import("../views/About.vue"),
   },
   {
     path: "/login",
     name: "Login",
-    component: () =>
-      import(/* webpackChunkName: "login" */ "../views/Login.vue"),
+    component: () => import("../views/Login.vue"),
     beforeEnter: requireSignedOut,
   },
   {
     path: "/register",
     name: "Registration",
-    component: () =>
-      import(
-        /* webpackChunkName: "registration" */ "../views/Registration.vue"
-      ),
+    component: () => import("../views/Registration.vue"),
     beforeEnter: requireSignedOut,
   },
   {
     path: "/reset",
     name: "PassReset",
-    component: () =>
-      import(/* webpackChunkName: "passReset" */ "../views/PassReset.vue"),
+    component: () => import("../views/PassReset.vue"),
   },
   {
     path: "/profile",
     name: "Profile",
-    component: () =>
-      import(/* webpackChunkName: "profile" */ "../views/Profile.vue"),
+    component: () => import("../views/Profile.vue"),
     beforeEnter: requireSignedIn,
   },
   {
     path: "/search/:query?",
     name: "Search",
-    component: () =>
-      import(
-        /* webpackChunkName: "searchResults" */ "../views/SearchResults.vue"
-      ),
+    component: () => import("../views/SearchResults.vue"),
     beforeEnter: requireParams,
   },
   {
     path: "/drinks/:id",
     name: "DrinkInfo",
-    component: () =>
-      import(/* webpackChunkName: "drinkInfo" */ "../views/DrinkInfo.vue"),
+    component: () => import("../views/DrinkInfo.vue"),
   },
   {
     path: "/:catchAll(.*)",

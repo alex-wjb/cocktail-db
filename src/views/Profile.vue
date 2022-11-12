@@ -1,99 +1,106 @@
 <template>
-    <div class="profileCard">
-      <MDBCard class="rounded-0 h-100" text="white" bg="dark">
-        <MDBCardHeader style="border-width: 0px !important">
-          <img
-            v-show="profilePicExists"
-            ref="profilePic"
-            class="profileImage img-fluid rounded-circle"
-            alt="user profile picture"
-          />
-          <img
-            class="profileImage image-fluid rounded-circle"
-            v-show="!profilePicExists"
-            alt="grey outline user profile picture placeholder"
-            src="../assets/profile-placeholder.png"
-          />
-          <h3 style="padding-top:10px;">{{ displayName }}</h3></MDBCardHeader
+  <div class="profileCard">
+    <MDBCard class="rounded-0 h-100" text="white" bg="dark">
+      <MDBCardHeader style="border-width: 0px !important">
+        <img
+          v-show="profilePicExists"
+          ref="profilePic"
+          class="profileImage img-fluid rounded-circle"
+          alt="user profile picture"
+        />
+        <img
+          class="profileImage image-fluid rounded-circle"
+          v-show="!profilePicExists"
+          alt="grey outline user profile picture placeholder"
+          src="../assets/profile-placeholder.png"
+        />
+        <h3 style="padding-top: 10px">{{ displayName }}</h3></MDBCardHeader
+      >
+      <MDBCardBody>
+        <MDBCardTitle></MDBCardTitle>
+        <MDBCardText> </MDBCardText>
+        <MDBBtn
+          @click="showCamera = true"
+          class="rounded-0"
+          color="dark"
+          outline="light"
+          style="border-color: grey !important"
+          >Edit Photo</MDBBtn
         >
-        <MDBCardBody>
-          <MDBCardTitle></MDBCardTitle>
-          <MDBCardText> </MDBCardText>
-          <MDBBtn
-            @click="showCamera = true"
-            class="rounded-0"
-            color="dark"
-            outline="light"
-            style="border-color: grey !important"
-            >Edit Photo</MDBBtn
-          >
-          <MDBBtn 
-            class="rounded-0"
-            @click="populateFavourites()"
-            color="dark"
-            outline="light"
-            style="border-color: grey !important"
-            >View Favourites</MDBBtn
-          >
-         
-        </MDBCardBody>
-      </MDBCard>
-    </div>
-    
+        <MDBBtn
+          class="rounded-0"
+          @click="populateFavourites()"
+          color="dark"
+          outline="light"
+          style="border-color: grey !important"
+          >View Favourites</MDBBtn
+        >
+      </MDBCardBody>
+    </MDBCard>
+  </div>
 
-    <div
-      v-if="cocktails"
-      style="max-width: 1500px; margin: auto"
-      class="favouriteCards"
-      xl
-    >
-      <!-- rows have one column, cards split equal width to fit 3, up to a breakpoint-->
-      <!-- g-4 = grid gap of 4 -->
-      <MDBRow :cols="['1', 'md-4']" class="g-4">
-        <!-- cols col to each row-->
+  <div
+    v-if="cocktails"
+    style="max-width: 1500px; margin: auto"
+    class="favouriteCards"
+    xl
+  >
+    <!-- rows have one column, cards split equal width to fit 3, up to a breakpoint-->
+    <!-- g-4 = grid gap of 4 -->
+    <MDBRow :cols="['1', 'md-4']" class="g-4">
+      <!-- cols col to each row-->
 
-        <MDBCol v-for="item in cocktails" :key="item.idDrink">
-          <MDBCard class="rounded-0 h-100" text="white" bg="dark">
-            <MDBCardHeader style="border-width: 0px !important;">
-              <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
-            </MDBCardHeader>
-            <MDBCardBody style="padding: 0px !important;">
-              <!-- <router-link
+      <MDBCol v-for="item in cocktails" :key="item.idDrink">
+        <MDBCard class="rounded-0 h-100" text="white" bg="dark">
+          <MDBCardHeader style="border-width: 0px !important">
+            <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
+          </MDBCardHeader>
+          <MDBCardBody style="padding: 0px !important">
+            <!-- <router-link
                 style="padding: 2px"
                 :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
                 >Get Drink Info</router-link
               > -->
+          </MDBCardBody>
 
-         
-            </MDBCardBody>
-
-            <MDBCardFooter class="text-muted" style="padding-left:0px; padding-right:0px; border-width: 0px !important;">
-                   <router-link
-                :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
-              >
-                <a class="drinkImgContainer">
-                  <MDBCardImg
-                    class="rounded-0 drinkImg skeleton"
-                    bottom
-                    v-bind:src="item.strDrinkThumb"
-                    v-bind:alt="item.strDrink"
-                  />
-                </a>
-              </router-link>
-              <!-- <li
+          <MDBCardFooter
+            class="text-muted"
+            style="
+              padding-left: 0px;
+              padding-right: 0px;
+              border-width: 0px !important;
+            "
+          >
+            <router-link
+              :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
+            >
+              <a class="drinkImgContainer">
+                <MDBCardImg
+                  class="rounded-0 drinkImg skeleton"
+                  bottom
+                  v-bind:src="item.strDrinkThumb"
+                  v-bind:alt="item.strDrink"
+                />
+              </a>
+            </router-link>
+            <!-- <li
                 class="ingredientItem list-inline list-inline-item"
                 v-for="item in getIngredients(item)"
                 :key="item"
               >
                 {{ item }}
               </li> -->
-              <FavBtn style="padding-top: 15px;" v-if="currentUser" :drinkId="item.idDrink" />
-            </MDBCardFooter>
-          </MDBCard>
-        </MDBCol>
-      </MDBRow>
-    </div>
-    <Camera @photoUploaded="getProfilePic()" v-if="showCamera" />
+            <FavBtn
+              style="padding-top: 15px"
+              v-if="currentUser"
+              :drinkId="item.idDrink"
+            />
+          </MDBCardFooter>
+        </MDBCard>
+      </MDBCol>
+    </MDBRow>
+  </div>
+  <Camera @photoUploaded="getProfilePic()" v-if="showCamera" />
 </template>
 
 <script>
@@ -108,7 +115,7 @@ import Camera from "../components/Camera.vue";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import getAllCocktails from "../composables/fetchCocktails.js";
-import FavBtn from "../components/FavBtn"
+import FavBtn from "../components/FavBtn.vue";
 
 import { ref, onMounted } from "vue";
 import {
@@ -137,7 +144,6 @@ export default {
     MDBCardFooter,
     Camera,
     FavBtn,
-    
   },
   setup() {
     const { currentUser } = getUser();
@@ -265,7 +271,7 @@ export default {
       currentUser,
       populateFavourites,
       getIngredients,
-      favourites
+      favourites,
     };
   },
 };
