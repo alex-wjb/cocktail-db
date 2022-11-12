@@ -64,7 +64,7 @@
 <script>
 import { useRoute } from "vue-router";
 import { ref, watchEffect, computed } from "vue";
-import getAllCocktails from "../composables/fetchCocktails.js";
+import getAllCocktails from "../../composables/fetchCocktails.js";
 
 import {
   MDBListGroup,

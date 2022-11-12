@@ -38,11 +38,11 @@
 
           <router-link
             style="padding: 2px"
-            :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
+            :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
             >Get Drink Info</router-link
           >
           <router-link
-            :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
+            :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
           >
             <a class="drinkImgContainer">
               <MDBCardImg

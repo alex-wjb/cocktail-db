@@ -78,10 +78,10 @@
 
 <script>
 import { useRoute } from "vue-router";
-import getAllCocktails from "../composables/fetchCocktails.js";
+import getAllCocktails from "../../composables/fetchCocktails.js";
 import { ref, watchEffect, computed } from "vue";
-import FavBtn from "../components/FavBtn.vue";
-import getUser from "../composables/getUser";
+import FavBtn from "../../components/FavBtn.vue";
+import getUser from "../../composables/getUser";
 import { useMeta } from "vue-meta";
 
 import {
@@ -244,7 +244,8 @@ export default {
 
     //repopulate drink info if the url id parameter changes
     watchEffect(() => {
-      if (route.name == "DrinkInfo") {
+      // console.log(route.name);
+       if (route.name == "drinks-id") {
         populateCocktailData(route.params.id);
       }
     });

@@ -116,6 +116,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import FavBtn from "../components/FavBtn.vue";
+import { useRoute } from "vue-router";
 
 import { ref, onMounted } from "vue";
 import {
@@ -148,6 +149,8 @@ export default {
   setup() {
     const { currentUser } = getUser();
     const displayName = ref("");
+    const route = useRoute();
+    console.log(route.path);
     const video = ref(null);
     const showCamera = ref(false);
     const profilePic = ref(null);
@@ -156,7 +159,7 @@ export default {
     const favourites = ref([]);
     const cocktails = ref([]);
     const { allCocktails, fetchData, error } = getAllCocktails();
-
+    
     const getProfilePic = () => {
       const user = currentUser.value.uid;
       const storage = getStorage();
