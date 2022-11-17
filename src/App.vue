@@ -44,6 +44,19 @@ export default {
   padding-left: 25px;
   padding-right: 25px;
 }
+/* Feature Query */
+/* @supports (padding: max(0px)) { */
+  /* .wrapper { */
+    /* uses constant value provided by IOS to provide padding when iphone horizontal to
+      prevent device sensor bar covering content */
+    /* When vertical the constant will be 0, so padding will default to
+      other specified value when using max() */
+    /* padding-left: max(25px, env(safe-area-inset-left));
+    padding-right: max(25px, env(safe-area-inset-right)); */
+  /* } */
+/* } */
+
+
 .form-outline .form-control:focus {
     box-shadow: null;
 }
