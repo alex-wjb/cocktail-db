@@ -1,7 +1,7 @@
 import { ref } from "vue";
 const baseURL = "https://www.thecocktaildb.com/api/json/v2";
 const apiKey = "9973533";
-const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
 //sends Fetch API request returning results as json
 const sendRequest = async (requestUrl) => {
   //returns promise containing response object on resolve
@@ -56,6 +56,7 @@ const getAllCocktails = () => {
       });
     } catch (err) {
       console.log(err);
+      console.log("hiii");
       error.value = err;   
     }
   };

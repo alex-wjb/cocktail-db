@@ -1,7 +1,7 @@
 <template>
   <MDBNavbar expand="lg" dark bg="dark" position="top" container="md">
     <MDBNavbarBrand
-      ><h1 class="navHeading"><router-link class="homeLink" :to="{ name: 'Home' }">
+      ><h1 class="navHeading"><router-link class="homeLink" :to="{ name: 'Index' }">
         Cocktail Database</router-link
       ></h1></MDBNavbarBrand
     >
@@ -62,7 +62,7 @@ import {
   MDBCollapse,
 } from "mdb-vue-ui-kit";
 import getUser from "../composables/getUser";
-import SearchBar from "../components/SearchBar.vue";
+import SearchBar from "./SearchBar.vue";
 import { ref, watchEffect } from "vue";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter, useRoute } from "vue-router";

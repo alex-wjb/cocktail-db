@@ -72,7 +72,7 @@
             "
           >
             <router-link
-              :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
+              :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
             >
               <a class="drinkImgContainer">
                 <MDBCardImg
@@ -159,7 +159,7 @@ export default {
     const favourites = ref([]);
     const cocktails = ref([]);
     const { allCocktails, fetchData, error } = getAllCocktails();
-    
+
     const getProfilePic = () => {
       const user = currentUser.value.uid;
       const storage = getStorage();

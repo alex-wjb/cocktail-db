@@ -1,11 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 // import Home from "../views/Home.vue";
 // import NotFound from "../views/NotFound.vue";
- import getUser from "../composables/getUser";
+import getUser from "../composables/getUser";
 
-import routes from '~pages';
-
-
+import routes from "~pages";
 
 //ROUTE GUARDS
 
@@ -101,12 +99,15 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const { currentUser } = getUser();
-  console.log("YOLO");
-  console.log(to.name);
-  if (to.name === 'Profile' && !currentUser.value) { console.log("no user!"); next({ name: 'Home' }) }
-  if (to.name === 'Login' && currentUser.value) { console.log("user"); next({ name: 'Home' }) }
-  if (to.name === 'Registration' && currentUser.value) { console.log("user"); next({ name: 'Home' }) }
-  else next()
-})
+  if (to.name === "Profile" && !currentUser.value) {
+    next({ name: "Index" });
+  }
+  if (to.name === "Login" && currentUser.value) {
+    next({ name: "Index" });
+  }
+  if (to.name === "Register" && currentUser.value) {
+    next({ name: "Index" });
+  } else next();
+});
 
 export default router;

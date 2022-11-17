@@ -13,15 +13,17 @@
             </div>
           </MDBCardTitle>
           <MDBCardText>
-            <form @submit.prevent="register">
+            <form @submit.prevent="register" autocomplete="off">
               <MDBRow>
                 <MDBCol md="6">
+                  <label style="border: 2px solid green; text-align: left!important;" for="form2FirstName">First Name</label>
                   <MDBInput
                   class="registerInput"
                     id="form2FirstName"
                     v-model.trim="firstName"
                     type="text"
-                    label="First Name"
+                 
+                    placeholder="First Name"
                     wrapper-class="mb-4"
                     :maxlength="32"
                     required

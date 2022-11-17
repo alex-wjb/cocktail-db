@@ -44,21 +44,28 @@ export default {
   padding-left: 25px;
   padding-right: 25px;
 }
+.form-outline .form-control:focus {
+    box-shadow: null;
+}
 
 /* CHROME input element autocomplete styles*/
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
 textarea:-webkit-autofill,
 textarea:-webkit-autofill:hover,
 textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
+select:-webkit-autofill:focus
+{
   border: 0;
   -webkit-text-fill-color: white;
   background-color: #262626;
-  -webkit-box-shadow: 0 0 0px 1000px #262626 inset;
+  -webkit-box-shadow: 0 0 0px 30px #262626 inset!important;
   transition: background-color 5000s ease-in-out 0s;
 }
+
+
 </style>

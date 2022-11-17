@@ -2,7 +2,6 @@
   <!-- Randomise button -->
   <div class="btn-div">
     <MDBBtn
-      style="border: 3px solid rgba(0, 0, 0, 0.125)"
       color="dark"
       class="mb-4 floating-btn rounded-0"
       @click="setRandom()"
@@ -10,11 +9,11 @@
     >
   </div>
   <!-- Site logo -->
-  <img
+  <!-- <img
     class="cocktailLogo"
     alt="cocktail database logo"
     src="../assets/watercolor-title.png"
-  />
+  /> -->
 
   <div v-if="error" class="fetchError">
     <div style="height: fit-content">
@@ -169,6 +168,7 @@ export default {
 .drinkCardsContainer {
   max-width: 1500px;
   margin: auto;
+  padding-top: 15px;
 }
 
 .fetchError {
@@ -188,8 +188,12 @@ export default {
 
 .floating-btn {
   margin: 0 auto;
+box-shadow: 20px!important;
+  border-radius: 30px!important;
   text-align: center;
   z-index: 999;
+  background: rgb(108,107,112);
+background: linear-gradient(90deg, rgba(108,107,112,1) 56%, rgba(29,27,27,1) 100%);
 }
 .btn-div {
   width: 100vw;
