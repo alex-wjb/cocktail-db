@@ -27,7 +27,7 @@
         v-for="item in getPageResults"
         :key="item"
       >
-        <router-link :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }">
+        <router-link :to="{ name: 'drinks-id', params: { id: item.idDrink } }">
           <img
             class="resultImg"
             :src="item.strDrinkThumb"
@@ -36,7 +36,7 @@
         </router-link>
 
         <router-link
-          :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
+          :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
           class="drinkTitle"
           >{{ item.strDrink }}</router-link
         ></MDBListGroupItem

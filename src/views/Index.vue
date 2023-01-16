@@ -1,19 +1,4 @@
 <template>
-  <!-- Randomise button -->
-  <div class="btn-div">
-    <MDBBtn
-      color="dark"
-      class="mb-4 floating-btn rounded-0"
-      @click="setRandom()"
-      >Randomise</MDBBtn
-    >
-  </div>
-  <!-- Site logo -->
-  <!-- <img
-    class="cocktailLogo"
-    alt="cocktail database logo"
-    src="../assets/watercolor-title.png"
-  /> -->
 
   <div v-if="error" class="fetchError">
     <div style="height: fit-content">
@@ -24,36 +9,34 @@
 
   <!-- Displayed Drinks -->
   <div class="drinkCardsContainer">
-    <!-- rows have one column, cards split equal width to fit 3, up to a breakpoint-->
-    <!-- g-4 = grid gap of 4 -->
-    <MDBRow :cols="['1', 'md-3']" class="g-4">
-      <!-- cols col to each row-->
+  
+      <div class="row row-cols-1 row-cols-md-3 g-4">
 
-      <MDBCol v-for="item in randomCocktails" :key="item.idDrink">
-        <MDBCard class="rounded-0 h-100" text="white" bg="dark">
-          <MDBCardHeader style="border-width: 3px">
-            <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
-          </MDBCardHeader>
+      <div class="col" v-for="item in randomCocktails" :key="item.idDrink">
+        <div class="rounded-0 h-100 card text-white bg-dark">
+          <div class="card-header" style="border-width: 0px; " >
+            <h4 class="card-title ">{{ item.strDrink }}</h4>
+          </div>
 
           <router-link
-            style="padding: 2px"
+          class="drinkLink"
+            style="padding: 10px"
             :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
-            >Get Drink Info</router-link
+            >View Recipe</router-link
           >
           <router-link
             :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
           >
             <a class="drinkImgContainer">
-              <MDBCardImg
-                class="rounded-0 drinkImg skeleton"
-                bottom
+              <img
+                class="rounded-0 card-img-bottom drinkImg skeleton"
                 v-bind:src="item.strDrinkThumb"
                 v-bind:alt="item.strDrink"
               />
             </a>
           </router-link>
 
-          <MDBCardFooter class="text-muted">
+          <div class="text-muted card-footer">
             <li
               class="ingredientItem list-inline list-inline-item"
               v-for="item in getIngredients(item)"
@@ -62,10 +45,10 @@
               {{ item }}
             </li>
             <FavBtn v-if="currentUser" :drinkId="item.idDrink" />
-          </MDBCardFooter>
-        </MDBCard>
-      </MDBCol>
-    </MDBRow>
+          </div>
+        </div>
+      </div>
+      </div>
   </div>
 </template>
 <script>
@@ -73,35 +56,20 @@ import { ref } from "vue";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import FavBtn from "../components/FavBtn.vue";
 import getUser from "../composables/getUser";
-import { onBeforeMount } from "vue";
+import { onBeforeMount, watchEffect } from "vue";
 import {
-  MDBBtn,
-  MDBCard,
-  MDBCardTitle,
-  MDBCardImg,
-  MDBCol,
-  MDBRow,
-  MDBCardFooter,
-  MDBCardHeader,
 } from "mdb-vue-ui-kit";
 export default {
   name: "Home",
+  props: ['shuffle'],
   components: {
-    MDBCard,
-    MDBCardTitle,
-    MDBBtn,
-    MDBCardImg,
-    MDBCol,
-    MDBRow,
-    MDBCardFooter,
-    MDBCardHeader,
     FavBtn,
   },
-  setup() {
+  setup(props) {
     const randomCocktails = ref(null);
     const { allCocktails, fetchData, error } = getAllCocktails();
     const { currentUser } = getUser();
-    
+
     //returns list of all ingredients of a cocktail obj
     const getIngredients = (cocktailObj) => {
       let ingredients = [];
@@ -113,20 +81,41 @@ export default {
       }
       return ingredients;
     };
+    watchEffect(() => {
+      if (randomCocktails.value && props.shuffle!==null) {
 
+        setRandom();
+    
+      }
+    });
+ 
     //returns array of n random cocktails
     const getRandomCocktails = (n) => {
-      const cocktails = allCocktails.value;
-      cocktails.forEach((ele)=>{console.log(ele.strDrink)})
+      let randomNums = [];
       let randomCocktails = [];
+      const cocktails = allCocktails.value;
       for (let i = 0; i < n; i++) {
-        randomCocktails = randomCocktails.concat(
-          cocktails.splice(Math.random() * cocktails.length, 1)
-        );
+        const num = Math.floor(Math.random() * allCocktails.value.length);
+
+        if (!randomNums.includes(num)) {
+          randomNums.push(num);
+          randomCocktails.push(cocktails[num]);
+        }
       }
+      // alert(randomCocktails.length);
       return randomCocktails;
     };
+    //   const getRandomCocktails = (n) => {
 
+    //   const cocktails = allCocktails.value;
+    //   let randomCocktails = [];
+    //   for (let i = 0; i < n; i++) {
+    //     randomCocktails = randomCocktails.concat(
+    //       cocktails.splice(Math.random() * cocktails.length, 1)
+    //     );
+    //   }
+    //   return randomCocktails;
+    // };
 
     const setRandom = () => {
       randomCocktails.value = getRandomCocktails(12);
@@ -168,7 +157,7 @@ export default {
 .drinkCardsContainer {
   max-width: 1500px;
   margin: auto;
-  padding-top: 15px;
+  text-align: center;
 }
 
 .fetchError {
@@ -188,20 +177,24 @@ export default {
 
 .floating-btn {
   margin: 0 auto;
-box-shadow: 20px!important;
-  border-radius: 30px!important;
+  box-shadow: 20px !important;
   text-align: center;
-  z-index: 999;
-  background: rgb(108,107,112);
-background: linear-gradient(90deg, rgba(108,107,112,1) 56%, rgba(29,27,27,1) 100%);
+  z-index: 3000;
+  height: 55px;
+  width: 100px;
+  height: 100px;
+  border-radius: 150px!important;
 }
 .btn-div {
   width: 100vw;
   position: fixed;
-  top: 70px; /* relative to container (viewport) */
-  left: 0px; /* relative to container (viewport) */
-  z-index: 999;
-  height: 30px;
+ 
+  width: fit-content;
+  bottom: 0px; /* relative to container (viewport) */
+  right: 10px;
+  /* relative to container (viewport) */
+  z-index: 3000;
+ height: auto;
 }
 
 .drinkImg {
@@ -210,9 +203,9 @@ background: linear-gradient(90deg, rgba(108,107,112,1) 56%, rgba(29,27,27,1) 100
   backface-visibility: hidden;
 }
 
-.drinkImgContainer:hover .drinkImg {
-  opacity: 0.6;
-}
+/* .drinkImgContainer:hover .drinkImg {
+  opacity: 0.8;
+} */
 
 .cocktailLogo {
   width: 280px;
@@ -224,5 +217,15 @@ background: linear-gradient(90deg, rgba(108,107,112,1) 56%, rgba(29,27,27,1) 100
   padding-left: 3px;
   padding-right: 3px;
   margin-bottom: 5px;
+}
+.drinkLink:hover{
+  background-color: #414551;
+  color:white;
+}
+.drinkLink{
+  color:grey;
+  text-decoration: none;
+  background-color: #0c0e10;
+  
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
  
     <div
-      class="login w-100 p-4 d-flex align-items-center justify-content-center"
+      class="login w-100 reset-container d-flex align-items-center justify-content-center"
       style="height: 70%"
     >
       <MDBCard text="center" bg="dark" class="rounded-0">
@@ -86,6 +86,8 @@ export default {
   max-width: 45vw;
   color: red;
   background-color: pink;
+}
+.reset-container{
 }
 
 .resetInput {

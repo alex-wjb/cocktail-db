@@ -1,8 +1,17 @@
-import "mdb-vue-ui-kit/css/mdb.min.css"; // must go first
+// import "mdb-vue-ui-kit/css/mdb.min.css"; // must go first
+// Import custom CSS
+import './scss/styles.scss'
+import * as bootstrap from 'bootstrap'
+
+// Import all of Bootstrap's JS
+// eslint-disable-next-line no-unused-vars
+
+
+
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import { createMetaManager} from 'vue-meta'
+import { createMetaManager } from 'vue-meta'
 
 import { auth } from "./firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
@@ -16,5 +25,6 @@ onAuthStateChanged(auth, () => {
   if (!app) {
     //create an instance of the vue object, declare a root component and mount it in the DOM
     app = createApp(App).use(router).use(metaManager).mount("#app");
+    
   }
 });

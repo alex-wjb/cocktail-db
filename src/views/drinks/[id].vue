@@ -5,7 +5,6 @@
     v-html="generateJsonld"
     type="application/ld+json"
   ></component>
-  <h1 v-if="drinkName">How to Make: {{ drinkName }}</h1>
   <div v-if="error" class="fetchError">
     <div style="height: fit-content">
       <h4 class="errorTxt">Unable to retrieve cocktail data.</h4>
@@ -13,29 +12,32 @@
     </div>
   </div>
   <div class="infoCards">
-    <MDBRow :cols="['1', 'md-2']" class="g-4">
-      <MDBCol>
-        <MDBCard
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      <div class="col">
+        <!-- 1st card -->
+        <div
           v-if="cocktail != null"
-          class="rounded-0 h-100"
+          class="card rounded-0 h-100 bg-dark text-white"
           text="white"
           bg="dark"
           style="max-width: 940px; margin: auto"
         >
-          <MDBCardHeader>
-            <h2>{{ applyTitleCase(cocktail.strDrink) }}</h2>
-          </MDBCardHeader>
+          <div class="card-header">
+            <h1 class="h3">How to Make</h1>
+            <h1 class="display-6" v-if="drinkName">{{ drinkName }}</h1>
+            <!-- <h2>{{ applyTitleCase(cocktail.strDrink) }}</h2> -->
+          </div>
 
           <a class="drinkImgContainer">
-            <MDBCardImg
-              class="rounded-0 skeleton"
+            <img
+              class="card-img-bottom rounded-0 skeleton"
               bottom
               v-bind:src="cocktail.strDrinkThumb"
               v-bind:alt="imgAltText"
             />
           </a>
 
-          <MDBCardFooter class="text-muted">
+          <div class="card-footer text-muted">
             <li class="tagItem list-inline list-inline-item">
               {{ cocktail.strAlcoholic }}
             </li>
@@ -43,36 +45,47 @@
               {{ cocktail.strCategory }}
             </li>
             <FavBtn v-if="currentUser" :drinkId="cocktail.idDrink" />
-          </MDBCardFooter>
-        </MDBCard>
-      </MDBCol>
-      <MDBCol>
-        <MDBCard
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <!-- 2nd card -->
+        <div
           v-if="cocktail != null"
-          class="rounded-0 h-100"
+          class="card rounded-0 h-100 bg-dark text-white"
           text="white"
           bg="dark"
-          style="max-width: 940px; margin: auto"
+          style="max-width: 940px; margin: auto;"
         >
-          <MDBCardBody>
+          <div class="card-body" style="display:flex; align-items: center;
+  justify-content: center;">
+            <div>
             <h3>Directions</h3>
             <p>{{ cocktail.strInstructions }}</p>
             <br />
             <h3>Ingredients</h3>
+          
 
-            <MDBTable style="width: 50%; margin: auto" sm dark>
+            <table
+              class="table text-white"
+              style="width: 50%; margin: auto"
+              sm
+              dark
+            >
               <tbody>
                 <tr v-for="item in getIngredients(cocktail)" :key="item">
                   <td>{{ item.ingredient }}</td>
                   <td>{{ item.measure }}</td>
                 </tr>
               </tbody>
-            </MDBTable>
-          </MDBCardBody>
-          <MDBCardFooter class="text-muted"> </MDBCardFooter>
-        </MDBCard>
-      </MDBCol>
-    </MDBRow>
+            </table>
+          </div>
+          </div>
+          
+        </div>
+      </div>
+      <!-- </MDBRow> -->
+    </div>
   </div>
 </template>
 
@@ -83,27 +96,8 @@ import { ref, watchEffect, computed } from "vue";
 import FavBtn from "../../components/FavBtn.vue";
 import getUser from "../../composables/getUser";
 import { useMeta } from "vue-meta";
-
-import {
-  MDBCard,
-  MDBCardHeader,
-  MDBCardImg,
-  MDBCardFooter,
-  MDBTable,
-  MDBCol,
-  MDBRow,
-  MDBCardBody,
-} from "mdb-vue-ui-kit";
 export default {
   components: {
-    MDBCard,
-    MDBCardHeader,
-    MDBCardImg,
-    MDBCardFooter,
-    MDBTable,
-    MDBCol,
-    MDBRow,
-    MDBCardBody,
     FavBtn,
   },
   setup() {
@@ -245,7 +239,7 @@ export default {
     //repopulate drink info if the url id parameter changes
     watchEffect(() => {
       // console.log(route.name);
-       if (route.name == "drinks-id") {
+      if (route.name == "drinks-id") {
         populateCocktailData(route.params.id);
       }
     });
@@ -288,7 +282,17 @@ export default {
 
 .infoCards {
   margin: 0 auto;
-  margin-top: 25px;
   max-width: 1200px;
+  text-align: center;
+}
+
+.vertical-center {
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 </style>

@@ -1,43 +1,56 @@
 <template>
- <metainfo></metainfo>
-  <Header></Header>
+  <metainfo></metainfo>
+  <Header @shuffle="shuffle"></Header>
 
   <div class="pageWrapper">
-    <router-view> </router-view>
+    <router-view :shuffle="activateRandom"> </router-view>
   </div>
- 
 </template>
 
 <script>
 import Header from "./components/Header.vue";
-import { useMeta } from 'vue-meta'
+import { useMeta } from "vue-meta";
+import { ref } from "vue"
 export default {
   components: {
     Header,
   },
-  setup(){
-     useMeta({
-      title: 'The Cocktail Database - Classic Cocktail Recipes',
-      description: 'Browse recipes, ingredients and photos for over 600 cocktails.',
-      htmlAttrs: { lang: 'en', amp: true }
-    })
-  }
+  setup() {
+    let activateRandom = ref(false);
+    useMeta({
+      title: "The Cocktail Database - Classic Cocktail Recipes",
+      description:
+        "Browse recipes, ingredients and photos for over 600 cocktails.",
+      htmlAttrs: { lang: "en", amp: true },
+    });
+    const shuffle = () => {
+      activateRandom.value = !activateRandom.value;
+    }
+    return { activateRandom, shuffle};
+  },
 };
 </script>
 
 <style>
 #app {
   /* Global vue app font */
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
+  /* font-family: Georgia, Times, "Times New Roman", serif; */
+  font-family: 'Montserrat';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* text-align: center; */
 }
+
+
+
 
 .pageWrapper {
   background-color: lightgrey;
+ 
+  /* good card color: #0E1B40; */
   min-height: 100vh;
-  padding-top: 115px;
+  padding-top: 125px;
   width: 100%;
   overflow-x: hidden;
   padding-bottom: 25px;
@@ -46,23 +59,22 @@ export default {
 }
 /* Feature Query */
 /* @supports (padding: max(0px)) { */
-  /* .wrapper { */
-    /* uses constant value provided by IOS to provide padding when iphone horizontal to
+/* .wrapper { */
+/* uses constant value provided by IOS to provide padding when iphone horizontal to
       prevent device sensor bar covering content */
-    /* When vertical the constant will be 0, so padding will default to
+/* When vertical the constant will be 0, so padding will default to
       other specified value when using max() */
-    /* padding-left: max(25px, env(safe-area-inset-left));
+/* padding-left: max(25px, env(safe-area-inset-left));
     padding-right: max(25px, env(safe-area-inset-right)); */
-  /* } */
+/* } */
 /* } */
 
-
-.form-outline .form-control:focus {
+/* .form-outline .form-control:focus {
     box-shadow: null;
-}
+} */
 
 /* CHROME input element autocomplete styles*/
-input:-webkit-autofill,
+/* input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active,
@@ -78,7 +90,5 @@ select:-webkit-autofill:focus
   background-color: #262626;
   -webkit-box-shadow: 0 0 0px 30px #262626 inset!important;
   transition: background-color 5000s ease-in-out 0s;
-}
-
-
+} */
 </style>

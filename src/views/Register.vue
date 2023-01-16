@@ -1,6 +1,6 @@
 <template>
     <div
-      class="w-100 p-4 d-flex align-items-center justify-content-center"
+      class="w-100 register-container d-flex align-items-center justify-content-center"
       style="height: 70%"
     >
       <MDBCard text="center" class="rounded-0" bg="dark">
@@ -232,6 +232,9 @@ export default {
   padding-bottom: 25px;
   padding-left: 25px;
   padding-right: 25px;
+}
+
+.register-container{
 }
 
 .errorMsg{

@@ -20,8 +20,14 @@
     }
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-regular-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@fortawesome/vue-fontawesome": "^3.0.2",
+    "@popperjs/core": "^2.11.6",
     "@vitejs/plugin-legacy": "^2.3.1",
     "@vitejs/plugin-vue": "^3.2.0",
+    "bootstrap": "^5.2.2",
     "mdb-vue-ui-kit": "^1.12.0",
     "node-fetch": "^2.6.7",
     "npm-watch": "^0.11.0",
@@ -44,6 +50,7 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.20.0",
     "prettier": "2.7.1",
+    "sass": "^1.56.1",
     "terser": "^5.15.1",
     "vite-plugin-pages": "^0.27.1"
   }

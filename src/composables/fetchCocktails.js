@@ -56,7 +56,6 @@ const getAllCocktails = () => {
       });
     } catch (err) {
       console.log(err);
-      console.log("hiii");
       error.value = err;   
     }
   };
