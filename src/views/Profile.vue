@@ -196,7 +196,7 @@ export default {
     const populateCocktailData = async (drinkId) => {
       const cocktail = ref(null);
       const baseURL = "https://www.thecocktaildb.com/api/json/v2";
-      const apiKey = "9973533";
+      const apiKey = (import.meta.env.VITE_API_KEY ? import.meta.env.VITE_API_KEY : 1);
       const query = `lookup.php?i=${drinkId}`;
       const requestUrl = `${baseURL}/${apiKey}/${query}`;
       try {
