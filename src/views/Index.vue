@@ -10,12 +10,13 @@
   <!-- Displayed Drinks -->
   <div class="drinkCardsContainer">
   
-      <div class="row row-cols-1 row-cols-md-3 g-4">
+      <!-- <div class="row row-cols-1 row-cols-md-3 g-4"> -->
+        <div class="row g-4">
 
-      <div class="col" v-for="item in randomCocktails" :key="item.idDrink">
-        <div class="rounded-0 h-100 card text-white bg-dark">
-          <div class="card-header" style="border-width: 0px; " >
-            <h4 class="card-title ">{{ item.strDrink }}</h4>
+      <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3" v-for="item in randomCocktails" :key="item.idDrink">
+        <div class="rounded-0 h-100 card text-white bg-dark drinkCard rounded-1">
+          <div class="card-header d-flex align-items-center justify-content-center" style="border-width: 0px; min-height:80px;" >
+            <h4 class="card-title">{{ item.strDrink }}</h4>
           </div>
 
           <router-link
@@ -36,17 +37,21 @@
             </a>
           </router-link>
 
-          <div class="text-muted card-footer">
+          <div class="text-muted card-footer" style="height:100%;">
+          
             <li
-              class="ingredientItem list-inline list-inline-item"
+              class="ingredientItem list-inline list-inline-item rounded-0"
               v-for="item in getIngredients(item)"
               :key="item"
             >
               {{ item }}
             </li>
-            <FavBtn v-if="currentUser" :drinkId="item.idDrink" />
+       
+           
           </div>
+          <FavBtn class="mb-3" v-if="currentUser" :drinkId="item.idDrink" />
         </div>
+       
       </div>
       </div>
   </div>
@@ -57,8 +62,6 @@ import getAllCocktails from "../composables/fetchCocktails.js";
 import FavBtn from "../components/FavBtn.vue";
 import getUser from "../composables/getUser";
 import { onBeforeMount, watchEffect } from "vue";
-import {
-} from "mdb-vue-ui-kit";
 export default {
   name: "Home",
   props: ['shuffle'],
@@ -155,7 +158,8 @@ export default {
 }
 
 .drinkCardsContainer {
-  max-width: 1500px;
+  max-width: 1400px;
+  /* 1300 */
   margin: auto;
   text-align: center;
 }
@@ -217,6 +221,10 @@ export default {
   padding-left: 3px;
   padding-right: 3px;
   margin-bottom: 5px;
+  /* background-color:#3cac83 */
+  /* background-color: #87d6b9; */
+  /* color: #86d5b8; */
+  color: grey;
 }
 .drinkLink:hover{
   background-color: #414551;
@@ -227,5 +235,10 @@ export default {
   text-decoration: none;
   background-color: #0c0e10;
   
+}
+.drinkCard{
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+  border: none;
+ 
 }
 </style>

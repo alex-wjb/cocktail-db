@@ -1,7 +1,12 @@
 <template>
   <div
     class="searchContainer d-flex flex-wrap"
-    style="display: block !important; position: relative"
+    style="
+      display: block !important;
+      position: relative;
+      padding-left: 20px;
+      padding-right: 20px;
+    "
   >
     <form
       role="search"
@@ -10,22 +15,20 @@
       style="width: 100% !important"
     >
       <input
-        ref="searchBar"
         class="form-control rounded-0 searchBar"
         type="search"
         label="Search Drinks"
-        placeholder="Search"
+        placeholder="Search cocktails"
         aria-label="Search"
         v-model="searchQuery"
         @keydown.enter.prevent="search"
       />
 
       <button
-        class="btn btn-outline-secondary rounded-0"
+        class="btn btn-outline-secondary rounded-0 searchBtn"
         type="button"
-        ref="searchBtn"
         @click="search"
-        id="button-addon2"
+        id="searchBtn"
         color="dark"
         outline="light"
         :disabled="!searchValid"
@@ -38,7 +41,7 @@
       v-show="searchQuery"
       id="searchResult"
       class="list-group rounded-0"
-      style="width: 100%; position: absolute; border: 5px solid yellow"
+      style="width: calc(100% - 40px); position: absolute"
     >
       <router-link
         class="searchLink"
@@ -64,11 +67,11 @@
         v-if="searchedDrinks.length > numResults"
         tag="button"
       >
-        {{ searchedDrinks.length }} More Results...
+        {{ searchedDrinks.length }} More results...
       </li>
 
       <li
-        class="list-group-item list-group-item-action list-group-item-dark searchResults"
+        class="list-group-item list-group-item-action list-group-item-dark noResults"
         tag="button"
         v-if="searchedDrinks.length == 0"
       >
@@ -79,7 +82,6 @@
 </template>
 
 <script>
-import {} from "mdb-vue-ui-kit";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import { ref, computed, watchEffect, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
@@ -90,18 +92,18 @@ export default {
     const { allCocktails, fetchData, error } = getAllCocktails();
     const searchQuery = ref("");
     const numResults = 5;
-    const searchBtn = ref(null);
-    const searchBar = ref(null);
     const router = useRouter();
     const searchValid = ref(false);
     const resultsHover = ref(false);
+    const searchBtnHover = ref(false);
 
     // CHECK IT WORKS ON MOBILE
     onMounted(() => {
       const inputEl = document.getElementById("searchInput");
       const resultsEl = document.getElementById("searchResult");
+      const searchBtnEl = document.getElementById("searchBtn");
       inputEl.addEventListener("focusout", () => {
-        if (!resultsHover.value) {
+        if (!resultsHover.value && !searchBtnHover.value) {
           closeSearch();
         }
       });
@@ -111,12 +113,26 @@ export default {
       resultsEl.addEventListener("mouseleave", () => {
         resultsHover.value = false;
       });
+      searchBtnEl.addEventListener("mouseover", () => {
+        searchBtnHover.value = true;
+      });
+      searchBtnEl.addEventListener("mouseleave", () => {
+        searchBtnHover.value = false;
+      });
     });
     onBeforeUnmount(() => {
-      const el = document.getElementById("searchInput");
-      el.removeEventListener("focusout");
-      el.removeEventListener("mouseover");
-      el.removeEventListener("mouseleave");
+      const inputEl = document.getElementById("searchInput");
+      inputEl.removeEventListener("focusout");
+      inputEl.removeEventListener("mouseover");
+      inputEl.removeEventListener("mouseleave");
+
+      const resultsEl = document.getElementById("searchInput");
+      resultsEl.removeEventListener("mouseover");
+      resultsEl.removeEventListener("mouseleave");
+
+      const searchBtnEl = document.getElementById("searchInput");
+      searchBtnEl.removeEventListener("mouseover");
+      searchBtnEl.removeEventListener("mouseleave");
     });
 
     const populateDrinks = async () => {
@@ -198,8 +214,6 @@ export default {
       searchedDrinks,
       numResults,
       limitedDrinkResults,
-      searchBtn,
-      searchBar,
       search,
       closeSearch,
       searchValid,
@@ -218,6 +232,15 @@ export default {
   background-color: black !important;
   color: white;
 }
+
+.noResults {
+  background-color: black !important;
+  color: white;
+}
+.noResults:hover {
+  background-color: black !important;
+  color: white;
+}
 .moreResults:hover {
   background-color: #414551 !important;
   color: white;
@@ -229,9 +252,30 @@ export default {
 .searchLink {
   text-decoration: none !important;
 }
-.searchBar{
-
+.searchBtn {
+  color: white;
+  border-left: none;
+  border-color: lightgrey;
 }
+/* .searchBtn:hover {
+  background-color: #414551;
+} */
+
+button:active{
+transform: scale(0.9);
+}
+
+/* no hover styling - bg same as no state */
+button:hover{
+  background-color: #212529;
+}
+/* Apply hover style on devices where hover behaves properly (hover style sticks on iphone safari) */
+@media (hover: hover) {
+    button:hover {
+        background-color: #414551;
+    }
+}
+
 /* .searchContainer { */
 /* prevents left border flicker of search input on nav expand */
 /* padding-left: 5px;

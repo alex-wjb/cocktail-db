@@ -1,6 +1,6 @@
 <template>
-  <div class="camera">
-    <div class="cameraWrapper">
+  <div class="camera rounded-3 text-center">
+    <div class="cameraWrapper rounded-3">
       <!-- Button to open/close video stream -->
       <div class="video-container">
         <!-- Video Stream -->
@@ -22,43 +22,48 @@
           :height="540"
         ></canvas>
       </div>
-      <div v-if="isCameraOpen" class="controls">
-        <MDBBtn
-          class="photoBtn rounded-0"
+      <div v-if="isCameraOpen" class="controls rounded-3">
+        <button
+          class="cameraBtn m-1 btn btn-dark rounded-1"
+
           color="dark"
           outline="light"
           @click="takePhoto"
           v-show="!isPhotoTaken"
+          style="border-width:2px;"
         >
           Take Photo
-        </MDBBtn>
-        <MDBBtn
-          class="photoBtn rounded-0"
+      </button>
+        <button
+          class="cameraBtn m-1 btn btn-dark rounded-1"
           color="dark"
           outline="light"
           @click="takePhoto"
           v-show="isPhotoTaken"
+          style="border-width:2px;"
         >
           Retake
-        </MDBBtn>
-        <MDBBtn
+      </button>
+        <button
           v-show="isPhotoTaken"
-          class="closeBtn rounded-0"
+          class="cameraBtn m-1 btn btn-dark rounded-1"
           color="dark"
+          style="border-width:2px;"
           outline="light"
           @click="
-            uploadPhoto(), toggleCamera(), (this.$parent.$parent.showCamera = false)
+            uploadPhoto(), toggleCamera(), (this.$parent.showCamera = false)
           "
         >
-          Upload</MDBBtn
+          Upload</button
         >
-        <MDBBtn
-          class="closeBtn rounded-0"
-          color="dark"
+        <button
+          class="cameraBtn m-1 btn btn-dark rounded-1"
+         
+          style="border-width:2px;"
           outline="light"
           @click="toggleCamera(), (this.$parent.showCamera = false)"
         >
-          Close</MDBBtn
+          Close</button
         >
       </div>
     </div>
@@ -67,12 +72,10 @@
 
 <script>
 import { ref } from "vue";
-import { MDBBtn } from "mdb-vue-ui-kit";
 import getUser from "../composables/getUser";
 import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 export default {
   emits: ["photoUploaded"],
-  components: { MDBBtn },
   setup(props, ctx) {
     const isCameraOpen = ref(false);
     const isPhotoTaken = ref(false);
@@ -89,7 +92,7 @@ export default {
           height: 540,
         },
       });
-      console.log("HELLO1")
+ 
 
       navigator.mediaDevices
         .getUserMedia(constraints)
@@ -97,7 +100,6 @@ export default {
           camera.value.srcObject = stream;
         })
         .catch((error) => {
-          console.log("HELLO")
           console.log(error);
         });
     };
@@ -154,6 +156,7 @@ export default {
         uploadBytes(storage_ref, blob, metadata)
           .then(() => {
             ctx.emit("photoUploaded");
+            toggleCamera();
           })
           .catch((error) => {
             switch (error.code) {
@@ -214,6 +217,8 @@ export default {
   height: 600px;
   margin: auto;
   background-color: #262626;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+
 }
 
 .controls {
@@ -226,17 +231,7 @@ export default {
   right: 0;
 }
 
-.closeBtn {
-  display: inline-block;
-  margin: 3px;
-  margin-bottom: 7px;
-  border-color: grey;
-}
-
-.photoBtn {
-  display: inline-block;
-  margin: 3px;
-  margin-bottom: 7px;
+.cameraBtn{
   border-color: grey;
 }
 
@@ -247,6 +242,7 @@ export default {
   width: 540px;
   left: 0;
   right: 0;
+
 }
 .videoStream {
   width: 100%;
@@ -300,6 +296,7 @@ export default {
     width: 270px;
     left: 0;
     right: 0;
+
   }
   .camera {
     padding-top: 70px;
@@ -311,13 +308,6 @@ export default {
     left: 0;
     bottom: -1px;
     right: 0;
-  }
-  .closeBtn {
-    margin: 3px;
-  }
-
-  .photoBtn {
-    margin: 3px;
   }
   .takenPhoto {
     width: 270px;

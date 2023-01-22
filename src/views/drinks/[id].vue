@@ -11,16 +11,24 @@
       <h4 class="errorTxt">Please try again later.</h4>
     </div>
   </div>
+   <router-link
+   style="width: 150px;"
+              :to="{ name: 'Index' }"
+              class="text-decoration-none backBtn text-white btn btn-dark rounded-1 mb-4 d-block m-auto pt-2 pb-2"
+         
+            >
+              Back to home</router-link
+            >
   <div class="infoCards">
     <div class="row row-cols-1 row-cols-md-2 g-4">
       <div class="col">
         <!-- 1st card -->
         <div
           v-if="cocktail != null"
-          class="card rounded-0 h-100 bg-dark text-white"
+          class="card rounded-1 bg-dark text-white drinkCard"
           text="white"
           bg="dark"
-          style="max-width: 940px; margin: auto"
+          style="margin: auto"
         >
           <div class="card-header">
             <h1 class="h3">How to Make</h1>
@@ -44,7 +52,8 @@
             <li class="tagItem list-inline list-inline-item">
               {{ cocktail.strCategory }}
             </li>
-            <FavBtn v-if="currentUser" :drinkId="cocktail.idDrink" />
+            <FavBtn class="mt-2 mb-2" v-if="currentUser" :drinkId="cocktail.idDrink" />
+            <div v-else class="mt-2"> <router-link class="loginLink" to="/login">Login</router-link> to add to favourites</div>
           </div>
         </div>
       </div>
@@ -52,10 +61,10 @@
         <!-- 2nd card -->
         <div
           v-if="cocktail != null"
-          class="card rounded-0 h-100 bg-dark text-white"
+          class="card rounded-1 h-100 bg-dark pb-3 pt-3 text-white drinkCard"
           text="white"
           bg="dark"
-          style="max-width: 940px; margin: auto;"
+          style="margin: auto;"
         >
           <div class="card-body" style="display:flex; align-items: center;
   justify-content: center;">
@@ -258,7 +267,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .fetchError {
   padding: 20px;
   margin: 40px auto;
@@ -273,6 +282,22 @@ export default {
   margin: auto;
 }
 
+.drinkCard{
+ 
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+  border: none;
+ 
+
+}
+
+.backBtn{
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+
+.backBtn:active{
+  background-color: #4d5154;
+}
+
 .tagItem {
   border: solid 1px;
   padding-left: 3px;
@@ -282,7 +307,7 @@ export default {
 
 .infoCards {
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: 1050px;
   text-align: center;
 }
 

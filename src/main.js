@@ -1,7 +1,10 @@
 // import "mdb-vue-ui-kit/css/mdb.min.css"; // must go first
 // Import custom CSS
+// import "bootstrap/dist/css/bootstrap.min.css"
+
+
 import './scss/styles.scss'
-import * as bootstrap from 'bootstrap'
+import "bootstrap"
 
 // Import all of Bootstrap's JS
 // eslint-disable-next-line no-unused-vars

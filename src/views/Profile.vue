@@ -1,7 +1,12 @@
 <template>
-  <div class="profileCard">
-    <MDBCard class="rounded-0 h-100" text="white" bg="dark">
-      <MDBCardHeader style="border-width: 0px !important">
+  <div class="profile">
+    <div
+      class="rounded-1 h-100 card bg-dark profileCard text-white text-center"
+    >
+      <div class="card-header profileHeader">
+        <h3 class="mt-4 mb-4">{{ displayName }}</h3>
+      </div>
+      <div class="card-body">
         <img
           v-show="profilePicExists"
           ref="profilePic"
@@ -14,29 +19,26 @@
           alt="grey outline user profile picture placeholder"
           src="../assets/profile-placeholder.png"
         />
-        <h3 style="padding-top: 10px">{{ displayName }}</h3></MDBCardHeader
-      >
-      <MDBCardBody>
-        <MDBCardTitle></MDBCardTitle>
-        <MDBCardText> </MDBCardText>
-        <MDBBtn
+
+        <button
           @click="showCamera = true"
-          class="rounded-0"
+          class="rounded-1 btn btn-dark mt-3 mb-3"
+          style="
+            border-color: grey;
+            margin: auto;
+            display: block;
+            border-width: 2px;
+          "
           color="dark"
           outline="light"
-          style="border-color: grey !important"
-          >Edit Photo</MDBBtn
         >
-        <MDBBtn
-          class="rounded-0"
-          @click="populateFavourites()"
-          color="dark"
-          outline="light"
-          style="border-color: grey !important"
-          >View Favourites</MDBBtn
-        >
-      </MDBCardBody>
-    </MDBCard>
+          Edit Photo
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-4 mb-3">
+    <h1 style="font-family: 'Pacifico'">Favourites</h1>
   </div>
 
   <div
@@ -47,58 +49,48 @@
   >
     <!-- rows have one column, cards split equal width to fit 3, up to a breakpoint-->
     <!-- g-4 = grid gap of 4 -->
-    <MDBRow :cols="['1', 'md-4']" class="g-4">
+    <div class="row g-4">
       <!-- cols col to each row-->
 
-      <MDBCol v-for="item in cocktails" :key="item.idDrink">
-        <MDBCard class="rounded-0 h-100" text="white" bg="dark">
-          <MDBCardHeader style="border-width: 0px !important">
-            <MDBCardTitle>{{ item.strDrink }}</MDBCardTitle>
-          </MDBCardHeader>
-          <MDBCardBody style="padding: 0px !important">
-            <!-- <router-link
-                style="padding: 2px"
-                :to="{ name: 'DrinkInfo', params: { id: item.idDrink } }"
-                >Get Drink Info</router-link
-              > -->
-          </MDBCardBody>
-
-          <MDBCardFooter
-            class="text-muted"
-            style="
-              padding-left: 0px;
-              padding-right: 0px;
-              border-width: 0px !important;
-            "
-          >
+      <div
+        class="col-md-3 col-xl-2"
+        v-for="item in cocktails"
+        :key="item.idDrink"
+      >
+        <div
+          class="rounded-1 card bg-dark text-white text-center h-100 border-0 favCard"
+        >
+          <div class="card-header" style="border-width: 0px !important; height: 70px;">
+            <div class="card-title">{{ item.strDrink }}</div>
+          </div>
+         
             <router-link
               :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
             >
               <a class="drinkImgContainer">
-                <MDBCardImg
-                  class="rounded-0 drinkImg skeleton"
+                <img
+                  class="rounded-0 card-img-bottom drinkImg skeleton"
                   bottom
                   v-bind:src="item.strDrinkThumb"
                   v-bind:alt="item.strDrink"
                 />
               </a>
             </router-link>
-            <!-- <li
-                class="ingredientItem list-inline list-inline-item"
-                v-for="item in getIngredients(item)"
-                :key="item"
-              >
-                {{ item }}
-              </li> -->
+        
+
+          <div
+            class="text-muted card-footer"
+            style="border-width: 0px !important"
+          >
             <FavBtn
               style="padding-top: 15px"
               v-if="currentUser"
               :drinkId="item.idDrink"
             />
-          </MDBCardFooter>
-        </MDBCard>
-      </MDBCol>
-    </MDBRow>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <Camera @photoUploaded="getProfilePic()" v-if="showCamera" />
 </template>
@@ -119,30 +111,8 @@ import FavBtn from "../components/FavBtn.vue";
 import { useRoute } from "vue-router";
 
 import { ref, onMounted } from "vue";
-import {
-  MDBCard,
-  MDBCardBody,
-  MDBCardHeader,
-  MDBCardTitle,
-  MDBCardText,
-  MDBBtn,
-  MDBCardImg,
-  MDBCol,
-  MDBRow,
-  MDBCardFooter,
-} from "mdb-vue-ui-kit";
 export default {
   components: {
-    MDBCard,
-    MDBCardBody,
-    MDBCardHeader,
-    MDBCardTitle,
-    MDBCardText,
-    MDBBtn,
-    MDBCardImg,
-    MDBCol,
-    MDBRow,
-    MDBCardFooter,
     Camera,
     FavBtn,
   },
@@ -259,6 +229,7 @@ export default {
     };
 
     onMounted(() => {
+      populateFavourites();
       getProfilePic();
     });
 
@@ -296,21 +267,50 @@ export default {
   width: 200px;
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
-}
 
-.profileCard {
+  border: 6px solid rgba(0, 0, 0, 0.175);
+}
+.profileHeader {
+  border-bottom: 5px solid rgba(0, 0, 0, 0.175) !important;
+
+  background-color: rgba(0, 0, 0, 0.175);
+}
+.profile {
   max-width: 500px;
 
   margin: 0 auto;
 }
 
+.favCard {
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+
+.profileCard {
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+
 .favouriteCards {
-  margin-top: 60px !important;
-  max-width: 800px !important;
+  max-width: 1400px !important;
 }
 @media (max-width: 768px) {
   .favouriteCards {
     max-width: 500px !important;
   }
 }
+
+button:active{
+transform: scale(0.9);
+}
+
+/* no hover styling - bg same as no state */
+button:hover{
+  background-color: #212529;
+}
+/* Apply hover style on devices where hover behaves properly (hover style sticks on iphone safari) */
+@media (hover: hover) {
+    button:hover {
+        background-color: #414551;
+    }
+}
+
 </style>

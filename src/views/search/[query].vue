@@ -1,64 +1,127 @@
 <template>
-    <h2 v-if="searchQuery">Results for: "{{ searchQuery }}"</h2>
+  <h2 class="mb-4" v-if="searchQuery">Results for: "{{ searchQuery }}"</h2>
 
-    <div v-if="results">{{ results.length }} Results</div>
-
-    <nav aria-label="Drinks Results Page Navigation">
-      <MDBPagination v-if="getPageResults">
-        <MDBPageItem @click="pageBack">Previous</MDBPageItem>
-        <div v-for="item in numbersShown" :key="item">
-          <div v-if="item == pgNum">
-            <MDBPageItem active @click="setPageNumber(item)">{{
-              item
-            }}</MDBPageItem>
-          </div>
-          <div v-else>
-            <MDBPageItem @click="setPageNumber(item)">{{ item }}</MDBPageItem>
-          </div>
-        </div>
-        <MDBPageItem @click="pageForward">Next</MDBPageItem>
-      </MDBPagination>
-    </nav>
-
-    <MDBListGroup flush v-if="getPageResults">
-      <MDBListGroupItem
-        class="resultItem"
-        style="background-color: lightgrey"
-        v-for="item in getPageResults"
-        :key="item"
+  <div v-if="results">{{ results.length }} Results</div>
+  <nav
+    class="mt-4"
+    aria-label="page navigation for cocktail database search results"
+  >
+    <ul class="pagination" v-if="getPageResults">
+      <li
+        style="width: 90px; height: 40px"
+        class="page-link text-center prevNextBtn"
+        @click="pageBack"
       >
-        <router-link :to="{ name: 'drinks-id', params: { id: item.idDrink } }">
-          <img
-            class="resultImg"
-            :src="item.strDrinkThumb"
-            v-bind:alt="item.strDrink"
-          />
-        </router-link>
-
-        <router-link
-          :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
-          class="drinkTitle"
-          >{{ item.strDrink }}</router-link
-        ></MDBListGroupItem
-      >
-    </MDBListGroup>
-
-    <nav class="bottomPageNav" aria-label="Drinks Results Page Navigation">
-      <MDBPagination v-if="getPageResults">
-        <MDBPageItem @click="pageBack">Previous</MDBPageItem>
-        <div v-for="item in numbersShown" :key="item">
-          <div v-if="item == pgNum">
-            <MDBPageItem active @click="setPageNumber(item)">{{
-              item
-            }}</MDBPageItem>
-          </div>
-          <div v-else>
-            <MDBPageItem @click="setPageNumber(item)">{{ item }}</MDBPageItem>
-          </div>
+        Previous
+      </li>
+      <div v-for="item in numbersShown" :key="item">
+        <div v-if="item == pgNum">
+          <li
+            class="page-link active text-center"
+            style="width: 40px; height: 40px"
+            @click="setPageNumber(item)"
+          >
+            {{ item }}
+          </li>
         </div>
-        <MDBPageItem @click="pageForward">Next</MDBPageItem>
-      </MDBPagination>
-    </nav>
+        <div v-else>
+          <li
+            class="page-link text-center"
+            style="width: 40px; height: 40px"
+            @click="setPageNumber(item)"
+          >
+            {{ item }}
+          </li>
+        </div>
+      </div>
+      <li
+        style="width: 90px"
+        class="page-link text-center prevNextBtn"
+        @click="pageForward"
+      >
+        Next
+      </li>
+    </ul>
+  </nav>
+  <div v-if="getPageResults" >
+    <div
+      class="pt-4 pb-4"
+      style="background-color: lightgrey; white-space: nowrap; border-bottom: 1px solid grey;"
+      v-for="item in getPageResults"
+      :key="item"
+    >
+
+    <div class="d-inline-block">
+      <router-link :to="{ name: 'drinks-id', params: { id: item.idDrink } }">
+        <img
+          class="resultImg"
+          :src="item.strDrinkThumb+'/preview'"
+          v-bind:alt="item.strDrink"
+        />
+      </router-link>
+    </div>
+    <div style=" width:70%;  white-space:normal" class="d-inline-block align-middle">
+      <router-link
+        style=""
+        :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
+        class="drinkTitle d-block ps-4 pb-0 text-decoration-none"
+        ><h3>{{ item.strDrink }}</h3></router-link
+      >
+      <div class="d-block ps-4">
+        <p
+          class=" me-2 mb-2 p-1 ingredientItem d-inline-block rounded-1"
+          style="background-color:#86d5b8"
+          v-for="item in getIngredients(item)"
+          :key="item"
+        >
+          {{ item }}
+        </p>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <nav
+    class="mt-4"
+    aria-label="page navigation for cocktail database search results"
+  >
+    <ul class="pagination" v-if="getPageResults">
+      <li
+        style="width: 90px; height: 40px"
+        class="page-link text-center prevNextBtn"
+        @click="pageBack"
+      >
+        Previous
+      </li>
+      <div v-for="item in numbersShown" :key="item">
+        <div v-if="item == pgNum">
+          <li
+            class="page-link active text-center"
+            style="width: 40px; height: 40px"
+            @click="setPageNumber(item)"
+          >
+            {{ item }}
+          </li>
+        </div>
+        <div v-else>
+          <li
+            class="page-link text-center"
+            style="width: 40px; height: 40px"
+            @click="setPageNumber(item)"
+          >
+            {{ item }}
+          </li>
+        </div>
+      </div>
+      <li
+        style="width: 90px"
+        class="page-link text-center prevNextBtn"
+        @click="pageForward"
+      >
+        Next
+      </li>
+    </ul>
+  </nav>
 </template>
 
 <script>
@@ -66,20 +129,8 @@ import { useRoute } from "vue-router";
 import { ref, watchEffect, computed } from "vue";
 import getAllCocktails from "../../composables/fetchCocktails.js";
 
-import {
-  MDBListGroup,
-  MDBListGroupItem,
-  MDBPagination,
-  MDBPageItem,
-} from "mdb-vue-ui-kit";
 export default {
-  components: {
-    MDBListGroup,
-    MDBListGroupItem,
-    MDBPagination,
-    MDBPageItem,
-    
-  },
+  components: {},
   setup() {
     const route = useRoute();
     const searchQuery = ref("");
@@ -89,6 +140,11 @@ export default {
     const resultChunks = ref([]);
 
     const setPageNumber = (n) => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "instant",
+      });
       pgNum.value = n;
     };
 
@@ -110,7 +166,7 @@ export default {
     //returns array of result arrays of length n, where n = results per page
     const splitResults = (results) => {
       const resultChunks = [];
-      const resultsPerPage = 10;
+      const resultsPerPage = 30;
       for (let i = 0; i < results.length; i = i + resultsPerPage) {
         const resultsChunk = results.slice(i, i + resultsPerPage);
         resultChunks.push(resultsChunk);
@@ -125,12 +181,22 @@ export default {
     const pageBack = () => {
       if (pgNum.value > 1) {
         pgNum.value--;
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: "instant",
+        });
       }
     };
 
     const pageForward = () => {
       if (pgNum.value < resultChunks.value.length) {
         pgNum.value++;
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: "instant",
+        });
       }
     };
 
@@ -198,6 +264,18 @@ export default {
       });
     };
 
+    const getIngredients = (cocktailObj) => {
+      console.log(cocktailObj);
+      let ingredients = [];
+      for (let i = 1; i <= 15; i++) {
+        let n = "strIngredient" + i;
+        if (cocktailObj[n]) {
+          ingredients.push(cocktailObj[n]);
+        }
+      }
+      return ingredients;
+    };
+
     return {
       searchQuery,
       results,
@@ -208,15 +286,50 @@ export default {
       pageBack,
       pageForward,
       numbersShown,
+      getIngredients,
     };
   },
 };
 </script>
 
-<style>
+<style scoped>
 /* only works when style not scoped */
-.page-item.active .page-link {
-  background-color: #262626 !important;
+.page-link {
+  background-color: #262626;
+  color: white;
+  border-color: lightgrey;
+}
+.page-link:hover {
+  cursor: pointer;
+  background-color:  #262626;
+}
+
+.page-link:active{
+  background-color:#414551!important;
+}
+.prevNextBtn:hover {
+  background-color: #262626;
+  cursor: pointer;
+}
+
+button:hover{
+  background-color: #262626;
+}
+
+@media (hover: hover) {
+    .prevNextBtn:hover {
+        background-color: #414551;
+    }
+    .page-link:hover {
+        background-color:  #414551;
+    }
+}
+
+.page-link.active {
+  /* background-color: #414551 !important; */
+  background-color: grey !important;
+  color: black;
+  border: 2px solid #262626;
 }
 
 .resultImg {
@@ -228,20 +341,20 @@ export default {
   display: inline-block;
   padding: 20px;
 }
-.resultItem {
+/* .resultItem {
   text-align: left;
   word-wrap: normal;
-}
+} */
 
 /* vertically centers text */
-a.drinkTitle {
+/* a.drinkTitle {
   color: black !important;
   margin: 0;
   position: absolute;
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-}
+} */
 a.drinkTitle:hover {
   color: grey !important;
 }

@@ -1,20 +1,8 @@
 <template>
   <div>
     <a @click="toggleFavourite" role="button">
-      <MDBIcon
-        v-show="!favourited"
-        iconStyle="fas"
-        icon="heart"
-        size="2x"
-        style="color: grey"
-      ></MDBIcon>
-      <MDBIcon
-        v-show="favourited"
-        iconStyle="fas"
-        icon="heart"
-        size="2x"
-        style="color: #99250e"
-      ></MDBIcon>
+      <i v-show="!favourited" class="fa-solid fa-heart fa-2xl" style="color: grey"></i>
+      <i v-show="favourited" class="fa-solid fa-heart fa-2xl" style="color: #99250e"></i>
     </a>
   </div>
 </template>
@@ -22,13 +10,9 @@
 <script>
 import { db } from "../firebase/config";
 import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { MDBIcon } from "mdb-vue-ui-kit";
 import { onMounted, ref } from "vue";
 import getUser from "../composables/getUser";
 export default {
-  components: {
-    MDBIcon,
-  },
   props: ["drinkId"],
   setup(props) {
     const favourited = ref(false);

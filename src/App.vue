@@ -20,7 +20,7 @@ export default {
     useMeta({
       title: "The Cocktail Database - Classic Cocktail Recipes",
       description:
-        "Browse recipes, ingredients and photos for over 600 cocktails.",
+        "Browse recipes for over 600 cocktails.",
       htmlAttrs: { lang: "en", amp: true },
     });
     const shuffle = () => {
@@ -42,6 +42,12 @@ export default {
   /* text-align: center; */
 }
 
+/* prevents horizontal page shift due to vertical scrollbar toggling */
+html {
+  overflow-y: scroll;
+  background-color: lightgrey;
+}
+
 
 
 
@@ -50,6 +56,7 @@ export default {
  
   /* good card color: #0E1B40; */
   min-height: 100vh;
+  /* padding-top: 125px; */
   padding-top: 125px;
   width: 100%;
   overflow-x: hidden;

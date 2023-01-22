@@ -1,32 +1,47 @@
 <template>
   <nav
-    class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"
+    class="fixed-top navbar navbar-expand-lg navbar-dark bg-dark"
+    style="position: fixed"
     id="navbar"
   >
-    <div class="container-fluid">
+    <div class="container-fluid text-center">
       <div class="navbar-brand">
-        <router-link class="navbar-brand" @click="refreshHome" :to="{ name: 'Index' }">
+        <router-link
+          class="navbar-brand"
+          @click="refreshHome"
+          :to="{ name: 'Index' }"
+        >
           <img
             class="cocktailLogo"
             alt="cocktail database logo"
             src="../assets/watercolor-title.png"
             style="display: inline-block"
           />
-          <h3 style="display: inline-block">Cocktail Database</h3></router-link
+          <h3 class="navTitle" style="display: inline-block">
+            Cocktail Database
+          </h3></router-link
         >
-        <button v-if="currentRoute === 'Index'" color="dark" class="btn rounded-0 shuffleBtn" @click="emitShuffle">
-          <div class="shuffleIcon">
-          <h2 style="margin: 0">
-           
-            <i class="fa-solid fa-shuffle"></i>
-          </h2>
-          <p style=" color:white; margin:0px;">Shuffle</p>
+        <div
+          class="smallViewShuffle"
+          style="width: 0px; display: inline-block; height: 0px"
+        >
+          <button
+            v-if="currentRoute === 'Index'"
+            color="dark"
+            class="btn rounded-0 shuffleBtn"
+            @click="emitShuffle"
+          >
+            <div class="shuffleIcon">
+              <h2 style="margin: 0">
+                <i class="fa-solid fa-shuffle"></i>
+              </h2>
+              <p style="color: white; margin: 0px">Shuffle</p>
+            </div>
+          </button>
         </div>
-        </button>
       </div>
       <button
         class="navbar-toggler"
-        @click="trackNavState"
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#navbarSupportedContent"
@@ -37,7 +52,11 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
+        <div></div>
+        <ul
+          class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center"
+          id="navItems"
+        >
           <li class="nav-item">
             <router-link
               class="nav-link"
@@ -83,19 +102,33 @@
               Logout</router-link
             >
           </li>
-          
+          <div style="width: 90px" class="largeViewShuffle">
+            <button
+              v-if="currentRoute === 'Index'"
+              color="dark"
+              class="btn rounded-0 shuffleBtn"
+              @click="emitShuffle"
+            >
+              <div class="shuffleIcon">
+                <h2 style="margin: 0">
+                  <i class="fa-solid fa-shuffle"></i>
+                </h2>
+                <p style="color: white; margin: 0px">Shuffle</p>
+              </div>
+            </button>
+          </div>
         </ul>
-        <SearchBar @searchEvent="toggleCollapse" style="padding-left:30px;"/>
+
+        <SearchBar @searchEvent="toggleCollapse" />
       </div>
     </div>
   </nav>
 </template>
 
 <script>
-import {} from "mdb-vue-ui-kit";
 import getUser from "../composables/getUser";
 import SearchBar from "./SearchBar.vue";
-import { ref, watchEffect, watch } from "vue";
+import { ref, watchEffect } from "vue";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter, useRoute } from "vue-router";
 import { Collapse } from "bootstrap";
@@ -125,7 +158,7 @@ export default {
       if (currentRoute.value === "Index") {
         router.go();
       }
-    }
+    };
 
     const emitShuffle = () => {
       context.emit("shuffle");
@@ -158,7 +191,6 @@ export default {
       toggleCollapse();
     });
 
-
     return {
       loggedIn,
       showLogin,
@@ -166,7 +198,7 @@ export default {
       currentRoute,
       toggleCollapse,
       emitShuffle,
-      refreshHome
+      refreshHome,
     };
   },
 };
@@ -176,23 +208,45 @@ export default {
 /* a.router-link-active {
   color: white !important;
 } */
+
+.navTitle {
+  font-family: "Pacifico";
+}
+
+.navbar {
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
 .navHeading {
   margin-top: 0;
   margin-bottom: 0;
   font-size: 20px;
 }
 
-.shuffleBtn{
-  background:#212529;
-  border:none;
-}
-.shuffleIcon{
-  color:white;
-}
-.shuffleIcon:hover{
-  color:grey;
+.shuffleBtn {
+  background: #212529;
+  border: none;
+  margin: auto;
+  /* display: block!important; */
+  /* border: 2px solid green; */
 }
 
+.shuffleIcon {
+  color: white;
+}
+.shuffleIcon:hover {
+  color: white;
+}
+
+.shuffleIcon:active {
+  color: grey;
+}
+
+/* if device supports proper hover behaviour */
+@media (hover: hover) {
+  .shuffleIcon:hover {
+    color: grey;
+  }
+}
 
 .cocktailLogo {
   width: 50px;
@@ -200,8 +254,44 @@ export default {
   margin-bottom: 10px;
 }
 
+.nav-link {
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  /* color:white; */
+}
+
 .nav-link:hover {
   background-color: #414551;
+  border-radius: 10px;
+}
+.smallViewShuffle {
+  visibility: visible;
+}
+
+.largeViewShuffle {
+}
+@media (min-width: 992px) {
+  .smallViewShuffle {
+    visibility: hidden;
+  }
+}
+
+@media (max-width: 400px) {
+  .navTitle {
+    font-size: medium;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .largeViewShuffle {
+    visibility: hidden;
+    height: 0px;
+    position: absolute;
+  }
+  #navbarSupportedContent {
+    border-top: 4px solid rgba(0, 0, 0, 0.175);
+  }
 }
 
 /* prevents navbar obstructing main content */
@@ -228,8 +318,9 @@ a.homeLink {
   #navbarSupportedContent.collapse.navbar-collapse {
     height: 0px !important ;
   }
-  /* overrides height on smaller view to ensure expanded navbar still has height */
 }
+/* overrides height on smaller view to ensure expanded navbar still has height */
+
 @media (max-width: 991.98px) {
   #navbarSupportedContent.collapse.navbar-collapse.show.loggedOutHeight {
     height: auto !important ;
