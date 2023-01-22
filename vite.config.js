@@ -83,7 +83,7 @@ export default ({ mode }) => {
           );
           generateSitemap({
             routes: [...routes, ...dynamicRoutes],
-            hostname: "https://www.cocktaildb.app/",
+            hostname: "https://cocktaildb.app/",
             changefreq: "weekly",
             exclude: ['/login', '/register', '/reset', '/profile'],
           });
