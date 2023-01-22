@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cocktail-db-74848.web.app/sitemap.xml
+Sitemap: https://www.cocktaildb.app/sitemap.xml
