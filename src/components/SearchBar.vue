@@ -146,7 +146,6 @@ export default {
     const search = () => {
       let query = searchQuery.value;
       searchQuery.value = "";
-      console.log("search query: " + query);
       // unfocusSearch();
       closeSearch();
       //navigate to results page
@@ -162,14 +161,9 @@ export default {
       ctx.emit("searchEvent");
     };
 
-    // const unfocusSearch = () => {
-    //   // console.log("yo");
-    //   searchBtn.value.$el.blur();
-    // };
     const searchedDrinks = computed(() => {
       const queryString = searchQuery.value.toLowerCase();
       let searchResults = [];
-      console.log(drinks.value);
       if (drinks.value) {
         searchResults = drinks.value.filter(
           (drink) =>

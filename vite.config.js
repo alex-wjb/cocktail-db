@@ -52,7 +52,6 @@ const fetchData = async () => {
     return cocktails;
   } catch (err) {
     console.log(err);
-    console.log("hiii");  
   }
 };
 
@@ -94,13 +93,16 @@ export default ({ mode }) => {
       }),
       VitePWA({
         mode: "development",
+        // injectManifest: {
+        //   globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+        // },
         devOptions: {
           enabled: true,
           /* when using generateSW the PWA plugin will switch to classic */
           type: "module",
           navigateFallback: "index.html",
         },
-        base: "/",
+        base: "",
         srcDir: "src",
         filename: "service-worker.js",
         includeAssets: ["/favicon.png"],

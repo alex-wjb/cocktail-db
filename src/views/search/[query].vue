@@ -265,7 +265,6 @@ export default {
     };
 
     const getIngredients = (cocktailObj) => {
-      console.log(cocktailObj);
       let ingredients = [];
       for (let i = 1; i <= 15; i++) {
         let n = "strIngredient" + i;

@@ -22,7 +22,6 @@ export default {
     onMounted(async () => {
       const docRef = doc(db, "users", currentUser.value.uid);
       const docSnap = await getDoc(docRef);
-      console.log(currentUser.value.uid);
 
       if (docSnap.exists()) {
         console.log("Document data:", docSnap.data());

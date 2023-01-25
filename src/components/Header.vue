@@ -70,7 +70,7 @@
             <router-link
               class="nav-link"
               @click="toggleCollapse"
-              :to="{ name: 'About' }"
+              to="/about"
             >
               About</router-link
             >
@@ -90,7 +90,7 @@
               class="nav-link"
               :to="{ name: 'Profile' }"
             >
-              Profile</router-link
+              Favourites</router-link
             >
           </li>
           <li class="nav-item" v-if="loggedIn()" @click="logout">
@@ -327,6 +327,16 @@ a.homeLink {
   }
   #navbarSupportedContent.collapse.navbar-collapse.show.loggedInHeight {
     height: auto !important ;
+  }
+}
+
+@supports (margin: max(0px)) {
+  .navbar-toggler {
+    /* uses constant value provided by IOS to provide margin when iphone horizontal to
+      prevent device sensor bar covering the nav toggler */
+    /* When device is in portrait view the env constant will be 0, so margin will default to
+      other specified value when using max() */
+    margin-right: max(0px, env(safe-area-inset-right));
   }
 }
 </style>

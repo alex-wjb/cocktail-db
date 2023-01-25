@@ -8,16 +8,18 @@ import { CacheFirst, StaleWhileRevalidate } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 import { clientsClaim, setCacheNameDetails } from "workbox-core";
 
+//hides sw console logs
+self.__WB_DISABLE_DEV_LOGS = true;
 precacheAndRoute(self.__WB_MANIFEST);
 
 // workbox.setConfig({
 //   debug: true,
 // });
-cleanupOutdatedCaches();
+// cleanupOutdatedCaches();
 setCacheNameDetails({ prefix: "cocktail-db" });
 //USED TO ALLOW SERVICE WORKER TO PERFORM RUNTIME CACHING WHEN FIRST REGISTERED WITHOUT FIRST RELOADING PAGE
 self.addEventListener("activate", () => self.clients.claim());
-clientsClaim();
+// clientsClaim();
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {

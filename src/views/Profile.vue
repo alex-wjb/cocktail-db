@@ -60,23 +60,25 @@
         <div
           class="rounded-1 card bg-dark text-white text-center h-100 border-0 favCard"
         >
-          <div class="card-header" style="border-width: 0px !important; height: 70px;">
+          <div
+            class="card-header"
+            style="border-width: 0px !important; height: 70px"
+          >
             <div class="card-title">{{ item.strDrink }}</div>
           </div>
-         
-            <router-link
-              :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
-            >
-              <a class="drinkImgContainer">
-                <img
-                  class="rounded-0 card-img-bottom drinkImg skeleton"
-                  bottom
-                  v-bind:src="item.strDrinkThumb"
-                  v-bind:alt="item.strDrink"
-                />
-              </a>
-            </router-link>
-        
+
+          <router-link
+            :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
+          >
+            <a class="drinkImgContainer">
+              <img
+                class="rounded-0 card-img-bottom drinkImg skeleton"
+                bottom
+                v-bind:src="item.strDrinkThumb"
+                v-bind:alt="item.strDrink"
+              />
+            </a>
+          </router-link>
 
           <div
             class="text-muted card-footer"
@@ -108,7 +110,6 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import FavBtn from "../components/FavBtn.vue";
-import { useRoute } from "vue-router";
 
 import { ref, onMounted } from "vue";
 export default {
@@ -119,8 +120,6 @@ export default {
   setup() {
     const { currentUser } = getUser();
     const displayName = ref("");
-    const route = useRoute();
-    console.log(route.path);
     const video = ref(null);
     const showCamera = ref(false);
     const profilePic = ref(null);
@@ -176,7 +175,6 @@ export default {
     const getFavourites = async () => {
       const docRef = doc(db, "users", currentUser.value.uid);
       const docSnap = await getDoc(docRef);
-      console.log(currentUser.value.uid);
       if (docSnap.exists()) {
         console.log("Document data:", docSnap.data());
         favourites.value = docSnap.data().favourites;
@@ -196,7 +194,9 @@ export default {
     const populateCocktailData = async (drinkId) => {
       const cocktail = ref(null);
       const baseURL = "https://www.thecocktaildb.com/api/json/v2";
-      const apiKey = (import.meta.env.VITE_API_KEY ? import.meta.env.VITE_API_KEY : 1);
+      const apiKey = import.meta.env.VITE_API_KEY
+        ? import.meta.env.VITE_API_KEY
+        : 1;
       const query = `lookup.php?i=${drinkId}`;
       const requestUrl = `${baseURL}/${apiKey}/${query}`;
       try {
@@ -205,7 +205,6 @@ export default {
           throw new Error(response.status + " - Unable to fetch data.");
         }
         const responseJSON = await response.json();
-        console.log(responseJSON);
         cocktail.value = responseJSON.drinks[0];
         cocktails.value.push(cocktail.value);
       } catch (e) {
@@ -214,17 +213,15 @@ export default {
           return;
         }
         cocktail.value = getCocktailByID(allCocktails.value, drinkId);
-        console.log(cocktail.value);
         cocktails.value.push(cocktail.value);
       }
     };
 
     const getCocktailByID = (cocktailObjArray, drinkID) => {
-      console.log(drinkID);
       const drink = cocktailObjArray.find(
         (element) => element.idDrink === drinkID
       );
-      console.log(drink);
+
       return drink;
     };
 
@@ -298,19 +295,18 @@ export default {
   }
 }
 
-button:active{
-transform: scale(0.9);
+button:active {
+  transform: scale(0.9);
 }
 
 /* no hover styling - bg same as no state */
-button:hover{
+button:hover {
   background-color: #212529;
 }
 /* Apply hover style on devices where hover behaves properly (hover style sticks on iphone safari) */
 @media (hover: hover) {
-    button:hover {
-        background-color: #414551;
-    }
+  button:hover {
+    background-color: #414551;
+  }
 }
-
 </style>

@@ -11,14 +11,13 @@
       <h4 class="errorTxt">Please try again later.</h4>
     </div>
   </div>
-   <router-link
-   style="width: 150px;"
-              :to="{ name: 'Index' }"
-              class="text-decoration-none backBtn text-white btn btn-dark rounded-1 mb-4 d-block m-auto pt-2 pb-2"
-         
-            >
-              Back to home</router-link
-            >
+  <router-link
+    style="width: 150px"
+    :to="{ name: 'Index' }"
+    class="text-decoration-none backBtn text-white btn btn-dark rounded-1 mb-4 d-block m-auto pt-2 pb-2"
+  >
+    Back to home</router-link
+  >
   <div class="infoCards">
     <div class="row row-cols-1 row-cols-md-2 g-4">
       <div class="col">
@@ -52,8 +51,15 @@
             <li class="tagItem list-inline list-inline-item">
               {{ cocktail.strCategory }}
             </li>
-            <FavBtn class="mt-2 mb-2" v-if="currentUser" :drinkId="cocktail.idDrink" />
-            <div v-else class="mt-2"> <router-link class="loginLink" to="/login">Login</router-link> to add to favourites</div>
+            <FavBtn
+              class="mt-2 mb-2"
+              v-if="currentUser"
+              :drinkId="cocktail.idDrink"
+            />
+            <div v-else class="mt-2">
+              <router-link class="loginLink" to="/login">Login</router-link> to
+              add to favourites
+            </div>
           </div>
         </div>
       </div>
@@ -64,33 +70,33 @@
           class="card rounded-1 h-100 bg-dark pb-3 pt-3 text-white drinkCard"
           text="white"
           bg="dark"
-          style="margin: auto;"
+          style="margin: auto"
         >
-          <div class="card-body" style="display:flex; align-items: center;
-  justify-content: center;">
+          <div
+            class="card-body"
+            style="display: flex; align-items: center; justify-content: center"
+          >
             <div>
-            <h3>Directions</h3>
-            <p>{{ cocktail.strInstructions }}</p>
-            <br />
-            <h3>Ingredients</h3>
-          
+              <h3>Directions</h3>
+              <p>{{ cocktail.strInstructions }}</p>
+              <br />
+              <h3>Ingredients</h3>
 
-            <table
-              class="table text-white"
-              style="width: 50%; margin: auto"
-              sm
-              dark
-            >
-              <tbody>
-                <tr v-for="item in getIngredients(cocktail)" :key="item">
-                  <td>{{ item.ingredient }}</td>
-                  <td>{{ item.measure }}</td>
-                </tr>
-              </tbody>
-            </table>
+              <table
+                class="table text-white"
+                style="width: 50%; margin: auto"
+                sm
+                dark
+              >
+                <tbody>
+                  <tr v-for="item in getIngredients(cocktail)" :key="item">
+                    <td>{{ item.ingredient }}</td>
+                    <td>{{ item.measure }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          </div>
-          
         </div>
       </div>
       <!-- </MDBRow> -->
@@ -143,7 +149,6 @@ export default {
     const generateJsonld = computed(() => {
       let jsonld = null;
       if (cocktail.value) {
-        console.log(cocktail.value);
         jsonld = JSON.stringify({
           "@context": "https://schema.org/",
           "@type": "Recipe",
@@ -170,14 +175,15 @@ export default {
           },
         });
       }
-      console.log(jsonld);
       return jsonld;
     });
 
     //uses thecocktaildb api lookup query to retrieve up to date drink info
     const fetchCocktailByID = async (drinkId) => {
       const baseURL = "https://www.thecocktaildb.com/api/json/v2";
-      const apiKey = (import.meta.env.VITE_API_KEY ? import.meta.env.VITE_API_KEY : 1);
+      const apiKey = import.meta.env.VITE_API_KEY
+        ? import.meta.env.VITE_API_KEY
+        : 1;
       const query = `lookup.php?i=${drinkId}`;
       const requestUrl = `${baseURL}/${apiKey}/${query}`;
 
@@ -193,13 +199,14 @@ export default {
       cocktail.value = null;
       try {
         cocktail.value = await fetchCocktailByID(drinkId);
-        console.log(drinkName.value);
+        console.log("USING FETCHBYID");
+
         drinkName.value = applyTitleCase(cocktail.value.strDrink);
         imgAltText.value = drinkName.value + " Cocktail Photo";
-        console.log(drinkName.value);
       } catch (e) {
         //defaults to drink data stored in cache by service worker
         await fetchData();
+        console.log("USING FETCHDATA");
         if (error.value) {
           return;
         }
@@ -247,7 +254,6 @@ export default {
 
     //repopulate drink info if the url id parameter changes
     watchEffect(() => {
-      // console.log(route.name);
       if (route.name == "drinks-id") {
         populateCocktailData(route.params.id);
       }
@@ -282,19 +288,16 @@ export default {
   margin: auto;
 }
 
-.drinkCard{
- 
+.drinkCard {
   box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
   border: none;
- 
-
 }
 
-.backBtn{
+.backBtn {
   box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
 
-.backBtn:active{
+.backBtn:active {
   background-color: #4d5154;
 }
 
