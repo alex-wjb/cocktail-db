@@ -58,6 +58,7 @@ const getAllCocktails = () => {
       console.log(err);
       error.value = err;   
     }
+
   };
   return { allCocktails, fetchData, error };
 };

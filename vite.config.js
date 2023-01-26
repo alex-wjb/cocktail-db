@@ -4,20 +4,21 @@ import Pages from "vite-plugin-pages";
 import vue from "@vitejs/plugin-vue";
 import { VitePWA } from "vite-plugin-pwa";
 import generateSitemap from "vite-plugin-pages-sitemap";
-const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const path = require("path");
 
 //TODO: IMPORT FROM UTILITY FILE
 //returns a promise resolving to an array of cocktails
 const fetchCocktailsByChar = (char) => {
+  const baseURL = "https://www.thecocktaildb.com/api/json/v2";
+  const apiKey = process.env.VITE_API_KEY ? process.env.VITE_API_KEY : 1;
+
   const query = `search.php?f=${char}`;
   const requestUrl = `${baseURL}/${apiKey}/${query}`;
   const response = sendRequest(requestUrl);
   return response;
-}
-
-const baseURL = "https://www.thecocktaildb.com/api/json/v2";
-const apiKey = (process.env.VITE_API_KEY ? process.env.VITE_API_KEY : 1);
+};
 
 //sends Fetch API request returning results as json
 const sendRequest = async (requestUrl) => {
@@ -38,7 +39,7 @@ const sendRequest = async (requestUrl) => {
 const fetchData = async () => {
   //clear cocktails array
   let data = [];
-  let cocktails = []
+  let cocktails = [];
   try {
     //resolve all promises to an array of cocktail arrays a-z
     data = await Promise.all(fetchCocktailsAZ());
@@ -49,6 +50,7 @@ const fetchData = async () => {
         cocktails = cocktails.concat(element.drinks);
       }
     });
+
     return cocktails;
   } catch (err) {
     console.log(err);
@@ -56,13 +58,13 @@ const fetchData = async () => {
 };
 
 //TODO: IMPORT FROM UTILITY FILE
-//returns an array of promises 
-const fetchCocktailsAZ = () =>{
+//returns an array of promises
+const fetchCocktailsAZ = () => {
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
   const charsAZ = Array.from(alphabet);
-  return charsAZ.map(async char=>{
+  return charsAZ.map(async (char) => {
     return fetchCocktailsByChar(char);
-  })
+  });
 };
 
 export default ({ mode }) => {
@@ -84,7 +86,7 @@ export default ({ mode }) => {
             routes: [...routes, ...dynamicRoutes],
             hostname: "https://cocktaildb.app/",
             changefreq: "weekly",
-            exclude: ['/login', '/register', '/reset', '/profile'],
+            exclude: ["/login", "/register", "/reset", "/profile"],
           });
         },
       }),
@@ -165,8 +167,8 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
-        '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap')
+        "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
       },
     },
   });
-}
+};

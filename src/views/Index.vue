@@ -34,10 +34,27 @@
             :to="{ name: 'drinks-id', params: { id: item.idDrink } }"
           >
             <a class="drinkImgContainer">
+              <!-- <svg
+                class="bd-placeholder-img card-img-bottom rounded-0 drinkImg"
+                width="700px"
+                height="350px"
+                xmlns="http://www.w3.org/2000/svg"
+                role="img"
+                aria-label="Placeholder"
+                preserveAspectRatio="meet"
+                focusable="false"
+              >
+                <title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#868e96"></rect>
+              </svg> -->
+              <img v-show="item.loading" src="../assets/loading.png" alt="placholder image" class="rounded-0 card-img-bottom drinkImg">
+       
               <img
-                class="rounded-0 card-img-bottom drinkImg skeleton"
+              v-show="!item.loading"
+                class="rounded-0 card-img-bottom drinkImg"
                 v-bind:src="item.strDrinkThumb"
                 v-bind:alt="item.strDrink"
+                @load="item.loading=false"
               />
             </a>
           </router-link>
@@ -124,7 +141,9 @@ export default {
 
         if (!randomNums.includes(index)) {
           randomNums.push(index);
-          randomCocktails.push(cocktails[index]);
+          let cocktail = cocktails[index];
+          cocktail.loading = true;
+          randomCocktails.push(cocktail);
         }
       }
       return randomCocktails;
@@ -297,7 +316,7 @@ export default {
   }
 }
 
-@media (max-height: 400px) and (min-width: 400px) {
+@media (max-height: 400px) {
   .cardCols {
     flex: 0 0 auto !important;
     width: 33.33333333% !important;

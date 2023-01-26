@@ -37,7 +37,7 @@
 
           <a class="drinkImgContainer">
             <img
-              class="card-img-bottom rounded-0 skeleton"
+              class="card-img-bottom rounded-0"
               bottom
               v-bind:src="cocktail.strDrinkThumb"
               v-bind:alt="imgAltText"
@@ -198,15 +198,13 @@ export default {
     const populateCocktailData = async (drinkId) => {
       cocktail.value = null;
       try {
+        //network api request for single drink 
         cocktail.value = await fetchCocktailByID(drinkId);
-        console.log("USING FETCHBYID");
-
         drinkName.value = applyTitleCase(cocktail.value.strDrink);
         imgAltText.value = drinkName.value + " Cocktail Photo";
       } catch (e) {
-        //defaults to drink data stored in cache by service worker
+        //network request for all drinks a-z, already stored in cache by service worker on site first load
         await fetchData();
-        console.log("USING FETCHDATA");
         if (error.value) {
           return;
         }
