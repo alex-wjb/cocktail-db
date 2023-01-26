@@ -54,28 +54,28 @@ registerRoute(
   })
 );
 
-registerRoute(
-  new RegExp("https://www.thecocktaildb.com/images/media/drink/(.*)"),
-  async ({url, event}) => {
-    const staleWhileRevalidate = new StaleWhileRevalidate();
+// registerRoute(
+//   new RegExp("https://www.thecocktaildb.com/images/media/drink/(.*)"),
+//   async ({url, event}) => {
+//     const staleWhileRevalidate = new StaleWhileRevalidate();
 
-    try {
-      const response = await caches.match(event.request) || await fetch(url, { method: 'GET' });
-      if (!response || response.status === 404) {
-        throw new Error(response.status);
-      } else {
-        return await staleWhileRevalidate.handle(event);
-      }
+//     try {
+//       const response = await caches.match(event.request) || await fetch(url, { method: 'GET' });
+//       if (!response || response.status === 404) {
+//         throw new Error(response.status);
+//       } else {
+//         return await staleWhileRevalidate.handle(event);
+//       }
 
-    } catch (error) {
-      console.log(error);
-      console.warn(`\nServiceWorker: Image [${url.href}] was not found either in the network or the cache. Responding with placeholder image instead.\n`);
-      // * get placeholder image from cache || get placeholder image from network
-      return await caches.match(placeholderImageURL) || await fetch(placeholderImageURL, { method: 'GET' });
+//     } catch (error) {
+//       console.log(error);
+//       console.warn(`\nServiceWorker: Image [${url.href}] was not found either in the network or the cache. Responding with placeholder image instead.\n`);
+//       // * get placeholder image from cache || get placeholder image from network
+//       return await caches.match(placeholderImageURL) || await fetch(placeholderImageURL, { method: 'GET' });
 
-    }
-  }
-);
+//     }
+//   }
+// );
 
 
 registerRoute(
@@ -93,20 +93,20 @@ registerRoute(
   })
 );
 
-registerRoute(
-  new RegExp("https://fonts.googleapis.com/(.*)"),
-  new CacheFirst({
-    cacheName: "fonts",
-    plugins: [
-      new ExpirationPlugin({
-        maxEntries: 30,
-        maxAgeSeconds: 60 * 60 * 24 * 30, //30 days
-      }),
-    ],
-    method: "GET",
-    cacheableResponse: { statuses: [0, 200] },
-  })
-);
+// registerRoute(
+//   new RegExp("https://fonts.googleapis.com/(.*)"),
+//   new CacheFirst({
+//     cacheName: "fonts",
+//     plugins: [
+//       new ExpirationPlugin({
+//         maxEntries: 30,
+//         maxAgeSeconds: 60 * 60 * 24 * 30, //30 days
+//       }),
+//     ],
+//     method: "GET",
+//     cacheableResponse: { statuses: [0, 200] },
+//   })
+// );
 
 const baseURL = "https://www.thecocktaildb.com/api/json/v2";
 const apiKey = "9973533";
