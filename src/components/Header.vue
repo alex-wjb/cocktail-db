@@ -70,6 +70,15 @@
             <router-link
               class="nav-link"
               @click="toggleCollapse"
+              :to="{ name: 'Quiz' }"
+            >
+              Quiz</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link
+              class="nav-link"
+              @click="toggleCollapse"
               to="/about"
             >
               About</router-link

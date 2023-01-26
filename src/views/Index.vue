@@ -136,7 +136,7 @@ export default {
       // gets 12 unique random cocktail objects
       while (randomNums.length !== n) {
         const index = Math.floor(
-          Math.random() * (allCocktails.value.length + 1)
+          Math.random() * (allCocktails.value.length)
         );
 
         if (!randomNums.includes(index)) {
