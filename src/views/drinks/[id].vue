@@ -41,6 +41,7 @@
               bottom
               v-bind:src="cocktail.strDrinkThumb"
               v-bind:alt="imgAltText"
+              crossorigin="anonymous"
             />
           </a>
 

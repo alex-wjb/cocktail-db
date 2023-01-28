@@ -55,6 +55,7 @@
                 v-bind:src="item.strDrinkThumb"
                 v-bind:alt="item.strDrink"
                 @load="item.loading=false"
+                crossorigin="anonymous"
               />
             </a>
           </router-link>

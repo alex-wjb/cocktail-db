@@ -57,6 +57,7 @@
           class="resultImg"
           :src="item.strDrinkThumb+'/preview'"
           v-bind:alt="item.strDrink"
+          crossorigin="anonymous"
         />
       </router-link>
     </div>
