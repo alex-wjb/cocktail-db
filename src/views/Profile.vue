@@ -76,6 +76,7 @@
                 bottom
                 v-bind:src="item.strDrinkThumb"
                 v-bind:alt="item.strDrink"
+                crossorigin="anonymous"
               />
             </a>
           </router-link>
