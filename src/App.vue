@@ -53,12 +53,12 @@ export default {
   font-weight: 400;
   font-style: normal;
   font-display: auto;
-  src: URL('src/assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+  src: Local('Montserrat-VariableFont_wght'), url('@/assets/styles/Montserrat-VariableFont_wght.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Pacifico';
-  src: URL('src/assets/fonts/Pacifico/Pacifico-Regular.ttf') format('truetype');
+  src: Local('Pacifico-Regular'), url('@/assets/styles/Pacifico-Regular.ttf') format('truetype');
 }
 
 /* prevents horizontal page shift due to vertical scrollbar toggling */

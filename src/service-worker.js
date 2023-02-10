@@ -3,21 +3,15 @@ import {
   cleanupOutdatedCaches,
   createHandlerBoundToURL,
 } from "workbox-precaching";
-import { NavigationRoute, registerRoute,} from "workbox-routing";
+import { NavigationRoute, registerRoute } from "workbox-routing";
 import { CacheFirst, StaleWhileRevalidate } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 import { clientsClaim, setCacheNameDetails } from "workbox-core";
 
+precacheAndRoute(self.__WB_MANIFEST || []);
+
 //hides sw console logs
 self.__WB_DISABLE_DEV_LOGS = true;
-const placeholderImageURL = './img/placeholder-img.png';
-const logoURL = './assets/watercolor-title.png'
-
-precacheAndRoute(
-  (self.__WB_MANIFEST || []).concat([ placeholderImageURL, logoURL ])
-);
-
-
 
 // workbox.setConfig({
 //   debug: true,
@@ -39,6 +33,8 @@ const handler = createHandlerBoundToURL("/index.html");
 const navigationRoute = new NavigationRoute(handler);
 registerRoute(navigationRoute);
 
+//RUNTIME CACHING
+//cache cocktail data
 registerRoute(
   new RegExp("https://www.thecocktaildb.com/api/json/v2/(.*)"),
   new StaleWhileRevalidate({
@@ -54,88 +50,61 @@ registerRoute(
   })
 );
 
+//cache cocktail images
 registerRoute(
   new RegExp("https://www.thecocktaildb.com/images/media/drink/(.*)"),
-  async ({url, event}) => {
+  async ({ url, event }) => {
     const staleWhileRevalidate = new StaleWhileRevalidate();
+    //image already added to precache via glob patterns set in vite pwa config
+    const placeholderImageURL = "./img/placeholder-img.png";
 
     try {
-      const response = await caches.match(event.request) || await fetch(url, { method: 'GET' });
+      const response =
+        (await caches.match(event.request)) ||
+        (await fetch(url, { method: "GET" }));
       if (!response || response.status === 404) {
         throw new Error(response.status);
       } else {
         return await staleWhileRevalidate.handle(event);
       }
-
+      //serve placeholder img if no cockail img available
     } catch (error) {
       console.log(error);
-      console.warn(`\nServiceWorker: Image [${url.href}] was not found either in the network or the cache. Responding with placeholder image instead.\n`);
-      // * get placeholder image from cache || get placeholder image from network
-      return await caches.match(placeholderImageURL) || await fetch(placeholderImageURL, { method: 'GET' });
-
+      console.warn(
+        `\nServiceWorker: Image [${url.href}] was not found either in the network or the cache. Responding with placeholder image instead.\n`
+      );
+      // * get placeholder image from precache || get placeholder image from network
+      return (
+        (await caches.match(placeholderImageURL)) ||
+        (await fetch(placeholderImageURL, { method: "GET" }))
+      );
     }
   }
 );
 
-
-// registerRoute(
-//   new RegExp("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/(.*)"),
-//   new CacheFirst({
-//     cacheName: "icons",
-//     plugins: [
-//       new ExpirationPlugin({
-//         maxEntries: 30,
-//         maxAgeSeconds: 60 * 60 * 24 * 30, //30 days
-//       }),
-//     ],
-//     method: "GET",
-//     cacheableResponse: { statuses: [200] },
-//   })
-// );
-
-// registerRoute(
-//   new RegExp("https://fonts.googleapis.com/(.*)"),
-//   new CacheFirst({
-//     cacheName: "fonts",
-//     plugins: [
-//       new ExpirationPlugin({
-//         maxEntries: 30,
-//         maxAgeSeconds: 60 * 60 * 24 * 30, //30 days
-//       }),
-//     ],
-//     method: "GET",
-//     cacheableResponse: { statuses: [200] },
-//   })
-// );
-
-const baseURL = "https://www.thecocktaildb.com/api/json/v2";
-const apiKey = "9973533";
-const alphabet = "abcdefghijklmnopqrstuvwxyz";
-const charsAZ = Array.from(alphabet);
-const requestUrls = charsAZ.map((char) => {
-  const query = `search.php?f=${char}`;
-  const url = `${baseURL}/${apiKey}/${query}`;
-  return url;
-});
-
-const addResourcesToCache = async (resources, cacheName) => {
-  const cache = await caches.open(cacheName);
-  await cache.addAll(resources);
-};
-
+//add all cocktail data to cache on service worker first install
 self.addEventListener("install", (evt) => {
   evt.waitUntil(
-    addResourcesToCache(requestUrls, "drinks").then(
+    addResourcesToCache(getDrinkRequestUrls(), "drinks").then(
       console.log("Drink api responses precached.")
     )
   );
 });
 
-// self.addEventListener("install", (evt) => {
-//   evt.waitUntil(
-//     addResourcesToCache(
-//       ["https://use.fontawesome.com/relea" + "ses/v5.15.1/css/all.css"],
-//       "icons"
-//     ).then(console.log("Icons precached."))
-//   );
-// });
+const getDrinkRequestUrls = () => {
+  const baseURL = "https://www.thecocktaildb.com/api/json/v2";
+  const apiKey = "9973533";
+  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+  const charsAZ = Array.from(alphabet);
+  const requestUrls = charsAZ.map((char) => {
+    const query = `search.php?f=${char}`;
+    const url = `${baseURL}/${apiKey}/${query}`;
+    return url;
+  });
+  return requestUrls;
+};
+
+const addResourcesToCache = async (resources, cacheName) => {
+  const cache = await caches.open(cacheName);
+  await cache.addAll(resources);
+};

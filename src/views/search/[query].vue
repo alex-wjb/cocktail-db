@@ -55,9 +55,10 @@
       <router-link :to="{ name: 'drinks-id', params: { id: item.idDrink } }">
         <img
           class="resultImg"
+          crossorigin="anonymous"
           :src="item.strDrinkThumb+'/preview'"
           v-bind:alt="item.strDrink"
-          crossorigin="anonymous"
+          
         />
       </router-link>
     </div>

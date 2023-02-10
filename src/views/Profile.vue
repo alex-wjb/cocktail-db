@@ -73,10 +73,10 @@
             <a class="drinkImgContainer">
               <img
                 class="rounded-0 card-img-bottom drinkImg skeleton"
-                bottom
+                crossorigin="anonymous"
                 v-bind:src="item.strDrinkThumb"
                 v-bind:alt="item.strDrink"
-                crossorigin="anonymous"
+                
               />
             </a>
           </router-link>

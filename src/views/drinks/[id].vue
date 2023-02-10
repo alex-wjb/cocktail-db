@@ -38,10 +38,10 @@
           <a class="drinkImgContainer">
             <img
               class="card-img-bottom rounded-0"
-              bottom
+              crossorigin="anonymous"
               v-bind:src="cocktail.strDrinkThumb"
               v-bind:alt="imgAltText"
-              crossorigin="anonymous"
+              
             />
           </a>
 
