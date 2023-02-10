@@ -95,9 +95,9 @@ export default ({ mode }) => {
       }),
       VitePWA({
         mode: "development",
-        // injectManifest: {
-        //   globPatterns: ['**/*.{js,css,html,ico,png,svg}']
-        // },
+        injectManifest: {
+          globPatterns: ['**/*.{js,css,html}', 'assets/*.{png,ttf,woff2}']
+        },
         devOptions: {
           enabled: true,
           /* when using generateSW the PWA plugin will switch to classic */
@@ -107,7 +107,7 @@ export default ({ mode }) => {
         base: "",
         srcDir: "src",
         filename: "service-worker.js",
-        includeAssets: ["/favicon.png"],
+        // includeAssets: ['/assets/styles/*.ttf', '/assets/*.png','/img/*.png'],
         strategies: "injectManifest",
         manifest: {
           name: "Cocktail Database",
@@ -166,7 +166,7 @@ export default ({ mode }) => {
     ],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "./src"),
+        "@": path.resolve(__dirname, "src"),
         "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
       },
     },
