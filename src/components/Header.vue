@@ -12,6 +12,7 @@
           :to="{ name: 'Index' }"
         >
           <img
+          v-show="!quizView"
             class="cocktailLogo"
             alt="cocktail database logo"
             src="../assets/watercolor-title.png"
@@ -152,6 +153,7 @@ export default {
     const currentRoute = ref("");
     const auth = getAuth();
     const { currentUser } = getUser();
+    const quizView = ref(false);
 
     //toggles bootstrap collapse
     const toggleCollapse = () => {
@@ -200,6 +202,18 @@ export default {
       toggleCollapse();
     });
 
+    //check if view is quiz - maybe use computed prop
+    watchEffect(() => {
+      if (route.name === "Quiz") {
+        quizView.value = true;
+      }
+      else {
+        quizView.value = false;
+      }
+      
+      toggleCollapse();
+    });
+
     return {
       loggedIn,
       showLogin,
@@ -208,6 +222,7 @@ export default {
       toggleCollapse,
       emitShuffle,
       refreshHome,
+      quizView
     };
   },
 };
