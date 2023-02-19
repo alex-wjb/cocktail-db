@@ -2,14 +2,15 @@
   <div id="quizGame" class="quizGame pt-4 pb-4">
     <div v-if="showResults" style="height: 100vh" class="text-center">
       <div
-        class="m-auto w-50 rounded-1 p-3"
+        class="m-auto scoreCard rounded-1 p-3"
         style="
-          height: 300px;
+          height:200px;
           background-color: white;
           margin-top: 100px !important;
         "
       >
-        <h4>You scored: {{ quizScore }} / 10</h4>
+        <h4 class="d-block">You scored:</h4>
+        <h4 cclass="d-block">{{ quizScore }} / 10</h4>
         <button
           class="btn btn-dark m-1"
           @click="(showResults = false), (quizActive = true), resetQuiz()"
@@ -24,10 +25,10 @@
       class="card quizCard rounded-0 text-center"
     >
       <div
-        class="card-header pb-0 d-flex align-items-center justify-content-center flex-column"
-        style="border-width: 0px; min-height: 80px"
+        class="card-header pt-1 pb-0 d-flex align-items-center justify-content-center flex-column"
+        style="border-width: 0px;"
       >
-        <div class="d-flex align-items-center flex-column mb-2">
+        <!-- <div class="d-flex align-items-center flex-column mb-2">
           <div><h6 class="fw-bold">Game Mode</h6></div>
           <div>
             <button class="btn btn-dark m-1" @click="set10QMode">
@@ -37,25 +38,26 @@
               Infinite (streak)
             </button>
           </div>
-        </div>
-        <div
+        </div> -->
+        <!-- <div
           v-if="streakMode"
           class="d-flex justify-content-between w-100 mt-1"
         >
           <h6 class="fw-bold mb-0">Current Streak: {{ quizStreak }}</h6>
           <h6 class="fw-bold mb-0">Highest Streak: {{ highStreak }}</h6>
-        </div>
+        </div> -->
         <div v-if="tenQMode" class="d-flex justify-content-center w-100">
           <h6 class="fw-bold mb-0">Question: {{ questionCount }}</h6>
         </div>
       </div>
 
-      <div class="card-body">
+      <div class="card-body pt-1">
+       
         <div
           class="drinkCard pt-2 pe-2 ps-2 m-auto rounded-1"
           style="background-color: #212529"
         >
-          <h3 class="card-title text-white mb-2">
+          <h3 class="card-title drinkTitle text-white mb-2">
             {{ displayedCocktail.strDrink }}
           </h3>
           <img
@@ -73,8 +75,9 @@
             {{ item }}
           </li>
         </div>
+     
 
-        <h6 class="mt-2 fw-bold">Select the missing ingredient:</h6>
+        <h6 class="mt-2 fw-bold quizPrompt">Select the missing ingredient:</h6>
 
         <div class="mt-2">
           <div
@@ -92,24 +95,26 @@
           </div>
         </div>
 
-        <div class="mt-0" v-show="answerSelected">
+        <div class="mt-0 answerReveal" v-show="answerSelected">
           <span class="fw-bold" style="color: green" v-if="ansCorrect"
             >You are Correct!</span
           >
           <div class="fw-bold" v-else>
-            <span class="d-block" style="color: #800020">You are Wrong!</span
-            ><span class="d-block"
-              >Answer: {{ displayedCocktail.missingIng }}</span
+            <span  style="color: #800020">You are Wrong! </span
+            ><span 
+              > | Answer: {{ displayedCocktail.missingIng }}</span
             >
           </div>
         </div>
+        <div style="height: 100px;">
         <button
           v-show="answerSelected"
-          class="btn-dark btn rounded-1 mt-1"
+          class="btn-dark btn rounded-1 mt-1 pt-1 pb-1"
           @click="loadQuestion(allCocktails)"
         >
           Next
         </button>
+      </div>
       </div>
     </div>
   </div>
@@ -330,8 +335,8 @@ export default {
   background-color: #212529;
   position: absolute;
   top: 45px;
-  left:-50px;
-  right:-50px;
+  left: -50px;
+  right: -50px;
   /* counterract parent pagewrapper padding */
 }
 
@@ -364,6 +369,10 @@ export default {
   background-color: #86d5b8;
 }
 
+.scoreCard{
+  max-width: 300px;
+}
+
 .answerOptions {
   color: white;
   background-color: #212529;
@@ -375,10 +384,40 @@ export default {
 @media (max-width: 600px) {
   .drinkCard {
     width: 85%;
+    min-height:320px;
   }
-
+.answerReveal{
+  font-size: 14px;
+}
   .answerOptions {
     width: 85% !important;
+    padding: 4px !important;
+    font-size: 14px;
+  }
+  .correctIngs {
+    font-size: 12px;
+    margin-bottom: 0px !important;
+    margin-top: 6px !important;
+  }
+
+  .quizPrompt{
+    font-size: 14px;
+  }
+
+  .drinkTitle{
+    font-size: 18px;
+  }
+  .drinkImg{
+    width: 70%;
+  }
+
+  .quizGame{
+    background-color: lightgrey;
+  }
+
+  .quizCard{
+    box-shadow: none;
+    border: none;
   }
 }
 </style>
