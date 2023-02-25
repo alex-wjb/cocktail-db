@@ -1,5 +1,6 @@
 import { ref } from "vue";
 const baseURL = "https://www.thecocktaildb.com/api/json/v2";
+// const baseURL = "https://www.thecocktaildb.com/api/jso";
 const apiKey = (import.meta.env.VITE_API_KEY ? import.meta.env.VITE_API_KEY : 1);
 
 //sends Fetch API request returning results as json
@@ -14,7 +15,9 @@ const sendRequest = async (requestUrl) => {
     return responseJSON;
   } catch (err) {
     //ADD SWITCH CASE FOR CUSTOM ERRORS
-    return Promise.reject(err.message);
+    console.log(err.message);
+    //return an empty response
+    return [];
   }
 };
 
@@ -37,7 +40,7 @@ const fetchCocktailsAZ = () =>{
 
 //COMPOSABLE FUNCTION
 const getAllCocktails = () => {
-  const allCocktails = ref([]);
+  const allCocktails = ref(null);
   const error = ref(null);
 
   const fetchData = async () => {

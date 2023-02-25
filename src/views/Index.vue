@@ -47,16 +47,20 @@
                 <title>Placeholder</title>
                 <rect width="100%" height="100%" fill="#868e96"></rect>
               </svg> -->
-              <img v-show="item.loading" src="../assets/loading.png" alt="placholder image" class="rounded-0 card-img-bottom drinkImg">
-       
               <img
-              v-show="!item.loading"
+                v-show="item.loading"
+                src="../assets/loading.png"
+                alt="placholder image"
+                class="rounded-0 card-img-bottom drinkImg"
+              />
+
+              <img
+                v-show="!item.loading"
                 class="rounded-0 card-img-bottom drinkImg"
                 crossorigin="anonymous"
                 v-bind:src="item.strDrinkThumb"
                 v-bind:alt="item.strDrink"
-                @load="item.loading=false"
-                
+                @load="item.loading = false"
               />
             </a>
           </router-link>
@@ -96,7 +100,7 @@ import { ref } from "vue";
 import getAllCocktails from "../composables/fetchCocktails.js";
 import FavBtn from "../components/FavBtn.vue";
 import getUser from "../composables/getUser";
-import { onBeforeMount, watchEffect } from "vue";
+import { onBeforeMount, watch } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 
 export default {
@@ -110,10 +114,29 @@ export default {
     const randomCocktails = ref(null);
     const { allCocktails, fetchData, error } = getAllCocktails();
     const { currentUser } = getUser();
-
     const populateCocktailData = async () => {
-      await fetchData();
-      setRandom();
+      try {
+        const cocktails = [];
+        const cocktailsAdded = [];
+        while (cocktails.length < 12) {
+          const drinks = await fetchRandomCocktails();
+          for (let drink of drinks) {
+            if (!cocktailsAdded.includes(drink.idDrink)) {
+              cocktailsAdded.push(drink.idDrink);
+              cocktails.push(drink);
+              if (cocktails.length === 12) break;
+             }
+          };
+        }
+        setRandom(cocktails);
+      } catch (err) {
+        //API random call failed
+        console.log(err);
+        if (!allCocktails.value) {
+          await fetchData();
+        }
+        setRandom(getRandomCocktails(12));
+      }
     };
 
     onBeforeMount(populateCocktailData);
@@ -137,9 +160,7 @@ export default {
       const cocktails = allCocktails.value;
       // gets 12 unique random cocktail objects
       while (randomNums.length !== n) {
-        const index = Math.floor(
-          Math.random() * (allCocktails.value.length)
-        );
+        const index = Math.floor(Math.random() * allCocktails.value.length);
 
         if (!randomNums.includes(index)) {
           randomNums.push(index);
@@ -151,8 +172,24 @@ export default {
       return randomCocktails;
     };
 
-    const setRandom = () => {
-      randomCocktails.value = getRandomCocktails(12);
+    const fetchRandomCocktails = async () => {
+      const baseURL = "https://www.thecocktaildb.com/api/json/v2";
+      const apiKey = import.meta.env.VITE_API_KEY
+        ? import.meta.env.VITE_API_KEY
+        : 1;
+      const query = `randomselection.php`;
+      const requestUrl = `${baseURL}/${apiKey}/${query}`;
+
+      const response = await fetch(requestUrl);
+      if (response.status !== 200) {
+        throw new Error(response.status + " - Unable to fetch data.");
+      }
+      const responseJSON = await response.json();
+      return responseJSON.drinks;
+    };
+
+    const setRandom = (cocktailObjArray) => {
+      randomCocktails.value = cocktailObjArray;
       window.scroll({
         top: 0,
         left: 0,
@@ -160,12 +197,15 @@ export default {
       });
     };
 
-    watchEffect(() => {
-      //shuffle cocktails when shuffle button is pressed
-      if (randomCocktails.value && props.shuffle !== null) {
-        setRandom();
+    //shuffle cocktails when shuffle button is pressed
+    watch(
+      () => props.shuffle,
+      () => {
+        if (randomCocktails.value && props.shuffle !== null) {
+          populateCocktailData();
+        }
       }
-    });
+    );
 
     onBeforeRouteLeave((to, from) => {
       if (from.name === "Index") {

@@ -136,7 +136,10 @@ export default {
     });
 
     const populateDrinks = async () => {
-      await fetchData();
+      //only performs network request if user agent is not a web crawler
+      if (!/google|baidu|bingbot|duckduckbot|teoma|slurp|yandex/i.test(window.navigator.userAgent)) {
+        await fetchData();
+      }
       if (error.value) {
         return;
       }

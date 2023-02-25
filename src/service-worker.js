@@ -4,7 +4,7 @@ import {
   createHandlerBoundToURL,
 } from "workbox-precaching";
 import { NavigationRoute, registerRoute } from "workbox-routing";
-import { CacheFirst, StaleWhileRevalidate } from "workbox-strategies";
+import { CacheFirst, StaleWhileRevalidate, NetworkOnly } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 import { clientsClaim, setCacheNameDetails } from "workbox-core";
 
@@ -50,6 +50,9 @@ registerRoute(
   })
 );
 
+const url = "https://www.thecocktaildb.com/api/json/v2/" + (import.meta.env.VITE_API_KEY ? import.meta.env.VITE_API_KEY : 1) + "/randomselection.php";
+registerRoute(url, new NetworkOnly());
+
 //cache cocktail images
 registerRoute(
   new RegExp("https://www.thecocktaildb.com/images/media/drink/(.*)"),
@@ -93,7 +96,7 @@ self.addEventListener("install", (evt) => {
 
 const getDrinkRequestUrls = () => {
   const baseURL = "https://www.thecocktaildb.com/api/json/v2";
-  const apiKey = "9973533";
+  const apiKey = (import.meta.env.VITE_API_KEY ? import.meta.env.VITE_API_KEY : 1);
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
   const charsAZ = Array.from(alphabet);
   const requestUrls = charsAZ.map((char) => {
@@ -105,6 +108,7 @@ const getDrinkRequestUrls = () => {
 };
 
 const addResourcesToCache = async (resources, cacheName) => {
+  console.log("YO");
   const cache = await caches.open(cacheName);
   await cache.addAll(resources);
 };

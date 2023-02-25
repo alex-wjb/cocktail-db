@@ -146,6 +146,7 @@ export default {
       });
       return ingredientList.toString().replace(/,/g, ", ");
     };
+    
 
     const generateJsonld = computed(() => {
       let jsonld = null;
