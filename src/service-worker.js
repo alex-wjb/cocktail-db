@@ -67,7 +67,8 @@ registerRoute(
   async ({ url, event }) => {
     const staleWhileRevalidate = new StaleWhileRevalidate();
     //image already added to precache via glob patterns set in vite pwa config
-    const placeholderImageURL = "./img/placeholder-img.png";
+    // TODO: replace with public src and cache the image in precache.
+    const placeholderImageURL = "./assets/placeholder-img.png";
 
     try {
       const response =

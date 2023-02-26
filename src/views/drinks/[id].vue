@@ -37,10 +37,18 @@
 
           <a class="drinkImgContainer">
             <img
+                v-show="cocktail.loading"
+                src="../../assets/loading.png"
+                v-bind:alt="imgAltText + ' image placeholder'"
+                class="rounded-0 card-img-bottom drinkImg"
+              />
+            <img
+              v-show="!cocktail.loading"
               class="card-img-bottom rounded-0"
               crossorigin="anonymous"
               v-bind:src="cocktail.strDrinkThumb"
               v-bind:alt="imgAltText"
+              @load="cocktail.loading = false"
               
             />
           </a>
@@ -201,7 +209,9 @@ export default {
       cocktail.value = null;
       try {
         //network api request for single drink 
-        cocktail.value = await fetchCocktailByID(drinkId);
+        const fetchedCocktail = await fetchCocktailByID(drinkId);
+        fetchedCocktail.loading = true;
+        cocktail.value = fetchedCocktail;
         drinkName.value = applyTitleCase(cocktail.value.strDrink);
         imgAltText.value = drinkName.value + " Cocktail Photo";
       } catch (e) {
@@ -210,7 +220,9 @@ export default {
         if (error.value) {
           return;
         }
-        cocktail.value = getCocktailByID(allCocktails.value, drinkId);
+        const fetchedCocktail = getCocktailByID(allCocktails.value, drinkId);
+        fetchedCocktail.loading = true;
+        cocktail.value = fetchedCocktail;
         drinkName.value = applyTitleCase(cocktail.value.strDrink);
         imgAltText.value = drinkName.value + " Cocktail Photo";
       }

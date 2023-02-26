@@ -50,7 +50,7 @@
               <img
                 v-show="item.loading"
                 src="../assets/loading.png"
-                alt="placholder image"
+                v-bind:alt="item.strDrink + ' image placeholder'"
                 class="rounded-0 card-img-bottom drinkImg"
               />
 
@@ -124,7 +124,10 @@ export default {
           for (let drink of drinks) {
             if (!cocktailsAdded.includes(drink.idDrink)) {
               cocktailsAdded.push(drink.idDrink);
-              cocktails.push(drink);
+              let cocktail = drink;
+              //add loading property to cocktail obj - default true
+              cocktail.loading = true;
+              cocktails.push(cocktail);
               if (cocktails.length === 12) break;
              }
           };
