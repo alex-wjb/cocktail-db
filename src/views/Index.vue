@@ -84,7 +84,7 @@
       class="mobileViewShuffle m-auto mt-3 mb-0"
       style="display: block"
     >
-      <button class="rounded-3 shuffleBtn p-2" @click="setRandom">
+      <button class="rounded-3 shuffleBtn p-2" @click="populateCocktailData">
         <div class="shuffleIcon">
           <h2 style="margin: 0">
             <i class="fa-solid fa-shuffle fa-lg"></i>
@@ -119,6 +119,7 @@ export default {
         const cocktails = [];
         const cocktailsAdded = [];
         while (cocktails.length < 12) {
+          console.log("yo");
           const drinks = await fetchRandomCocktails();
           for (let drink of drinks) {
             if (!cocktailsAdded.includes(drink.idDrink)) {
@@ -220,6 +221,7 @@ export default {
       getIngredients,
       error,
       currentUser,
+      populateCocktailData
     };
   },
 };

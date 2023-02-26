@@ -16,8 +16,9 @@ const sendRequest = async (requestUrl) => {
   } catch (err) {
     //ADD SWITCH CASE FOR CUSTOM ERRORS
     console.log(err.message);
-    //return an empty response
-    return [];
+    return Promise.reject(err.message);
+    //return an empty response;
+    // return [];
   }
 };
 
