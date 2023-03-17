@@ -46,15 +46,12 @@
           <h6 class="fw-bold mb-0">Current Streak: {{ quizStreak }}</h6>
           <h6 class="fw-bold mb-0">Highest Streak: {{ highStreak }}</h6>
         </div> -->
-        <div v-if="tenQMode" class="d-flex justify-content-center w-100">
-          <h6 class="fw-bold mb-0">Question: {{ questionCount }}</h6>
-        </div>
       </div>
 
       <div class="card-body pt-1">
        
         <div
-          class="drinkCard pt-2 pe-2 ps-2 m-auto rounded-1"
+          class="drinkCard pt-2 pe-2 ps-2 mt-2 m-auto rounded-1"
           style="background-color: #212529"
         >
           <h3 class="card-title drinkTitle text-white mb-2">
@@ -75,8 +72,9 @@
             {{ item }}
           </li>
         </div>
-     
-
+        <div v-if="tenQMode" class="d-flex justify-content-center w-100">
+        <h5 class="fw-bold mb-1 mt-1">Question {{ questionCount }}</h5>
+        </div>
         <h6 class="mt-2 fw-bold quizPrompt">Select the missing ingredient:</h6>
 
         <div class="mt-2">
@@ -332,6 +330,7 @@ export default {
   /* max-width: 1000px; */
   width: 100%;
   margin: auto;
+  height: 100vh;
   background-color: #212529;
   position: absolute;
   top: 45px;
@@ -343,6 +342,7 @@ export default {
 .quizCard {
   max-width: 700px;
   margin: auto;
+  height:100%;
   background-color: lightgrey;
   box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }

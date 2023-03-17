@@ -119,7 +119,6 @@ export default {
         const cocktails = [];
         const cocktailsAdded = [];
         while (cocktails.length < 12) {
-          console.log("yo");
           const drinks = await fetchRandomCocktails();
           for (let drink of drinks) {
             if (!cocktailsAdded.includes(drink.idDrink)) {
